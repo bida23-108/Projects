@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOCRA — New Products & Services Report Q1 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --navy:#06101E;
+  --navy2:#0C1D35;
+  --navy3:#122444;
+  --navy4:#1A2E52;
+  --gold:#C8A435;
+  --gold-light:#E2C06A;
+  --gold-pale:rgba(200,164,53,0.12);
+  --green:#4D7A3A;
+  --green-light:#6FA054;
+  --text:#EEE8D5;
+  --text2:#9AACBD;
+  --text3:#566A7F;
+  --border:rgba(200,164,53,0.18);
+  --border2:rgba(255,255,255,0.07);
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'Outfit',sans-serif;
+  --mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--navy);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.7;overflow-x:hidden}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,16,30,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 5vw}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+.nav-logo{display:flex;align-items:center;gap:14px}
+.logo-dots{display:flex;gap:5px;align-items:center}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot1{background:#1A4E8A}
+.dot2{background:#4D7A3A}
+.dot3{background:#C8A435}
+.nav-title{font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text2)}
+.nav-links{display:flex;gap:28px}
+.nav-links a{color:var(--text2);text-decoration:none;font-size:13px;font-weight:400;letter-spacing:0.06em;transition:color 0.2s}
+.nav-links a:hover{color:var(--gold)}
+.nav-badge{background:var(--gold);color:var(--navy);font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:5px 14px;border-radius:2px}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 5vw 8vw;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:url(https://i.postimg.cc/h475W8mx/BACKGROUND.png) no-repeat center center; background-size:cover}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border2) 1px,transparent 1px),linear-gradient(90deg,var(--border2) 1px,transparent 1px);background-size:80px 80px;opacity:0.6}
+.hero-accent{position:absolute;top:0;right:0;width:50%;height:100%;background:linear-gradient(135deg,transparent 40%,rgba(200,164,53,0.03) 100%)}
+.hero-line{position:absolute;top:30%;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);opacity:0.5}
+.hero-eyebrow{font-size:12px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:28px;display:flex;align-items:center;gap:16px}
+.hero-eyebrow::before{content:'';display:block;width:40px;height:1px;background:var(--gold)}
+.hero h1{font-family:var(--serif);font-size:clamp(52px,7vw,108px);font-weight:300;line-height:1.02;color:var(--text);max-width:900px;margin-bottom:10px}
+.hero h1 em{font-style:italic;color:var(--gold-light)}
+.hero-sub{font-size:clamp(16px,1.6vw,20px);color:var(--text2);font-weight:300;margin-bottom:52px;max-width:560px;line-height:1.6}
+.hero-meta{display:flex;align-items:center;gap:36px;flex-wrap:wrap}
+.hero-meta-item{display:flex;flex-direction:column;gap:3px}
+.hero-meta-label{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text3)}
+.hero-meta-value{font-size:15px;font-weight:500;color:var(--text)}
+.hero-divider{width:1px;height:40px;background:var(--border)}
+.scroll-hint{position:absolute;bottom:32px;right:5vw;writing-mode:vertical-rl;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text3);display:flex;align-items:center;gap:12px}
+.scroll-hint::after{content:'';width:1px;height:50px;background:var(--gold);opacity:0.4}
+
+/* ── STATS BAR ── */
+.stats-bar{background:var(--navy2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:0 5vw}
+.stats-inner{display:grid;grid-template-columns:repeat(4,1fr);border-left:1px solid var(--border)}
+.stat-cell{padding:36px 32px;border-right:1px solid var(--border);position:relative}
+.stat-num{font-family:var(--serif);font-size:52px;font-weight:300;color:var(--gold);line-height:1;margin-bottom:8px}
+.stat-label{font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2)}
+.stat-sub{font-size:13px;color:var(--text3);margin-top:4px}
+
+/* ── SECTIONS ── */
+section{padding:100px 5vw}
+.section-label{font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:flex;align-items:center;gap:14px}
+.section-label::before{content:'';display:block;width:24px;height:1px;background:var(--gold)}
+.section-title{font-family:var(--serif);font-size:clamp(38px,4vw,62px);font-weight:300;line-height:1.1;color:var(--text);margin-bottom:20px}
+.section-title em{font-style:italic;color:var(--gold-light)}
+.section-body{font-size:16px;color:var(--text2);max-width:680px;line-height:1.8;margin-bottom:56px}
+
+/* ── EXEC SUMMARY ── */
+.exec-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:60px}
+.exec-cell{background:var(--navy2);padding:36px 40px}
+.exec-cell-label{font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+.exec-cell-value{font-family:var(--serif);font-size:26px;font-weight:300;color:var(--text);line-height:1.3}
+.exec-cell-value em{color:var(--gold-light);font-style:italic}
+
+/* ── OPERATOR HEADER ── */
+.op-header{display:flex;align-items:center;justify-content:space-between;padding:40px 0 48px;border-bottom:1px solid var(--border);margin-bottom:56px}
+.op-name{font-family:var(--serif);font-size:clamp(32px,3.5vw,54px);font-weight:300;color:var(--text)}
+.op-count{font-size:13px;letter-spacing:0.1em;color:var(--gold);border:1px solid var(--border);padding:8px 18px;text-transform:uppercase}
+.op-section{border-top:1px solid var(--border);padding-top:88px}
+
+/* ── SERVICE CARDS ── */
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+.service-card{background:var(--navy2);padding:36px;position:relative;overflow:hidden;transition:background 0.25s}
+.service-card:hover{background:var(--navy3)}
+.service-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:transparent;transition:background 0.25s}
+.service-card:hover::before{background:var(--gold)}
+.service-num{font-family:var(--serif);font-size:64px;font-weight:300;color:rgba(200,164,53,0.1);line-height:1;position:absolute;top:20px;right:24px;pointer-events:none}
+.service-tag{display:inline-block;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(200,164,53,0.3);padding:4px 12px;margin-bottom:16px;border-radius:1px}
+.service-title{font-family:var(--serif);font-size:22px;font-weight:400;color:var(--text);line-height:1.25;margin-bottom:14px}
+.service-desc{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:20px}
+.service-meta{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--border2);padding-top:16px}
+.service-meta-row{display:flex;justify-content:space-between;font-size:12px}
+.service-meta-key{color:var(--text3);letter-spacing:0.05em}
+.service-meta-val{color:var(--text);font-weight:500;text-align:right;max-width:55%}
+
+/* ── WIDE CARD ── */
+.service-card-wide{grid-column:span 2}
+.service-card-full{grid-column:span 3}
+
+/* ── TARIFF TABLE ── */
+.tariff-wrap{margin:20px 0;overflow-x:auto}
+.tariff-table{width:100%;border-collapse:collapse;font-size:13px}
+.tariff-table th{background:var(--navy4);color:var(--gold);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;font-weight:500;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+.tariff-table td{padding:9px 14px;border-bottom:1px solid var(--border2);color:var(--text2);vertical-align:top}
+.tariff-table tr:last-child td{border-bottom:none}
+.tariff-table tr:hover td{background:rgba(255,255,255,0.02)}
+.tariff-table td:first-child{color:var(--text);font-weight:400}
+.pill{display:inline-block;background:rgba(77,122,58,0.2);color:#6FA054;font-size:10px;font-weight:600;padding:2px 9px;border-radius:20px;letter-spacing:0.05em}
+.pill-gold{background:rgba(200,164,53,0.12);color:var(--gold)}
+
+/* ── PULL QUOTE ── */
+.pull-quote{border-left:3px solid var(--gold);padding:24px 32px;margin:32px 0;background:var(--gold-pale)}
+.pull-quote p{font-family:var(--serif);font-size:22px;font-weight:300;font-style:italic;color:var(--gold-light);line-height:1.5}
+
+/* ── HIGHLIGHT BOX ── */
+.highlight-box{border:1px solid var(--border);padding:28px 32px;margin:20px 0;background:var(--navy3)}
+.highlight-box ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.highlight-box li{font-size:14px;color:var(--text2);display:flex;gap:12px;align-items:flex-start}
+.highlight-box li::before{content:'—';color:var(--gold);flex-shrink:0;margin-top:2px}
+
+/* ── CONCLUSION ── */
+.conclusion-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-top:52px}
+.conclusion-card{background:var(--navy2);padding:40px 36px}
+.conclusion-card-op{font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.conclusion-card-name{font-family:var(--serif);font-size:28px;font-weight:300;color:var(--text);margin-bottom:20px}
+.conclusion-card-count{font-size:40px;font-family:var(--serif);font-weight:300;color:var(--gold);margin-bottom:4px}
+.conclusion-card-label{font-size:12px;color:var(--text3);margin-bottom:24px}
+.conclusion-card-body{font-size:14px;color:var(--text2);line-height:1.7}
+
+/* ── FOOTER ── */
+footer{background:var(--navy2);border-top:1px solid var(--border);padding:52px 5vw 40px}
+.footer-inner{display:flex;align-items:flex-start;justify-content:space-between;gap:40px;margin-bottom:48px;flex-wrap:wrap}
+.footer-brand{max-width:320px}
+.footer-logo-row{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.footer-logo-text{font-size:14px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text)}
+.footer-tagline{font-size:13px;color:var(--text3);line-height:1.6}
+.footer-meta{display:flex;gap:56px;flex-wrap:wrap}
+.footer-col-title{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text3);margin-bottom:14px}
+.footer-col-list{list-style:none;display:flex;flex-direction:column;gap:9px}
+.footer-col-list li{font-size:13px;color:var(--text2)}
+.footer-base{border-top:1px solid var(--border2);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-copy{font-size:12px;color:var(--text3)}
+.footer-conf{font-size:11px;color:var(--text3);letter-spacing:0.08em}
+
+/* ── DIVIDER ── */
+.divider{height:1px;background:linear-gradient(90deg,var(--gold),transparent);opacity:0.3;margin:0 5vw}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{opacity:0;animation:fadeUp 0.8s ease forwards}
+.fade-up.d1{animation-delay:0.1s}
+.fade-up.d2{animation-delay:0.25s}
+.fade-up.d3{animation-delay:0.4s}
+.fade-up.d4{animation-delay:0.55s}
+.fade-up.d5{animation-delay:0.7s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .services-grid{grid-template-columns:1fr 1fr}
+  .service-card-wide{grid-column:span 2}
+  .service-card-full{grid-column:span 2}
+  .stats-inner{grid-template-columns:repeat(2,1fr)}
+  .exec-grid{grid-template-columns:1fr}
+  .conclusion-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+}
+@media(max-width:600px){
+  .services-grid{grid-template-columns:1fr}
+  .service-card-wide,.service-card-full{grid-column:span 1}
+  .hero{padding-bottom:16vw}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <div class="logo-dots">
+        <img src="https://dqos.bocra.org.bw/storage/BOCRA.png" alt="BOCRA Logo" height="40"></div>
+    </div>
+    <div class="nav-links">
+      <a href="#summary">Summary</a>
+      <a href="#orange">Orange</a>
+      <a href="#mascom">Mascom</a>
+      <a href="#btc">BTC</a>
+      <a href="#conclusion">Conclusion</a>
+    </div>
+    <div class="nav-badge">Q1 2026</div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-accent"></div>
+  <div class="hero-line"></div>
+  <div style="position:relative">
+    <div class="hero-eyebrow fade-up d1">Business Development Department &mdash; Internal Report</div>
+    <h1 class="fade-up d2">New Products<br>&amp; <em>Services</em><br>Report</h1>
+    <p class="hero-sub fade-up d3">A comprehensive review of selected telecommunications products, services, and short codes approved by BOCRA for Q1 2026 — covering Orange Botswana, Mascom Wireless, and BTC.</p>
+    <div class="hero-meta fade-up d4">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Period</span>
+        <span class="hero-meta-value">January — March 2026</span>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Operators</span>
+        <span class="hero-meta-value">3 Licensed MNOs</span>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Prepared by</span>
+        <span class="hero-meta-value">Business Development</span>
+      </div>
+      <div class="hero-divider"></div>
+    </div>
+  </div>
+  <div class="scroll-hint">Scroll</div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-cell">
+      <div class="stat-num" data-count="15">0</div>
+      <div class="stat-label">More than 15 Services Approved</div>
+      <div class="stat-sub">Across all three operators</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num" data-count="10">0</div>
+      <div class="stat-label">Orange Botswana</div>
+      <div class="stat-sub">Highest submissions — Q1</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num" data-count="3">0</div>
+      <div class="stat-label">Licensed Operators</div>
+      <div class="stat-sub">Orange · Mascom · BTC</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num" data-count="5">0</div>
+      <div class="stat-label">Service Categories</div>
+      <div class="stat-sub">Data · Content · Broadband · Fin · Codes</div>
+    </div>
+  </div>
+</div>
+
+<!-- EXECUTIVE SUMMARY -->
+<section id="summary">
+  <div class="section-label">01 — Executive Summary</div>
+  <h2 class="section-title">A Quarter of <em>Accelerated</em> Innovation</h2>
+  <p class="section-body">The first quarter of 2026 recorded significant regulatory activity across all three licensed mobile network operators in Botswana. BOCRA processed fifteen product and service applications within the quarter, spanning mobile data revamps, digital content platforms, 5G fixed broadband upgrades, financial services integration, and emergency short code allocations.</p>
+
+  <div class="exec-grid">
+    <div class="exec-cell">
+      <div class="exec-cell-label">Key Trend</div>
+      <div class="exec-cell-value">Operators prioritised <em>data value</em> over price increases — every revamp delivered more volume at the same or lower cost</div>
+    </div>
+    <div class="exec-cell">
+      <div class="exec-cell-label">Notable First</div>
+      <div class="exec-cell-value">BTC's <em>Travel eSIM</em> marks Botswana's first locally-issued international data-only eSIM service for travellers</div>
+    </div>
+    <div class="exec-cell">
+      <div class="exec-cell-label">Digital Inclusion</div>
+      <div class="exec-cell-value">BTC's <em>SMEGA</em> platform advances financial inclusion by enabling USSD-based wallets on any handset — no smartphone required</div>
+    </div>
+    <div class="exec-cell">
+      <div class="exec-cell-label">Community Focus</div>
+      <div class="exec-cell-value">Mascom's <em>Temo</em> service represents a deliberate move into agri-tech, serving Botswana's farming community via USSD</div>
+    </div>
+  </div>
+
+  <div class="pull-quote">
+    <p>"All fifteen applications were reviewed and approved within the quarter, reflecting BOCRA's commitment to timely regulatory processing and enabling operators to deliver improved services to Botswana consumers."</p>
+  </div>
+
+  <!-- Summary Table -->
+  <div class="tariff-wrap">
+    <table class="tariff-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Service</th>
+          <th>Operator</th>
+          <th>Category</th>
+          <th>Effective Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>01</td><td>Contract Mobile Data Offers Revamp</td><td>Orange Botswana</td><td>Mobile Data</td><td>31 Jan 2026</td><td><span class="pill">Approved</span></td></tr>
+        <tr><td>02</td><td>All My Internet Postpaid Revamp</td><td>Orange Botswana</td><td>Mobile Data</td><td>26 Jan 2026</td><td><span class="pill">Approved</span></td></tr>
+        <tr><td>03</td><td>All My Friends 7 & 30-Day Promotion</td><td>Orange Botswana</td><td>Promotion</td><td>9 Feb – 31 Mar 2026</td><td><span class="pill">Approved</span></td></tr>
+        <tr><td>04</td><td>Konnecta Max 5G Fixed Broadband Revamp</td><td>Orange Botswana</td><td>Fixed Broadband</td><td>17 Feb 2026</td><td><span class="pill">Approved</span></td></tr>
+        <tr><td>05</td><td>Stanbic Instant Money Wallet USSD Codes</td><td>Orange Botswana</td><td>Financial Services</td><td>19 Feb 2026</td><td><span class="pill">Approved</span></td></tr>
+        <tr><td>06</td><td>AFCON SMS Competition (Code 16005)</td><td>Orange Botswana</td><td>Short Code</td><td>Dec 2025 – Jan 2026</td><td><span class="pill">Approved</span></td></tr>
+        <tr><td>07</td><td>FA Cup Half-Time Show (Code 1120)</td><td>Orange Botswana</td><td>Short Code</td><td>13 Mar – 31 Jul 2026</td><td><span class="pill">Approved</span></td></tr>
+        <tr><td>08</td><td>Aga Sure Funeral Policy (Code 17500)</td><td>Orange Botswana</td><td>Short Code</td><td>25 Mar 2026</td><td><span class="pill">Approved</span></td></tr>
+        <tr><td>09</td><td>UVGAMING Digital Content Service</td><td>Orange Botswana</td><td>Digital Content</td><td>25 Mar 2026</td><td><span class="pill">Approved</span></td></tr>
+        <tr><td>10</td><td>Quiz Master Digital Content Service</td><td>Orange Botswana</td><td>Digital Content</td><td>25 Mar 2026</td><td><span class="pill">Approved</span></td></tr>
+        <tr><td>11</td><td>Temo Agricultural Service (*264#)</td><td>Mascom Wireless</td><td>Value-Added Service</td><td>25 Mar 2026</td><td><span class="pill">Approved</span></td></tr>
+        <tr><td>12</td><td>BTC Travel eSIM Service</td><td>BTC</td><td>Innovation</td><td>1 Apr 2026</td><td><span class="pill">Approved</span></td></tr>
+        <tr><td>13</td><td>Toll-Free 0800155212 – Kavindama Hospital</td><td>BTC</td><td>Toll-Free</td><td>30 Mar 2026</td><td><span class="pill">Approved</span></td></tr>
+        <tr><td>14</td><td>Short Code 919 – World Relays Emergency</td><td>BTC</td><td>Short Code</td><td>30 Mar 2026</td><td><span class="pill">Approved</span></td></tr>
+        <tr><td>15</td><td>SMEGA Financial Platform (*173#)</td><td>BTC</td><td>Financial Services</td><td>30 Mar 2026</td><td><span class="pill">Approved</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ORANGE BOTSWANA -->
+<section id="orange" class="op-section">
+  <div class="op-header">
+    <div>
+      <div class="section-label">02 — Operator Review</div>
+      <div class="op-name">Orange Botswana</div>
+    </div>
+    <div class="op-count">10 Services Approved</div>
+  </div>
+  <p class="section-body">Orange Botswana submitted the highest number of applications in Q1 2026, demonstrating a focused strategy on data value, digital content partnerships, and short code expansion. All ten applications were approved by BOCRA within the quarter.</p>
+
+  <div class="services-grid">
+
+    <!-- Card 1 -->
+    <div class="service-card service-card-wide">
+      <div class="service-num">01</div>
+      <div class="service-tag">Mobile Data</div>
+      <div class="service-title">Contract Mobile Data Offers Revamp</div>
+      <div class="service-desc">A comprehensive overhaul of Orange's contract mobile data portfolio effective 31 January 2026, covering three product lines — Sellecta, Mobile Hybrid Internet, and Mobile Broadband Internet (MBI). The revamp delivered increased data volumes with selective price reductions and rationalised legacy offers.</div>
+      <div class="tariff-wrap">
+        <table class="tariff-table">
+          <thead><tr><th>Offer</th><th>Original Volume</th><th>New Volume</th><th>Price (BWP)</th></tr></thead>
+          <tbody>
+            <tr><td>Sellecta</td><td>1.5 GB</td><td>2.5 GB</td><td>P40</td></tr>
+            <tr><td>Sellecta</td><td>4.5 GB</td><td>6 GB</td><td>P80</td></tr>
+            <tr><td>Sellecta</td><td>7 GB</td><td><strong style="color:var(--text)">32 GB</strong></td><td>P120</td></tr>
+            <tr><td>Sellecta</td><td>18 GB</td><td><strong style="color:var(--text)">75 GB</strong></td><td>P279</td></tr>
+            <tr><td>MBI 5 GB</td><td>5 GB</td><td>8 GB</td><td>P99 <small style="color:var(--text3)">(was P119)</small></td></tr>
+            <tr><td>MBI 45 GB</td><td>45 GB</td><td>150 GB</td><td>P599 <small style="color:var(--text3)">(was P549)</small></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="service-meta">
+        <div class="service-meta-row"><span class="service-meta-key">Out-of-bundle Rate</span><span class="service-meta-val">P0.69/MB — unchanged across all tiers</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Effective</span><span class="service-meta-val">31 January 2026</span></div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="service-card">
+      <div class="service-num">02</div>
+      <div class="service-tag">Mobile Data</div>
+      <div class="service-title">All My Internet Postpaid Bundles Revamp</div>
+      <div class="service-desc">Launched 26 January 2026 — significantly higher data volumes at the same or reduced prices across all validities. New top-tier bundles of up to 150 GB for P599 introduced.</div>
+      <div class="tariff-wrap">
+        <table class="tariff-table">
+          <thead><tr><th>Validity</th><th>New Bundle</th><th>Price</th></tr></thead>
+          <tbody>
+            <tr><td>1 Day</td><td>100 MB</td><td>P2</td></tr>
+            <tr><td>1 Day</td><td>1.5 GB</td><td>P10</td></tr>
+            <tr><td>1 Week</td><td>4 GB</td><td>P50</td></tr>
+            <tr><td>2 Weeks</td><td>8 GB</td><td>P80</td></tr>
+            <tr><td>1 Month</td><td>30 GB</td><td>P199</td></tr>
+            <tr><td>1 Month</td><td>150 GB</td><td>P599</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="service-meta">
+        <div class="service-meta-row"><span class="service-meta-key">Effective</span><span class="service-meta-val">26 January 2026</span></div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="service-card">
+      <div class="service-num">03</div>
+      <div class="service-tag">Promotion</div>
+      <div class="service-title">All My Friends 7 & 30-Day Promotion</div>
+      <div class="service-desc">A 100% data bonus promotion on Orange's popular social media bundles. Customers received double the daily data cap — from 500 MB to 1 GB per day — at no additional cost, via USSD or MaxIt app.</div>
+      <div class="highlight-box">
+        <ul>
+          <li>7-day bundle: P20 — daily cap raised to <strong>1 GB</strong> (from 500 MB)</li>
+          <li>30-day bundle: P60 — daily cap raised to <strong>1 GB</strong> (from 500 MB)</li>
+          <li>Social platforms: Facebook, X, WhatsApp, Instagram, Snapchat, LinkedIn, TikTok</li>
+          <li>On-net voice & SMS benefits retained</li>
+        </ul>
+      </div>
+      <div class="service-meta">
+        <div class="service-meta-row"><span class="service-meta-key">Duration</span><span class="service-meta-val">9 Feb – 31 Mar 2026</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Channels</span><span class="service-meta-val">USSD & MaxIt App</span></div>
+      </div>
+    </div>
+
+    <!-- Card 4 - Full Width -->
+    <div class="service-card service-card-full">
+      <div class="service-num">04</div>
+      <div class="service-tag">Fixed Broadband</div>
+      <div class="service-title">Konnecta Max 5G Fixed Broadband Services Revamp</div>
+      <div class="service-desc">Effective 17 February 2026, Orange significantly upgraded download speeds across all Konnecta Max 5G tiers — Prepaid, Prepaid Pro (SME), Postpaid, and Hybrid — with prices held constant. Every customer received faster speeds at zero additional cost.</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:12px">
+        <div style="background:var(--navy4);padding:20px;border-left:2px solid var(--gold)">
+          <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Prestige Tier</div>
+          <div style="font-family:var(--serif);font-size:28px;font-weight:300;color:var(--gold)">30 Mbps</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:4px">↑ from 15 Mbps &nbsp;·&nbsp; P499/mo</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:8px">FUP: 600 GB</div>
+        </div>
+        <div style="background:var(--navy4);padding:20px;border-left:2px solid var(--gold)">
+          <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Premium Tier</div>
+          <div style="font-family:var(--serif);font-size:28px;font-weight:300;color:var(--gold)">50 Mbps</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:4px">↑ from 30 Mbps &nbsp;·&nbsp; P799/mo</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:8px">FUP: 800 GB</div>
+        </div>
+        <div style="background:var(--navy4);padding:20px;border-left:2px solid var(--gold)">
+          <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Platinum Tier</div>
+          <div style="font-family:var(--serif);font-size:28px;font-weight:300;color:var(--gold)">100 Mbps</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:4px">↑ from 50 Mbps &nbsp;·&nbsp; P1,099/mo</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:8px">FUP: 1 TB</div>
+        </div>
+      </div>
+      <div class="service-meta" style="margin-top:20px">
+        <div class="service-meta-row"><span class="service-meta-key">Applies To</span><span class="service-meta-val">Prepaid Unlimited, Prepaid Pro (SME), Postpaid, Hybrid — all at same prices</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Effective</span><span class="service-meta-val">17 February 2026</span></div>
+      </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="service-card">
+      <div class="service-num">05</div>
+      <div class="service-tag">Financial Services</div>
+      <div class="service-title">Stanbic Bank Instant Money Wallet — USSD Codes</div>
+      <div class="service-desc">Four USSD codes approved for Stanbic Bank Botswana's Instant Money Wallet service, enabling customers to access financial services, top up airtime, and manage wallet accounts from any mobile device.</div>
+      <div class="tariff-wrap">
+        <table class="tariff-table">
+          <thead><tr><th>Code</th><th>Purpose</th><th>Charge</th></tr></thead>
+          <tbody>
+            <tr><td style="font-family:var(--mono);font-size:12px">*115*555</td><td>Full financial services & digital payments</td><td>P0.50</td></tr>
+            <tr><td style="font-family:var(--mono);font-size:12px">*116*555</td><td>Airtime top-up services</td><td>Free</td></tr>
+            <tr><td style="font-family:var(--mono);font-size:12px">*116*111</td><td>Wallet — limited functionality</td><td>Free</td></tr>
+            <tr><td style="font-family:var(--mono);font-size:12px">*115*111</td><td>Full financial services & digital payments</td><td>P2.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="service-meta">
+        <div class="service-meta-row"><span class="service-meta-key">Effective</span><span class="service-meta-val">19 February 2026</span></div>
+      </div>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="service-card">
+      <div class="service-num">06</div>
+      <div class="service-tag">Short Code</div>
+      <div class="service-title">AFCON SMS Competition — Code 16005</div>
+      <div class="service-desc">A nationwide SMS competition run in partnership with Black Mobile, tied to the 2025 Africa Cup of Nations tournament. Customers sent the keyword AFCON to short code 16005 to enter. Competition approved by the Gambling Authority.</div>
+      <div class="service-meta">
+        <div class="service-meta-row"><span class="service-meta-key">Short Code</span><span class="service-meta-val" style="font-family:var(--mono)">16005</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Rate</span><span class="service-meta-val">P2.00 per SMS (customer-borne)</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Period</span><span class="service-meta-val">16 Dec 2025 – 19 Jan 2026</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Partner</span><span class="service-meta-val">Black Mobile</span></div>
+      </div>
+    </div>
+
+    <!-- Card 7 -->
+    <div class="service-card">
+      <div class="service-num">07</div>
+      <div class="service-tag">Short Code</div>
+      <div class="service-title">Orange FA Cup Half-Time Show — Code 1120</div>
+      <div class="service-desc">A fan engagement voting line for the Orange FA Cup Half-Time Show, allowing supporters to vote for their preferred performing artist via SMS. Designed to build community and enhance the matchday experience for fans nationwide.</div>
+      <div class="service-meta">
+        <div class="service-meta-row"><span class="service-meta-key">Short Code</span><span class="service-meta-val" style="font-family:var(--mono)">1120</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Rate</span><span class="service-meta-val">P2.00 per SMS (customer-borne)</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Period</span><span class="service-meta-val">13 Mar – 31 Jul 2026</span></div>
+      </div>
+    </div>
+
+    <!-- Card 8 -->
+    <div class="service-card">
+      <div class="service-num">08</div>
+      <div class="service-tag">Short Code</div>
+      <div class="service-title">Aga Sure Funeral Policy — Code 17500</div>
+      <div class="service-desc">A one-way and two-way SMS service facilitating interaction between customers and the Aga Sure / Botswana Life Mosako Funeral Policy. Available in both Setswana and English, guiding customers on their policy and Orange Money Auto Debit Order setup.</div>
+      <div class="service-meta">
+        <div class="service-meta-row"><span class="service-meta-key">Short Code</span><span class="service-meta-val" style="font-family:var(--mono)">17500</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Charge</span><span class="service-meta-val">Free to customers</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Language</span><span class="service-meta-val">Setswana & English</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Effective</span><span class="service-meta-val">25 March 2026</span></div>
+      </div>
+    </div>
+
+    <!-- Card 9 -->
+    <div class="service-card">
+      <div class="service-num">09</div>
+      <div class="service-tag">Digital Content</div>
+      <div class="service-title">UVGAMING Digital Content Service</div>
+      <div class="service-desc">Launched in collaboration with UVCANN, this service provides prepaid subscribers with direct operator billing access to digital gaming content — including performance-based rewards. No credit or debit card required.</div>
+      <div class="service-meta">
+        <div class="service-meta-row"><span class="service-meta-key">Partner</span><span class="service-meta-val">UVCANN</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Daily Rate</span><span class="service-meta-val">P2.00</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Weekly Rate</span><span class="service-meta-val">P7.00</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Billing</span><span class="service-meta-val">Direct Operator Billing</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Effective</span><span class="service-meta-val">25 March 2026</span></div>
+      </div>
+    </div>
+
+    <!-- Card 10 -->
+    <div class="service-card">
+      <div class="service-num">10</div>
+      <div class="service-tag">Digital Content</div>
+      <div class="service-title">Quiz Master Digital Content Service</div>
+      <div class="service-desc">An interactive educational and entertainment quiz platform developed with Rainboo Softmate. Accessible to all prepaid subscribers via direct operator billing. Promotes learning and engagement through competitive trivia-based gameplay.</div>
+      <div class="service-meta">
+        <div class="service-meta-row"><span class="service-meta-key">Partner</span><span class="service-meta-val">Rainboo Softmate</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Daily Rate</span><span class="service-meta-val">P2.00</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Weekly Rate</span><span class="service-meta-val">P7.00</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Billing</span><span class="service-meta-val">Direct Operator Billing</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Effective</span><span class="service-meta-val">25 March 2026</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- MASCOM -->
+<section id="mascom" class="op-section">
+  <div class="op-header">
+    <div>
+      <div class="section-label">03 — Operator Review</div>
+      <div class="op-name">Mascom Wireless</div>
+    </div>
+    <div class="op-count">1 Service Approved</div>
+  </div>
+  <p class="section-body">Mascom Wireless submitted a single, socially significant application during the review period — a digital agricultural platform targeting Botswana's farming community.</p>
+
+  <div class="services-grid">
+    <div class="service-card service-card-wide">
+      <div class="service-num">11</div>
+      <div class="service-tag">Value-Added Service</div>
+      <div class="service-title">Temo Agricultural Information Service — USSD *264#</div>
+      <div class="service-desc">An innovative USSD-based platform designed to empower Botswana's farming community by delivering vital agricultural knowledge, seasonal guidance, and farming resources directly to any mobile handset. The service auto-renews daily or weekly unless deactivated by the subscriber, and is available exclusively to Mascom prepaid customers.</div>
+      <div class="tariff-wrap">
+        <table class="tariff-table">
+          <thead><tr><th>Detail</th><th>Information</th></tr></thead>
+          <tbody>
+            <tr><td>USSD Code</td><td style="font-family:var(--mono)">*264#</td></tr>
+            <tr><td>Target Users</td><td>All Mascom Prepaid subscribers</td></tr>
+            <tr><td>Daily Rate</td><td>P1.00 (auto-renew)</td></tr>
+            <tr><td>Weekly Rate</td><td>P5.00 (auto-renew)</td></tr>
+            <tr><td>Cancellation</td><td>Subscriber-initiated deactivation</td></tr>
+            <tr><td>Approved</td><td>17 March 2026</td></tr>
+            <tr><td>Launch Date</td><td>25 March 2026</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="service-card">
+      <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text3);margin-bottom:20px">Significance</div>
+      <div class="pull-quote" style="margin-top:0">
+        <p>"Temo represents a deliberate move into agri-tech — using USSD to bridge the digital divide for Botswana's rural farming communities who may not have smartphone or data access."</p>
+      </div>
+      <div class="highlight-box" style="margin-top:24px">
+        <ul>
+          <li>BOCRA Reference: BOCRA/9/3/2 III</li>
+          <li>Approval Date: 17 March 2026</li>
+          <li>Accessible on any handset — no smartphone required</li>
+          <li>Auto-renewal unless cancelled by subscriber</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- BTC -->
+<section id="btc" class="op-section">
+  <div class="op-header">
+    <div>
+      <div class="section-label">04 — Operator Review</div>
+      <div class="op-name">Botswana Telecommunications Corporation</div>
+    </div>
+    <div class="op-count">4 Services Approved</div>
+  </div>
+  <p class="section-body">BTC made notable strides in innovation during Q1 2026, introducing the country's first Travel eSIM product, two emergency and healthcare short codes, and a comprehensive financial inclusion platform. All four applications were approved on or before 31 March 2026.</p>
+
+  <div class="services-grid">
+
+    <!-- Travel eSIM -->
+    <div class="service-card service-card-full">
+      <div class="service-num">12</div>
+      <div class="service-tag">Innovation &nbsp;·&nbsp; Industry First</div>
+      <div class="service-title">BTC Travel eSIM Service</div>
+      <div class="service-desc">Botswana's first locally-issued international data-only eSIM service, available through a dedicated mobile application (Android & iOS). Customers — including Botswana residents and international travellers — can purchase, activate and manage international data bundles digitally, without a physical SIM card, at predefined per-destination rates denominated in USD.</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0">
+        <div style="background:var(--navy4);padding:18px;border-top:2px solid var(--gold)">
+          <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text3);margin-bottom:6px">Package</div>
+          <div style="font-family:var(--serif);font-size:22px;font-weight:300;color:var(--text)">3 Bundles</div>
+          <div style="font-size:12px;color:var(--text3)">1 GB / 3 GB / 5 GB</div>
+        </div>
+        <div style="background:var(--navy4);padding:18px;border-top:2px solid var(--gold)">
+          <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text3);margin-bottom:6px">Validity</div>
+          <div style="font-family:var(--serif);font-size:22px;font-weight:300;color:var(--text)">3 Options</div>
+          <div style="font-size:12px;color:var(--text3)">3 / 7 / 30 Days</div>
+        </div>
+        <div style="background:var(--navy4);padding:18px;border-top:2px solid var(--gold)">
+          <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text3);margin-bottom:6px">Developer</div>
+          <div style="font-family:var(--serif);font-size:22px;font-weight:300;color:var(--text)">3rd Party</div>
+          <div style="font-size:12px;color:var(--text3)">Outsourced app</div>
+        </div>
+        <div style="background:var(--navy4);padding:18px;border-top:2px solid var(--gold)">
+          <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text3);margin-bottom:6px">Payment</div>
+          <div style="font-family:var(--serif);font-size:22px;font-weight:300;color:var(--text)">Visa Card</div>
+          <div style="font-size:12px;color:var(--text3)">Secure gateway</div>
+        </div>
+      </div>
+      <div class="tariff-wrap">
+        <table class="tariff-table">
+          <thead><tr><th>Destination</th><th>1 GB / 3 Days (USD)</th><th>3 GB / 7 Days (USD)</th><th>5 GB / 30 Days (USD)</th></tr></thead>
+          <tbody>
+            <tr><td>United Kingdom</td><td>$2.07</td><td>$4.13</td><td>$14.47</td></tr>
+            <tr><td>Germany / France / Italy</td><td>$2.07</td><td>$4.13</td><td>$14.47</td></tr>
+            <tr><td>United Arab Emirates</td><td>$8.98</td><td>$17.96</td><td>$62.85</td></tr>
+            <tr><td>United States</td><td>$3.93</td><td>$7.85</td><td>$27.49</td></tr>
+            <tr><td>South Africa</td><td>$6.73</td><td>$13.46</td><td>$47.10</td></tr>
+            <tr><td>India</td><td>$8.98</td><td>$17.96</td><td>$62.85</td></tr>
+            <tr><td>Australia</td><td>$4.94</td><td>$9.87</td><td>$34.56</td></tr>
+            <tr><td>China</td><td>$5.37</td><td>$10.75</td><td>$37.61</td></tr>
+            <tr><td>Botswana</td><td>$22.51</td><td>$45.00</td><td>$157.52</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="service-meta" style="margin-top:8px">
+        <div class="service-meta-row"><span class="service-meta-key">Service Type</span><span class="service-meta-val">Data-only — voice calls and SMS not supported</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Device Requirement</span><span class="service-meta-val">eSIM-compatible, carrier-unlocked devices only</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Application</span><span class="service-meta-val">Google Play Store (Android) & Apple App Store (iOS)</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Approved</span><span class="service-meta-val">31 March 2026</span></div>
+      </div>
+    </div>
+
+    <!-- Kavindama -->
+    <div class="service-card">
+      <div class="service-num">13</div>
+      <div class="service-tag">Toll-Free</div>
+      <div class="service-title">Kavindama Primary Hospital — 0800155212</div>
+      <div class="service-desc">A toll-free number allocated to Kavindama Primary Hospital for patient enquiries, suggestions, and recommendations. The hospital absorbs the full cost, making every call free for patients calling from any network.</div>
+      <div class="service-meta">
+        <div class="service-meta-row"><span class="service-meta-key">Number</span><span class="service-meta-val" style="font-family:var(--mono)">0800 155 212</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Client</span><span class="service-meta-val">Kavindama Primary Hospital</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Networks</span><span class="service-meta-val">BTC Mobile, Orange, Mascom</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Cost to Caller</span><span class="service-meta-val">Free</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Tariff Absorbed</span><span class="service-meta-val">Hospital (P1.59/min)</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Mapped To</span><span class="service-meta-val" style="font-family:var(--mono)">+267 687513</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Approved</span><span class="service-meta-val">30 March 2026</span></div>
+      </div>
+    </div>
+
+    <!-- World Relays -->
+    <div class="service-card">
+      <div class="service-num">14</div>
+      <div class="service-tag">Emergency Short Code</div>
+      <div class="service-title">World Relays Emergency Line — Short Code 919</div>
+      <div class="service-desc">A dedicated emergency short code allocated to the World Relays athletics event, providing visiting teams, athletes, and officials with immediate emergency access callable from any network. BTC absorbs all costs — free for all callers.</div>
+      <div class="service-meta">
+        <div class="service-meta-row"><span class="service-meta-key">Short Code</span><span class="service-meta-val" style="font-family:var(--mono)">919</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Client</span><span class="service-meta-val">World Relays</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Networks</span><span class="service-meta-val">BTC Mobile, Orange, Mascom</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Cost to Caller</span><span class="service-meta-val">Free</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Tariff Absorbed</span><span class="service-meta-val">BTC (P1.67/min)</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Validity</span><span class="service-meta-val">Approval – 30 June 2026</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Mapped To</span><span class="service-meta-val" style="font-family:var(--mono)">+267 3555424</span></div>
+      </div>
+    </div>
+
+    <!-- SMEGA -->
+    <div class="service-card service-card-wide">
+      <div class="service-num">15</div>
+      <div class="service-tag">Financial Inclusion</div>
+      <div class="service-title">SMEGA Digital Financial Services Platform — *173#</div>
+      <div class="service-desc">A comprehensive digital wallet and financial services platform accessible via USSD on any handset — no smartphone or internet connection required. SMEGA advances financial inclusion in Botswana by enabling secure, affordable transactions for all population segments, including those without bank accounts or data access.</div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:16px 0">
+        <div style="background:var(--navy4);padding:12px 16px;display:flex;gap:10px;align-items:flex-start">
+          <div style="color:var(--gold);margin-top:2px">—</div>
+          <span style="font-size:13px;color:var(--text2)">Register or activate SMEGA wallet</span>
+        </div>
+        <div style="background:var(--navy4);padding:12px 16px;display:flex;gap:10px;align-items:flex-start">
+          <div style="color:var(--gold);margin-top:2px">—</div>
+          <span style="font-size:13px;color:var(--text2)">Check wallet balance</span>
+        </div>
+        <div style="background:var(--navy4);padding:12px 16px;display:flex;gap:10px;align-items:flex-start">
+          <div style="color:var(--gold);margin-top:2px">—</div>
+          <span style="font-size:13px;color:var(--text2)">Send & receive money (domestic & international)</span>
+        </div>
+        <div style="background:var(--navy4);padding:12px 16px;display:flex;gap:10px;align-items:flex-start">
+          <div style="color:var(--gold);margin-top:2px">—</div>
+          <span style="font-size:13px;color:var(--text2)">Purchase electricity & water vouchers</span>
+        </div>
+        <div style="background:var(--navy4);padding:12px 16px;display:flex;gap:10px;align-items:flex-start">
+          <div style="color:var(--gold);margin-top:2px">—</div>
+          <span style="font-size:13px;color:var(--text2)">Buy airtime & data bundles</span>
+        </div>
+        <div style="background:var(--navy4);padding:12px 16px;display:flex;gap:10px;align-items:flex-start">
+          <div style="color:var(--gold);margin-top:2px">—</div>
+          <span style="font-size:13px;color:var(--text2)">Pay insurance & save via group savings wallet</span>
+        </div>
+      </div>
+      <div class="service-meta">
+        <div class="service-meta-row"><span class="service-meta-key">USSD Code</span><span class="service-meta-val" style="font-family:var(--mono)">*173#</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Session Fee</span><span class="service-meta-val">P2.00 per USSD session (customer-borne)</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Accessibility</span><span class="service-meta-val">Any mobile phone — no smartphone or data required</span></div>
+        <div class="service-meta-row"><span class="service-meta-key">Approved</span><span class="service-meta-val">30 March 2026</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONCLUSION -->
+<section id="conclusion">
+  <div class="section-label">05 — Conclusion</div>
+  <h2 class="section-title">A Quarter That <em>Defined Direction</em></h2>
+  <p class="section-body">The first quarter of 2026 demonstrated a dynamic and evolving telecommunications landscape in Botswana. All three licensed operators invested meaningfully in improving service value and expanding digital access — each in ways that reflect their strategic priorities. BOCRA processed all fifteen applications within the quarter, maintaining timely regulatory oversight without impeding market momentum.</p>
+
+  <div class="conclusion-grid">
+    <div class="conclusion-card">
+      <div class="conclusion-card-op">Orange Botswana</div>
+      <div class="conclusion-card-name">Data Value<br>& Digital Content</div>
+      <div class="conclusion-card-count">10</div>
+      <div class="conclusion-card-label">Services approved in Q1 2026</div>
+      <div class="conclusion-card-body">Led the quarter with the broadest portfolio of activity — from major data revamps across contract, broadband, and prepaid products, to digital content partnerships and short code expansions for sport, insurance, and financial services.</div>
+    </div>
+    <div class="conclusion-card">
+      <div class="conclusion-card-op">Mascom Wireless</div>
+      <div class="conclusion-card-name">Agriculture<br>& Rural Inclusion</div>
+      <div class="conclusion-card-count">01</div>
+      <div class="conclusion-card-label">Service approved in Q1 2026</div>
+      <div class="conclusion-card-body">Mascom's singular Temo submission was deliberate in its focus. The agricultural USSD platform represents a shift into underserved communities — leveraging existing infrastructure to deliver practical, life-improving information to Botswana's farmers.</div>
+    </div>
+    <div class="conclusion-card">
+      <div class="conclusion-card-op">BTC</div>
+      <div class="conclusion-card-name">Innovation<br>& Financial Access</div>
+      <div class="conclusion-card-count">04</div>
+      <div class="conclusion-card-label">Services approved in Q1 2026</div>
+      <div class="conclusion-card-body">BTC made the most ambitious product moves of the quarter — the Travel eSIM marks a genuine industry first for Botswana, while SMEGA's USSD-based wallet signals a serious commitment to the country's financial inclusion agenda.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo-row">
+        <div class="logo-dots">
+          <div class="dot dot1"></div>
+          <div class="dot dot2"></div>
+          <div class="dot dot3"></div>
+        </div>
+        <span class="footer-logo-text">BOCRA</span>
+      </div>
+      <p class="footer-tagline">Botswana Communications Regulatory Authority<br>Plot 50671 Independence Avenue, Private Bag 00495<br>Gaborone, Botswana</p>
+    </div>
+    <div class="footer-meta">
+      <div>
+        <div class="footer-col-title">Report Details</div>
+        <ul class="footer-col-list">
+          <li>Period: January – March 2026</li>
+          <li>Department: Business Development</li>
+          <li>Date: May 2026</li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Operators Covered</div>
+        <ul class="footer-col-list">
+          <li>Orange Botswana (Pty) Ltd</li>
+          <li>Mascom Wireless (Pty) Ltd</li>
+          <li>Botswana Telecommunications Corporation</li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Contact</div>
+        <ul class="footer-col-list">
+          <li>Tel: +267 3957755</li>
+          <li>Fax: +267 3957976</li>
+          <li>info@bocra.org.bw</li>
+          <li>www.bocra.org.bw</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-base">
+    <span class="footer-copy">© 2026 Botswana Communications Regulatory Authority. All rights reserved.</span>
+    <span class="footer-conf">INTERNAL DOCUMENT — NOT FOR PUBLIC DISTRIBUTION</span>
+  </div>
+</footer>
+
+<script>
+const counters=document.querySelectorAll('.stat-num[data-count]');
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const el=e.target,target=+el.dataset.count,dur=1400;
+      const start=performance.now();
+      const tick=now=>{
+        const p=Math.min((now-start)/dur,1);
+        el.textContent=Math.round(p*p*(3-2*p)*target);
+        if(p<1)requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+      obs.unobserve(el);
+    }
+  });
+},{threshold:0.5});
+counters.forEach(c=>obs.observe(c));
+</script>
+</body>
+</html>

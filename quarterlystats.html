@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BOCRA | Executive Intelligence Dashboard · FY2025/26</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+/* =========================================
+   DESIGN TOKENS & RESET
+   ========================================= */
+:root {
+  --bg-void:      #020912;
+  --bg-deep:      #04101f;
+  --bg-surface:   #071728;
+  --bg-elevated:  #0c2240;
+  --glass-bg:     rgba(7,23,40,0.72);
+  --glass-border: rgba(0,210,255,0.12);
+  --glass-glow:   rgba(0,210,255,0.06);
+  --cyan:         #00d4ff;
+  --cyan-dim:     rgba(0,212,255,0.15);
+  --cyan-glow:    rgba(0,212,255,0.4);
+  --blue:         #2979ff;
+  --blue-dim:     rgba(41,121,255,0.15);
+  --green:        #00e676;
+  --green-dim:    rgba(0,230,118,0.12);
+  --red:          #ff4560;
+  --red-dim:      rgba(255,69,96,0.12);
+  --orange:       #ff9f1c;
+  --orange-dim:   rgba(255,159,28,0.12);
+  --purple:       #b388ff;
+  --text-primary: #e8f4fd;
+  --text-secondary:#8faec8;
+  --text-muted:   #3d6280;
+  --font-head:    'Syne', sans-serif;
+  --font-body:    'Plus Jakarta Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --radius-sm:    6px;
+  --radius-md:    12px;
+  --radius-lg:    20px;
+  --radius-xl:    28px;
+  --shadow-glow:  0 0 40px rgba(0,212,255,0.08);
+  --shadow-card:  0 8px 40px rgba(0,0,0,0.5);
+  --transition:   cubic-bezier(0.4,0,0.2,1);
+}
+.light-mode {
+  --bg-void:      #f0f4f8;
+  --bg-deep:      #e8eef5;
+  --bg-surface:   #dce6f0;
+  --bg-elevated:  #cddae8;
+  --glass-bg:     rgba(220,230,240,0.82);
+  --glass-border: rgba(0,140,200,0.18);
+  --glass-glow:   rgba(0,140,200,0.06);
+  --cyan:         #0077c8;
+  --cyan-dim:     rgba(0,119,200,0.12);
+  --cyan-glow:    rgba(0,119,200,0.3);
+  --text-primary: #0a1f35;
+  --text-secondary:#2a4a65;
+  --text-muted:   #6a90a8;
+  --shadow-glow:  0 0 40px rgba(0,119,200,0.08);
+  --shadow-card:  0 8px 40px rgba(0,0,0,0.12);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  background:var(--bg-void);
+  color:var(--text-primary);
+  font-family:var(--font-body);
+  line-height:1.6;
+  overflow-x:hidden;
+  transition:background 0.4s var(--transition), color 0.4s var(--transition);
+}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg-deep)}
+::-webkit-scrollbar-thumb{background:var(--cyan);border-radius:2px}
+
+/* =========================================
+   ANIMATED BACKGROUND
+   ========================================= */
+.bg-canvas{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:0;overflow:hidden;
+}
+.bg-orb{
+  position:absolute;border-radius:50%;filter:blur(80px);
+  animation:orb-drift 20s ease-in-out infinite alternate;
+  opacity:0.25;
+}
+.orb1{width:600px;height:600px;background:radial-gradient(circle,#00d4ff22,transparent 70%);top:-200px;left:-150px;animation-delay:0s;}
+.orb2{width:500px;height:500px;background:radial-gradient(circle,#2979ff18,transparent 70%);bottom:-100px;right:-100px;animation-delay:-7s;}
+.orb3{width:350px;height:350px;background:radial-gradient(circle,#00e67615,transparent 70%);top:40%;left:45%;animation-delay:-14s;}
+@keyframes orb-drift{
+  0%{transform:translate(0,0) scale(1);}
+  100%{transform:translate(40px,60px) scale(1.1);}
+}
+/* grid lines */
+.bg-grid{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background-image:linear-gradient(rgba(0,212,255,0.025) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(0,212,255,0.025) 1px,transparent 1px);
+  background-size:60px 60px;pointer-events:none;z-index:0;
+}
+
+/* =========================================
+   NAVIGATION
+   ========================================= */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  backdrop-filter:blur(20px) saturate(180%);
+  background:rgba(2,9,18,0.8);
+  border-bottom:1px solid var(--glass-border);
+  height:64px;display:flex;align-items:center;
+  padding:0 clamp(16px,4vw,48px);
+  transition:all 0.3s var(--transition);
+}
+.nav-brand{
+  display:flex;align-items:center;gap:12px;flex:1;
+  font-family:var(--font-head);font-weight:800;font-size:1.05rem;
+  color:var(--text-primary);text-decoration:none;letter-spacing:0.02em;
+}
+.nav-logo{
+  width:36px;height:36px;
+  background:linear-gradient(135deg,var(--cyan),var(--blue));
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-size:0.75rem;font-weight:700;color:#fff;
+  box-shadow:0 0 16px var(--cyan-glow);
+}
+.nav-links{
+  display:flex;gap:4px;list-style:none;
+  align-items:center;
+}
+.nav-links a{
+  color:var(--text-secondary);text-decoration:none;font-size:0.78rem;
+  font-weight:500;padding:6px 12px;border-radius:var(--radius-sm);
+  transition:all 0.2s;letter-spacing:0.03em;
+}
+.nav-links a:hover{color:var(--cyan);background:var(--cyan-dim);}
+.nav-actions{display:flex;gap:8px;align-items:center;margin-left:auto;}
+.btn-ghost{
+  background:transparent;border:1px solid var(--glass-border);
+  color:var(--text-secondary);padding:6px 14px;border-radius:var(--radius-sm);
+  cursor:pointer;font-size:0.78rem;font-family:var(--font-body);
+  transition:all 0.2s;
+}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);}
+.theme-toggle{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--glass-bg);border:1px solid var(--glass-border);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:1rem;transition:all 0.3s;
+}
+.theme-toggle:hover{border-color:var(--cyan);box-shadow:0 0 12px var(--cyan-glow);}
+@media(max-width:768px){.nav-links{display:none}}
+
+/* =========================================
+   HERO SECTION
+   ========================================= */
+.hero{
+  position:relative;z-index:1;
+  min-height:100vh;display:flex;flex-direction:column;
+  justify-content:center;align-items:flex-start;
+  padding:120px clamp(16px,6vw,80px) 80px;
+  overflow:hidden;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--cyan-dim);border:1px solid rgba(0,212,255,0.25);
+  border-radius:100px;padding:6px 16px;
+  font-size:0.75rem;font-weight:600;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--cyan);
+  margin-bottom:28px;
+  animation:fade-in-up 0.8s var(--transition) both;
+}
+.hero-eyebrow::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--cyan);animation:pulse-dot 2s infinite;
+}
+@keyframes pulse-dot{
+  0%,100%{box-shadow:0 0 0 0 rgba(0,212,255,0.6);}
+  50%{box-shadow:0 0 0 6px rgba(0,212,255,0);}
+}
+.hero-title{
+  font-family:var(--font-head);font-size:clamp(2.5rem,7vw,5.5rem);
+  font-weight:800;line-height:1.05;letter-spacing:-0.02em;
+  margin-bottom:20px;max-width:900px;
+  animation:fade-in-up 0.8s 0.1s var(--transition) both;
+}
+.hero-title .accent{
+  background:linear-gradient(135deg,var(--cyan),var(--blue));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-subtitle{
+  font-size:1.05rem;color:var(--text-secondary);max-width:600px;
+  margin-bottom:48px;font-weight:400;
+  animation:fade-in-up 0.8s 0.2s var(--transition) both;
+}
+.hero-kpis{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:16px;width:100%;max-width:1100px;
+  animation:fade-in-up 0.8s 0.3s var(--transition) both;
+}
+.kpi-card{
+  background:var(--glass-bg);
+  backdrop-filter:blur(20px);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius-lg);
+  padding:24px;
+  position:relative;overflow:hidden;
+  transition:all 0.3s var(--transition);
+}
+.kpi-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+  opacity:0;transition:opacity 0.3s;
+}
+.kpi-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-glow);border-color:rgba(0,212,255,0.25);}
+.kpi-card:hover::before{opacity:1;}
+.kpi-label{font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+.kpi-value{font-family:var(--font-head);font-size:1.9rem;font-weight:700;color:var(--text-primary);line-height:1.1;}
+.kpi-change{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:0.75rem;font-weight:600;margin-top:8px;
+  padding:3px 8px;border-radius:100px;
+}
+.kpi-change.up{background:var(--green-dim);color:var(--green);}
+.kpi-change.down{background:var(--red-dim);color:var(--red);}
+.kpi-change.flat{background:var(--orange-dim);color:var(--orange);}
+.kpi-icon{
+  position:absolute;top:20px;right:20px;
+  width:36px;height:36px;border-radius:var(--radius-sm);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;
+}
+@keyframes fade-in-up{
+  from{opacity:0;transform:translateY(24px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* =========================================
+   SECTION COMMONS
+   ========================================= */
+.section{
+  position:relative;z-index:1;
+  padding:80px clamp(16px,6vw,80px);
+}
+.section-header{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  margin-bottom:40px;flex-wrap:wrap;gap:16px;
+}
+.section-tag{
+  font-size:0.68rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--cyan);margin-bottom:8px;
+}
+.section-title{
+  font-family:var(--font-head);font-size:clamp(1.4rem,3vw,2rem);
+  font-weight:700;letter-spacing:-0.01em;
+}
+.section-meta{font-size:0.82rem;color:var(--text-muted);}
+.divider{
+  height:1px;background:linear-gradient(90deg,transparent,var(--glass-border) 20%,var(--glass-border) 80%,transparent);
+  margin:0 0 80px;
+}
+
+/* =========================================
+   GLASS CARDS & PANELS
+   ========================================= */
+.card{
+  background:var(--glass-bg);
+  backdrop-filter:blur(20px);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius-lg);
+  padding:28px;
+  transition:all 0.3s var(--transition);
+  position:relative;overflow:hidden;
+}
+.card:hover{border-color:rgba(0,212,255,0.2);box-shadow:var(--shadow-card);}
+.card-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:24px;flex-wrap:wrap;gap:8px;
+}
+.card-title{font-family:var(--font-head);font-size:0.95rem;font-weight:600;}
+.card-badge{
+  font-size:0.68rem;font-weight:600;padding:4px 10px;border-radius:100px;
+  background:var(--cyan-dim);color:var(--cyan);letter-spacing:0.06em;text-transform:uppercase;
+}
+.chart-container{width:100%;height:280px;}
+.chart-container-lg{width:100%;height:340px;}
+.chart-container-xl{width:100%;height:420px;}
+
+/* =========================================
+   GRID LAYOUTS
+   ========================================= */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;}
+.col-span-2{grid-column:span 2;}
+.col-span-3{grid-column:span 3;}
+@media(max-width:1024px){.grid-3,.grid-4{grid-template-columns:1fr 1fr;}}
+@media(max-width:640px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}.col-span-2,.col-span-3{grid-column:span 1;}}
+
+/* =========================================
+   INSIGHT CARDS
+   ========================================= */
+.insight-card{
+  background:var(--glass-bg);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius-md);
+  padding:20px;
+  display:flex;flex-direction:column;gap:10px;
+  transition:all 0.3s;position:relative;overflow:hidden;
+}
+.insight-card::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  border-radius:var(--radius-md) var(--radius-md) 0 0;
+}
+.insight-card.positive::after{background:linear-gradient(90deg,var(--green),transparent);}
+.insight-card.negative::after{background:linear-gradient(90deg,var(--red),transparent);}
+.insight-card.neutral::after{background:linear-gradient(90deg,var(--cyan),transparent);}
+.insight-card.warning::after{background:linear-gradient(90deg,var(--orange),transparent);}
+.insight-icon{font-size:1.3rem;line-height:1;}
+.insight-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);font-weight:600;}
+.insight-headline{font-size:0.9rem;font-weight:600;color:var(--text-primary);line-height:1.4;}
+.insight-detail{font-size:0.78rem;color:var(--text-secondary);line-height:1.5;}
+
+/* =========================================
+   STAT ROW / COMPARISON TABLE
+   ========================================= */
+.stat-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 0;border-bottom:1px solid rgba(0,212,255,0.06);
+}
+.stat-row:last-child{border-bottom:none;}
+.stat-row-label{font-size:0.82rem;color:var(--text-secondary);font-weight:500;}
+.stat-row-values{display:flex;gap:20px;align-items:center;}
+.stat-val{
+  font-family:var(--font-mono);font-size:0.82rem;font-weight:500;
+  padding:4px 10px;border-radius:var(--radius-sm);
+  background:var(--glass-bg);
+}
+.stat-val.q3{color:var(--blue);}
+.stat-val.q4{color:var(--cyan);}
+.delta-pill{
+  font-size:0.7rem;font-weight:600;padding:3px 8px;border-radius:100px;
+  display:inline-flex;align-items:center;gap:3px;
+}
+.delta-pill.up{background:var(--green-dim);color:var(--green);}
+.delta-pill.down{background:var(--red-dim);color:var(--red);}
+
+/* =========================================
+   PROGRESS BARS
+   ========================================= */
+.progress-item{margin-bottom:16px;}
+.progress-head{display:flex;justify-content:space-between;margin-bottom:6px;}
+.progress-label{font-size:0.8rem;color:var(--text-secondary);font-weight:500;}
+.progress-value{font-size:0.8rem;font-family:var(--font-mono);color:var(--text-primary);}
+.progress-bar{height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:3px;transition:width 1.5s cubic-bezier(0.4,0,0.2,1) 0.3s;}
+.progress-fill.cyan{background:linear-gradient(90deg,var(--cyan),var(--blue));}
+.progress-fill.green{background:linear-gradient(90deg,var(--green),#00c853);}
+.progress-fill.orange{background:linear-gradient(90deg,var(--orange),#ff6d00);}
+.progress-fill.purple{background:linear-gradient(90deg,var(--purple),#7c4dff);}
+.progress-fill.red{background:linear-gradient(90deg,var(--red),#c62828);}
+
+/* =========================================
+   BROADCASTER TABLE
+   ========================================= */
+.data-table{width:100%;border-collapse:collapse;font-size:0.82rem;}
+.data-table th{
+  font-size:0.68rem;text-transform:uppercase;letter-spacing:0.1em;
+  color:var(--text-muted);padding:10px 14px;text-align:left;
+  border-bottom:1px solid var(--glass-border);font-weight:600;
+}
+.data-table td{padding:12px 14px;border-bottom:1px solid rgba(0,212,255,0.04);}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:var(--glass-glow);}
+.tbl-name{font-weight:600;color:var(--text-primary);}
+.tbl-num{font-family:var(--font-mono);color:var(--text-secondary);}
+
+/* =========================================
+   QUARTER TOGGLE
+   ========================================= */
+.q-toggle{
+  display:inline-flex;background:var(--bg-elevated);
+  border:1px solid var(--glass-border);border-radius:100px;padding:3px;gap:2px;
+}
+.q-btn{
+  padding:6px 16px;border-radius:100px;font-size:0.75rem;font-weight:600;
+  cursor:pointer;border:none;font-family:var(--font-body);
+  transition:all 0.2s;letter-spacing:0.04em;color:var(--text-muted);
+  background:transparent;
+}
+.q-btn.active{background:var(--cyan);color:#000;box-shadow:0 0 16px rgba(0,212,255,0.4);}
+
+/* =========================================
+   SCORE BADGES
+   ========================================= */
+.score-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:44px;height:44px;border-radius:50%;
+  font-family:var(--font-mono);font-size:0.75rem;font-weight:700;
+}
+.score-badge.high{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,230,118,0.3);}
+.score-badge.med{background:var(--orange-dim);color:var(--orange);border:1px solid rgba(255,159,28,0.3);}
+.score-badge.low{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,69,96,0.3);}
+
+/* =========================================
+   STRATEGY CARDS
+   ========================================= */
+.strategy-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;}
+.strat-card{
+  background:var(--glass-bg);border:1px solid var(--glass-border);
+  border-radius:var(--radius-md);padding:20px;
+  display:flex;flex-direction:column;gap:12px;
+  transition:transform 0.3s var(--transition);
+}
+.strat-card:hover{transform:translateY(-3px);}
+.strat-num{
+  font-family:var(--font-head);font-size:2rem;font-weight:800;
+  background:linear-gradient(135deg,var(--cyan),var(--blue));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1;
+}
+.strat-title{font-size:0.9rem;font-weight:700;color:var(--text-primary);}
+.strat-body{font-size:0.78rem;color:var(--text-secondary);line-height:1.6;}
+
+/* =========================================
+   FOOTER
+   ========================================= */
+footer{
+  position:relative;z-index:1;
+  padding:40px clamp(16px,6vw,80px);
+  border-top:1px solid var(--glass-border);
+  display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;
+}
+.footer-brand{
+  font-family:var(--font-head);font-size:0.9rem;font-weight:700;
+  background:linear-gradient(135deg,var(--cyan),var(--blue));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.footer-meta{font-size:0.72rem;color:var(--text-muted);}
+.quarter-legend{
+  display:flex;gap:16px;align-items:center;flex-wrap:wrap;
+}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-secondary);}
+.legend-dot{width:8px;height:8px;border-radius:50%;}
+
+/* =========================================
+   SCROLL ANIMATION
+   ========================================= */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.7s var(--transition),transform 0.7s var(--transition);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-delay-1{transition-delay:0.1s;}
+.reveal-delay-2{transition-delay:0.2s;}
+.reveal-delay-3{transition-delay:0.3s;}
+
+/* =========================================
+   LOADING SCREEN
+   ========================================= */
+#loading{
+  position:fixed;inset:0;background:var(--bg-void);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:9999;transition:opacity 0.6s var(--transition);
+}
+.loader-logo{
+  font-family:var(--font-head);font-size:1.2rem;font-weight:800;
+  background:linear-gradient(135deg,var(--cyan),var(--blue));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:24px;letter-spacing:0.1em;
+}
+.loader-bar{
+  width:200px;height:2px;background:rgba(0,212,255,0.1);border-radius:1px;overflow:hidden;
+}
+.loader-fill{
+  height:100%;background:linear-gradient(90deg,var(--cyan),var(--blue));
+  border-radius:1px;animation:load-progress 1.8s ease-in-out forwards;
+}
+@keyframes load-progress{from{width:0%}to{width:100%}}
+.loader-text{font-size:0.72rem;color:var(--text-muted);margin-top:12px;letter-spacing:0.1em;}
+
+/* Tooltip utility */
+[data-tooltip]{position:relative;}
+[data-tooltip]::after{
+  content:attr(data-tooltip);
+  position:absolute;bottom:110%;left:50%;transform:translateX(-50%);
+  background:var(--bg-elevated);border:1px solid var(--glass-border);
+  color:var(--text-primary);font-size:0.72rem;padding:6px 10px;
+  border-radius:var(--radius-sm);white-space:nowrap;pointer-events:none;
+  opacity:0;transition:opacity 0.2s;z-index:100;
+}
+[data-tooltip]:hover::after{opacity:1;}
+</style>
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div id="loading">
+  <div class="loader-logo">BOCRA statistics Q3 vs Q4 2025/26</div>
+  <div class="loader-bar"><div class="loader-fill"></div></div>
+  <div class="loader-text">Initialising Executive Dashboard · FY2025/26</div>
+</div>
+
+<!-- BACKGROUND EFFECTS -->
+<div class="bg-canvas">
+  <div class="bg-orb orb1"></div>
+  <div class="bg-orb orb2"></div>
+  <div class="bg-orb orb3"></div>
+</div>
+<div class="bg-grid"></div>
+
+<!-- NAVIGATION -->
+<nav>
+  <a class="nav-brand" href="#">
+    <div class="nav-ogo"><IMG src="https://dqos.bocra.org.bw/storage/BOCRA.png" alt="BOCRA Logo" height="40"></div>
+    <span style="color:var(--text-muted);font-weight:400;font-size:0.82rem;margin-left:4px;">QUARTERLY STATISTICS/PERFORMANCE</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#telecom">Telecom</a></li>
+    <li><a href="#broadcasting">Broadcasting</a></li>
+    <li><a href="#postal">Postal</a></li>
+    <li><a href="#outlook">Outlook</a></li>
+  </ul>
+  <div class="nav-actions">
+    <div class="q-toggle" id="globalQToggle">
+      <button class="q-btn" onclick="setQuarter('q3')">Q3 2025</button>
+      <button class="q-btn active" onclick="setQuarter('q4')">Q4 2026</button>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">☀️</button>
+  </div>
+</nav>
+
+<!-- ==========================================
+     HERO SECTION
+     ========================================== -->
+<section class="hero">
+  <div class="hero-eyebrow">FY2025/26 · Q3 & Q4 Performance Review</div>
+  <h1 class="hero-title">Botswana's<br/><span class="accent">Quarterly Performance</span></h1>
+  <p class="hero-subtitle">Comprehensive analysis of telecommunications, broadcasting, and postal sector performance. Q3 (Oct–Dec 2025) vs Q4 (Jan–Mar 2026).</p>
+
+  <div class="hero-kpis" id="heroKpis">
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background:var(--cyan-dim);">☏</div>
+      <div class="kpi-label">Total Mobile Subscribers</div>
+      <div class="kpi-value" id="kpi-mobile">4,676,518</div>
+      <span class="kpi-change up">▲ +3.0% QoQ</span>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background:var(--blue-dim);">ᯤ</div>
+      <div class="kpi-label">Mobile Broadband Subs</div>
+      <div class="kpi-value" id="kpi-mbb">3,274,912</div>
+      <span class="kpi-change flat">▲ +0.1% QoQ</span>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background:var(--green-dim);">⛃</div>
+      <div class="kpi-label">Mobile Money Subs</div>
+      <div class="kpi-value" id="kpi-mm">1,623,422</div>
+      <span class="kpi-change up">▲ +7.5% QoQ</span>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background:var(--orange-dim);">🗺</div>
+      <div class="kpi-label">Fixed Broadband Subs</div>
+      <div class="kpi-value" id="kpi-fb">254,486</div>
+      <span class="kpi-change up">▲ +3.7% QoQ</span>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background:var(--red-dim);">✉︎</div>
+      <div class="kpi-label">Total Mail Volumes</div>
+      <div class="kpi-value" id="kpi-mail">855,986</div>
+      <span class="kpi-change down">▼ -7.3% QoQ</span>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background:rgba(179,136,255,0.12);">$</div>
+      <div class="kpi-label">Postal Revenue (BWP)</div>
+      <div class="kpi-value" id="kpi-rev">24.75M</div>
+      <span class="kpi-change up">▲ +24.2% QoQ</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider" style="margin:0 clamp(16px,6vw,80px)"></div>
+
+<!-- ==========================================
+     EXECUTIVE SUMMARY
+     ========================================== -->
+<section class="section reveal" id="exec-summary">
+  <div class="section-header">
+    <div>
+      <div class="section-tag">Executive Intelligence</div>
+      <h2 class="section-title">Strategic Insights & Key Observations</h2>
+    </div>
+    <div class="section-meta">Q3 → Q4 FY2025/26</div>
+  </div>
+
+  <div class="grid-auto">
+    <div class="insight-card positive reveal reveal-delay-1">
+      <div class="insight-icon">🗠</div>
+      <div class="insight-label">Growth Leader</div>
+      <div class="insight-headline">Mascom Mobile Money surges +24.7% — standout performer of the quarter</div>
+      <div class="insight-detail">Mascom's mobile money subscriptions grew from 367,214 to 457,738, the highest growth rate across all market segments. Signals aggressive platform expansion and customer acquisition success.</div>
+    </div>
+    <div class="insight-card positive reveal reveal-delay-2">
+      <div class="insight-icon">🛰</div>
+      <div class="insight-label">Emerging Disruptor</div>
+      <div class="insight-headline">Starlink fixed broadband accelerates +15.0%, reshaping rural connectivity</div>
+      <div class="insight-detail">Starlink grew from 17,352 to 19,958 subscribers, the fastest growth in fixed broadband. LEO satellite is demonstrating strong demand in underserved areas, outpacing all terrestrial operators.</div>
+    </div>
+    <div class="insight-card positive reveal reveal-delay-3">
+      <div class="insight-icon">📾</div>
+      <div class="insight-label">Broadcasting</div>
+      <div class="insight-headline">Gabz FM SAR recovers to 96% after equipment replacement drives reliability</div>
+      <div class="insight-detail">Gabz FM reversed its Q3 decline (93.04% → 96.00%) through strategic transmitter and antenna replacements, demonstrating effective infrastructure investment responding to regulatory oversight.</div>
+    </div>
+    <div class="insight-card negative reveal reveal-delay-1">
+      <div class="insight-icon">⌯⌲</div>
+      <div class="insight-label">Structural Decline</div>
+      <div class="insight-headline">Ordinary mail falls -12.8% QoQ; digital substitution accelerating</div>
+      <div class="insight-detail">Ordinary mail declined from 640,960 to 559,126 items — continuing a sustained structural downtrend driven by digitalisation. Post-festive normalisation amplified the effect this quarter.</div>
+    </div>
+    <div class="insight-card warning reveal reveal-delay-2">
+      <div class="insight-icon">⎚</div>
+      <div class="insight-label">Market Shift</div>
+      <div class="insight-headline">Duma FM loses 3pp market share to Gabz FM amid economic advertising pressure</div>
+      <div class="insight-detail">Duma FM declined from 40% to 37% market share. Gabz FM gained 5pp through data-driven audience research attracting new advertisers, while Yarona FM refreshes programming to combat content fatigue.</div>
+    </div>
+    <div class="insight-card positive reveal reveal-delay-3">
+      <div class="insight-icon">𖠩</div>
+      <div class="insight-label">Revenue Rebound</div>
+      <div class="insight-headline">Postal revenue rebounds +24.2% QoQ to BWP 24.75M from a Q3 low</div>
+      <div class="insight-detail">Commercial postal operator revenue recovered strongly from BWP 19.75M to BWP 24.75M in Q4, led by Sprint Couriers (BWP 8.77M) and FedEx Express (BWP 7.37M), reversing Q3's 24.4% decline.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider" style="margin:0 clamp(16px,6vw,80px)"></div>
+
+<!-- ==========================================
+     TELECOMMUNICATIONS SECTION
+     ========================================== -->
+<section class="section" id="telecom">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-tag">Sector Performance</div>
+      <h2 class="section-title">Telecommunications & ICTs</h2>
+    </div>
+  </div>
+
+  <!-- Mobile Telephony Growth -->
+  <div class="grid-2 reveal">
+    <div class="card col-span-2" style="padding-bottom:32px;">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Mobile Telephony Subscriptions — All Operators</div>
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">Sep 2025 → Mar 2026 growth trajectory</div>
+        </div>
+        <span class="card-badge">+3.0% QoQ</span>
+      </div>
+      <div class="chart-container-lg" id="chart-mobile-subs"></div>
+      <div style="display:flex;gap:24px;margin-top:16px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:8px;font-size:0.78rem;color:var(--text-secondary);">
+          <span style="width:12px;height:3px;background:#FF6B35;border-radius:2px;display:inline-block;"></span>Orange (44% share)
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:0.78rem;color:var(--text-secondary);">
+          <span style="width:12px;height:3px;background:#00D4FF;border-radius:2px;display:inline-block;"></span>Mascom (41% share)
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:0.78rem;color:var(--text-secondary);">
+          <span style="width:12px;height:3px;background:#2979FF;border-radius:2px;display:inline-block;"></span>BTC Mobile (16% share, fastest growth)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-3 reveal" style="margin-top:20px;">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Mobile Market Share Q4</div>
+        <span class="card-badge">Mar 2026</span>
+      </div>
+      <div class="chart-container" id="chart-mobile-share"></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Mobile Broadband Growth</div>
+        <span class="card-badge">3.27M Subs</span>
+      </div>
+      <div class="chart-container" id="chart-mbb"></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Operator Comparison</div>
+        <span class="card-badge">Q3 vs Q4</span>
+      </div>
+      <div style="padding-top:8px;">
+        <div class="stat-row">
+          <div class="stat-row-label">Orange Mobile</div>
+          <div class="stat-row-values">
+            <span class="stat-val q3">1,999,593</span>
+            <span class="stat-val q4">2,001,759</span>
+            <span class="delta-pill up">▲0.1%</span>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-row-label">Mascom Mobile</div>
+          <div class="stat-row-values">
+            <span class="stat-val q3">1,850,564</span>
+            <span class="stat-val q4">1,917,230</span>
+            <span class="delta-pill up">▲3.6%</span>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-row-label">BTC Mobile</div>
+          <div class="stat-row-values">
+            <span class="stat-val q3">690,222</span>
+            <span class="stat-val q4">757,529</span>
+            <span class="delta-pill up">▲9.8%</span>
+          </div>
+        </div>
+        <div class="stat-row" style="margin-top:8px;padding-top:16px;border-top:1px solid var(--glass-border);">
+          <div class="stat-row-label" style="font-weight:700;color:var(--text-primary);">Total</div>
+          <div class="stat-row-values">
+            <span class="stat-val q3">4,540,379</span>
+            <span class="stat-val q4">4,676,518</span>
+            <span class="delta-pill up">▲3.0%</span>
+          </div>
+        </div>
+        <div style="margin-top:16px;padding:12px;background:var(--green-dim);border-radius:var(--radius-sm);border:1px solid rgba(0,230,118,0.2);">
+          <div style="font-size:0.72rem;color:var(--green);font-weight:600;">BTC Growth Driver</div>
+          <div style="font-size:0.78rem;color:var(--text-secondary);margin-top:4px;">Free SIM distribution, KYC drive & SMEGA registration contributed to BTC's +9.8% surge — the highest among all operators.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fixed Services -->
+  <div class="grid-2 reveal" style="margin-top:20px;">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Fixed Broadband — Operator Breakdown</div>
+        <span class="card-badge">+3.7% QoQ</span>
+      </div>
+      <div class="chart-container-lg" id="chart-fixed-bb"></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Mobile Money Ecosystem Growth</div>
+        <span class="card-badge">+7.5% QoQ</span>
+      </div>
+      <div class="chart-container-lg" id="chart-mobile-money"></div>
+    </div>
+  </div>
+
+  <!-- Fixed Telephony Decline -->
+  <div class="grid-3 reveal" style="margin-top:20px;">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Fixed Telephony — Structural Decline</div>
+        <span class="card-badge" style="background:var(--red-dim);color:var(--red);">Declining</span>
+      </div>
+      <div class="chart-container" id="chart-fixed-tel"></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Starlink Satellite Broadband</div>
+        <span class="card-badge" style="background:var(--green-dim);color:var(--green);">+15% Q4</span>
+      </div>
+      <div style="padding-top:8px;">
+        <div style="font-size:2.5rem;font-family:var(--font-head);font-weight:800;background:linear-gradient(135deg,var(--cyan),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;">19,958</div>
+        <div style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:20px;">Subscribers as of Mar 2026</div>
+        <div class="progress-item">
+          <div class="progress-head"><span class="progress-label">Sep 2025 baseline</span><span class="progress-value">11,444</span></div>
+          <div class="progress-bar"><div class="progress-fill cyan" style="width:57%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-head"><span class="progress-label">Dec 2025 (Q3)</span><span class="progress-value">17,352</span></div>
+          <div class="progress-bar"><div class="progress-fill cyan" style="width:87%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-head"><span class="progress-label">Mar 2026 (Q4)</span><span class="progress-value">19,958</span></div>
+          <div class="progress-bar"><div class="progress-fill green" style="width:100%"></div></div>
+        </div>
+        <div style="margin-top:12px;padding:10px;background:var(--cyan-dim);border-radius:var(--radius-sm);border:1px solid rgba(0,212,255,0.15);font-size:0.75rem;color:var(--text-secondary);">
+          📡 Cumulative growth of +74.4% over two quarters. Fastest-growing segment in fixed broadband.
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Mobile Money Leader Board</div>
+        <span class="card-badge">Q4 Rankings</span>
+      </div>
+      <div style="margin-top:4px;">
+        <div class="progress-item">
+          <div class="progress-head"><span class="progress-label">Orange (63%)</span><span class="progress-value" style="color:var(--text-primary)">1,023,822</span></div>
+          <div class="progress-bar"><div class="progress-fill cyan" style="width:63%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-head"><span class="progress-label">Mascom (28%) <span style="font-size:0.65rem;background:var(--green-dim);color:var(--green);padding:2px 6px;border-radius:4px;margin-left:4px;">+24.7%</span></span><span class="progress-value" style="color:var(--text-primary)">457,738</span></div>
+          <div class="progress-bar"><div class="progress-fill green" style="width:28%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-head"><span class="progress-label">BTC Mobile (8%)</span><span class="progress-value" style="color:var(--text-primary)">122,260</span></div>
+          <div class="progress-bar"><div class="progress-fill orange" style="width:8%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-head"><span class="progress-label">BotswanaPost (1%)</span><span class="progress-value" style="color:var(--text-primary)">19,602</span></div>
+          <div class="progress-bar"><div class="progress-fill purple" style="width:1%"></div></div>
+        </div>
+        <div style="margin-top:16px;padding:12px;background:rgba(0,0,0,0.2);border-radius:var(--radius-sm);border:1px solid var(--glass-border);">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+            <span style="font-size:0.75rem;color:var(--text-muted);">Q3 Total</span>
+            <span style="font-size:0.75rem;font-family:var(--font-mono);">1,509,945</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;">
+            <span style="font-size:0.75rem;color:var(--text-muted);">Q4 Total</span>
+            <span style="font-size:0.75rem;font-family:var(--font-mono);color:var(--green);">1,623,422</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider" style="margin:0 clamp(16px,6vw,80px)"></div>
+
+<!-- ==========================================
+     BROADCASTING SECTION
+     ========================================== -->
+<section class="section" id="broadcasting">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-tag">Content & Compliance</div>
+      <h2 class="section-title">Broadcasting Regulation</h2>
+    </div>
+    <div class="section-meta">Commercial Radio & TV · Botswana</div>
+  </div>
+
+  <!-- SAR + Local Content -->
+  <div class="grid-2 reveal">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Service Availability Rate (SAR) — Radio</div>
+        <span class="card-badge">Min. 98% Threshold</span>
+      </div>
+      <div class="chart-container-lg" id="chart-sar-radio"></div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;">
+        <div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-muted);">
+          <span style="width:10px;height:10px;border-radius:50%;background:#00D4FF;display:inline-block;"></span>Duma FM
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-muted);">
+          <span style="width:10px;height:10px;border-radius:50%;background:#2979FF;display:inline-block;"></span>Gabz FM
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-muted);">
+          <span style="width:10px;height:10px;border-radius:50%;background:#FF6B35;display:inline-block;"></span>Yarona FM
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-muted);">
+          <span style="width:10px;height:10px;border-radius:50%;background:#00E676;display:inline-block;"></span>YTV
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Local Content Quota Compliance</div>
+        <span class="card-badge">Min. 45% Radio / 25% TV</span>
+      </div>
+      <div class="chart-container-lg" id="chart-local-content"></div>
+    </div>
+  </div>
+
+  <!-- Market Share -->
+  <div class="grid-3 reveal" style="margin-top:20px;">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">FM Market Share — Q3</div>
+        <span class="card-badge">Oct–Dec 2025</span>
+      </div>
+      <div class="chart-container" id="chart-ms-q3"></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">FM Market Share — Q4</div>
+        <span class="card-badge">Jan–Mar 2026</span>
+      </div>
+      <div class="chart-container" id="chart-ms-q4"></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">SAR Compliance Snapshot</div>
+      </div>
+      <table class="data-table" style="margin-top:8px;">
+        <thead>
+          <tr>
+            <th>Station</th>
+            <th>Q3</th>
+            <th>Q4</th>
+            <th>Δ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="tbl-name">Duma FM</td>
+            <td class="tbl-num">99.00%</td>
+            <td class="tbl-num">99.00%</td>
+            <td><span class="delta-pill flat" style="background:var(--orange-dim);color:var(--orange);">—</span></td>
+          </tr>
+          <tr>
+            <td class="tbl-name">Gabz FM</td>
+            <td class="tbl-num">93.04%</td>
+            <td class="tbl-num">96.00%</td>
+            <td><span class="delta-pill up">▲ +2.96</span></td>
+          </tr>
+          <tr>
+            <td class="tbl-name">Yarona FM</td>
+            <td class="tbl-num">95.31%</td>
+            <td class="tbl-num">94.20%</td>
+            <td><span class="delta-pill down">▼ -1.11</span></td>
+          </tr>
+          <tr>
+            <td class="tbl-name">YTV</td>
+            <td class="tbl-num">98.00%</td>
+            <td class="tbl-num">98.90%</td>
+            <td><span class="delta-pill up">▲ +0.90</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:20px;">
+        <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:12px;font-weight:600;">FM Market Share Movement</div>
+        <div class="stat-row">
+          <span class="stat-row-label">Duma FM</span>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span style="font-size:0.78rem;color:var(--text-muted);">40%</span>
+            <span style="font-size:0.75rem;color:var(--text-muted);">→</span>
+            <span style="font-size:0.78rem;color:var(--cyan);">37%</span>
+            <span class="delta-pill down">▼ 3pp</span>
+          </div>
+        </div>
+        <div class="stat-row">
+          <span class="stat-row-label">Gabz FM</span>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span style="font-size:0.78rem;color:var(--text-muted);">26%</span>
+            <span style="font-size:0.75rem;color:var(--text-muted);">→</span>
+            <span style="font-size:0.78rem;color:var(--cyan);">31%</span>
+            <span class="delta-pill up">▲ 5pp</span>
+          </div>
+        </div>
+        <div class="stat-row">
+          <span class="stat-row-label">Yarona FM</span>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span style="font-size:0.78rem;color:var(--text-muted);">34%</span>
+            <span style="font-size:0.75rem;color:var(--text-muted);">→</span>
+            <span style="font-size:0.78rem;color:var(--cyan);">32%</span>
+            <span class="delta-pill down">▼ 2pp</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Broadcasting monitoring coverage -->
+  <div class="grid-2 reveal" style="margin-top:20px;">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">FM Compliance Monitoring Coverage</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;padding-top:8px;">
+        <div style="padding:16px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-md);">
+          <div style="font-size:2rem;font-weight:800;font-family:var(--font-head);color:var(--cyan);">37</div>
+          <div style="font-size:0.78rem;color:var(--text-secondary);margin-top:4px;">Villages monitored</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);">Kweneng District — Q3</div>
+        </div>
+        <div style="padding:16px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-md);">
+          <div style="font-size:2rem;font-weight:800;font-family:var(--font-head);color:var(--blue);">35</div>
+          <div style="font-size:0.78rem;color:var(--text-secondary);margin-top:4px;">Villages monitored</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);">Mahalapye District — Q4</div>
+        </div>
+      </div>
+      <div style="margin-top:16px;">
+        <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:10px;font-weight:600;">Q3 Kweneng — Signal Coverage</div>
+        <div class="progress-item">
+          <div class="progress-head"><span class="progress-label">RB1 (national)</span><span class="progress-value">35 / 37</span></div>
+          <div class="progress-bar"><div class="progress-fill cyan" style="width:94.6%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-head"><span class="progress-label">Duma FM</span><span class="progress-value">22 / 37</span></div>
+          <div class="progress-bar"><div class="progress-fill green" style="width:59.5%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-head"><span class="progress-label">Gabz FM</span><span class="progress-value">20 / 37</span></div>
+          <div class="progress-bar"><div class="progress-fill orange" style="width:54%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-head"><span class="progress-label">Yarona FM</span><span class="progress-value">13 / 37</span></div>
+          <div class="progress-bar"><div class="progress-fill red" style="width:35%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-head"><span class="progress-label">RB2</span><span class="progress-value">26 / 37</span></div>
+          <div class="progress-bar"><div class="progress-fill purple" style="width:70.3%"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Local Content Trends — All Stations</div>
+        <span class="card-badge">3-Quarter View</span>
+      </div>
+      <div class="chart-container-lg" id="chart-lc-trend"></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider" style="margin:0 clamp(16px,6vw,80px)"></div>
+
+<!-- ==========================================
+     POSTAL SECTOR
+     ========================================== -->
+<section class="section" id="postal">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-tag">Logistics & Courier</div>
+      <h2 class="section-title">Postal Sector Performance</h2>
+    </div>
+    <div class="section-meta">Mail Volumes & Revenue Analysis</div>
+  </div>
+
+  <div class="grid-2 reveal">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Mail Volume Breakdown — 3 Quarters</div>
+        <span class="card-badge" style="background:var(--red-dim);color:var(--red);">Declining Trend</span>
+      </div>
+      <div class="chart-container-lg" id="chart-mail-volumes"></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Commercial Postal Revenue (BWP)</div>
+        <span class="card-badge">Q4 Recovery +24.2%</span>
+      </div>
+      <div class="chart-container-lg" id="chart-postal-rev"></div>
+    </div>
+  </div>
+
+  <div class="grid-3 reveal" style="margin-top:20px;">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Market Share by Volume — Q4</div>
+      </div>
+      <div class="chart-container" id="chart-postal-share"></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Mail Volume Comparison</div>
+      </div>
+      <table class="data-table" style="margin-top:8px;">
+        <thead>
+          <tr>
+            <th>Mail Type</th>
+            <th>Q3</th>
+            <th>Q4</th>
+            <th>Δ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="tbl-name">Ordinary Mail</td>
+            <td class="tbl-num">640,960</td>
+            <td class="tbl-num">559,126</td>
+            <td><span class="delta-pill down">▼ -12.8%</span></td>
+          </tr>
+          <tr>
+            <td class="tbl-name">Dom. Express</td>
+            <td class="tbl-num">257,571</td>
+            <td class="tbl-num">246,408</td>
+            <td><span class="delta-pill down">▼ -4.3%</span></td>
+          </tr>
+          <tr>
+            <td class="tbl-name">Int'l Express</td>
+            <td class="tbl-num">25,231</td>
+            <td class="tbl-num">27,247</td>
+            <td><span class="delta-pill up">▲ +8.0%</span></td>
+          </tr>
+          <tr>
+            <td class="tbl-name" style="font-weight:700;color:var(--text-primary);">Total</td>
+            <td class="tbl-num">923,762</td>
+            <td class="tbl-num">855,986</td>
+            <td><span class="delta-pill down">▼ -7.3%</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:16px;padding:12px;background:var(--orange-dim);border-radius:var(--radius-sm);border:1px solid rgba(255,159,28,0.2);">
+        <div style="font-size:0.72rem;color:var(--orange);font-weight:600;">Digital Substitution Alert</div>
+        <div style="font-size:0.77rem;color:var(--text-secondary);margin-top:4px;">Ordinary mail has declined from 825,342 (Sep 2025) to 559,126 (Mar 2026) — a cumulative drop of -32.2% over two quarters.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Q4 Revenue Leaders (BWP)</div>
+      </div>
+      <div style="padding-top:8px;">
+        <div class="progress-item">
+          <div class="progress-head"><span class="progress-label">Sprint Couriers</span><span class="progress-value">8,777,114</span></div>
+          <div class="progress-bar"><div class="progress-fill cyan" style="width:100%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-head"><span class="progress-label">FedEx Express</span><span class="progress-value">7,369,489</span></div>
+          <div class="progress-bar"><div class="progress-fill blue" style="width:84%;background:linear-gradient(90deg,var(--blue),#1565c0)"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-head"><span class="progress-label">DHL Botswana</span><span class="progress-value">6,408,123</span></div>
+          <div class="progress-bar"><div class="progress-fill orange" style="width:73%;"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-head"><span class="progress-label">Ram Transport</span><span class="progress-value">541,051</span></div>
+          <div class="progress-bar"><div class="progress-fill green" style="width:6.2%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-head"><span class="progress-label">Pinnacle</span><span class="progress-value">434,896</span></div>
+          <div class="progress-bar"><div class="progress-fill purple" style="width:5%"></div></div>
+        </div>
+        <div style="padding-top:12px;border-top:1px solid var(--glass-border);margin-top:4px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:0.78rem;color:var(--text-secondary);">Total Q4 Revenue</span>
+            <span style="font-family:var(--font-mono);font-size:0.9rem;color:var(--green);font-weight:600;">P 24,751,203</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+            <span style="font-size:0.78rem;color:var(--text-secondary);">vs Q3 Total</span>
+            <span style="font-family:var(--font-mono);font-size:0.82rem;color:var(--text-muted);">P 19,746,628</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider" style="margin:0 clamp(16px,6vw,80px)"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-brand"><IMG src="https://dqos.bocra.org.bw/storage/BOCRA.png" alt="BOCRA Logo" height="40"></div>
+    <div class="footer-meta" style="margin-top:4px;">Botswana Communications Regulatory Authority · FY2025/26 Q3 vs Q4</div>
+  </div>
+  <div class="quarter-legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>Q3: Oct–Dec 2025</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--cyan)"></div>Q4: Jan–Mar 2026</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--text-muted)"></div>Baseline: Jul–Sep 2025</div>
+  </div>
+  <div class="footer-meta">SOURCE: Management Reports · Broadcasting & Corporate Communications · Business Development</div>
+</footer>
+
+<!-- ==========================================
+     JAVASCRIPT
+     ========================================== -->
+<script>
+// ==========================
+// THEME
+// ==========================
+function toggleTheme(){
+  document.body.classList.toggle('light-mode');
+  const btn=document.querySelector('.theme-toggle');
+  btn.textContent=document.body.classList.contains('light-mode')?'🌙':'☀️';
+  // re-render charts with new theme
+  setTimeout(()=>initCharts(),100);
+}
+
+// ==========================
+// QUARTER TOGGLE (cosmetic)
+// ==========================
+function setQuarter(q){
+  document.querySelectorAll('#globalQToggle .q-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#globalQToggle .q-btn').forEach(b=>{
+    if((q==='q3'&&b.textContent.includes('Q3'))||(q==='q4'&&b.textContent.includes('Q4')))b.classList.add('active');
+  });
+}
+
+// ==========================
+// LOADING SCREEN
+// ==========================
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    const l=document.getElementById('loading');
+    l.style.opacity='0';
+    setTimeout(()=>l.style.display='none',600);
+  },1900);
+  setTimeout(()=>initCharts(),2000);
+  initCounters();
+  initScrollReveal();
+});
+
+// ==========================
+// COUNTER ANIMATION
+// ==========================
+function initCounters(){
+  const kpis=[
+    {id:'kpi-mobile',val:4676518,format:'number'},
+    {id:'kpi-mbb',val:3274912,format:'number'},
+    {id:'kpi-mm',val:1623422,format:'number'},
+    {id:'kpi-fb',val:254486,format:'number'},
+    {id:'kpi-mail',val:855986,format:'number'},
+    {id:'kpi-rev',val:24.75,format:'m'},
+  ];
+  kpis.forEach(k=>{
+    const el=document.getElementById(k.id);
+    if(!el)return;
+    const dur=2200, fps=60, steps=dur/1000*fps;
+    let frame=0;
+    const interval=setInterval(()=>{
+      frame++;
+      const progress=easeOut(frame/steps);
+      const cur=k.val*progress;
+      if(k.format==='number') el.textContent=Math.floor(cur).toLocaleString();
+      else if(k.format==='m') el.textContent=cur.toFixed(2)+'M';
+      if(frame>=steps) clearInterval(interval);
+    },1000/fps);
+  });
+}
+function easeOut(t){return 1-Math.pow(1-t,3);}
+
+// ==========================
+// SCROLL REVEAL
+// ==========================
+function initScrollReveal(){
+  const obs=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');}});
+  },{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  // Animate progress bars
+  const pbObs=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.querySelectorAll('.progress-fill').forEach(fill=>{
+          const w=fill.style.width;fill.style.width='0%';
+          setTimeout(()=>fill.style.width=w,100);
+        });
+      }
+    });
+  },{threshold:0.2});
+  document.querySelectorAll('.card').forEach(c=>pbObs.observe(c));
+}
+
+// ==========================
+// ECHARTS THEME CONFIG
+// ==========================
+function getTheme(){
+  const light=document.body.classList.contains('light-mode');
+  return {
+    bg:'transparent',
+    text:light?'#0a1f35':'#e8f4fd',
+    subtext:light?'#2a4a65':'#8faec8',
+    grid:light?'rgba(0,0,0,0.08)':'rgba(255,255,255,0.06)',
+    tooltip:{bg:light?'#dce6f0':'#071728',border:light?'rgba(0,119,200,0.2)':'rgba(0,212,255,0.15)',text:light?'#0a1f35':'#e8f4fd'},
+  };
+}
+const CYAN='#00d4ff', BLUE='#2979ff', GREEN='#00e676', RED='#ff4560', ORANGE='#ff9f1c', PURPLE='#b388ff';
+const charts={};
+function disposeAll(){Object.values(charts).forEach(c=>{try{c.dispose();}catch(e){}});}
+
+// ==========================
+// INIT ALL CHARTS
+// ==========================
+function initCharts(){
+  disposeAll();
+  const T=getTheme();
+  const tooltip={
+    trigger:'axis',
+    backgroundColor:T.tooltip.bg,
+    borderColor:T.tooltip.border,
+    textStyle:{color:T.tooltip.text,fontSize:12},
+    extraCssText:`backdrop-filter:blur(20px);border-radius:8px;box-shadow:0 8px 32px rgba(0,0,0,0.4);`
+  };
+  const axisLabel={color:T.subtext,fontSize:11};
+  const axisLine={lineStyle:{color:T.grid}};
+  const splitLine={lineStyle:{color:T.grid,type:'dashed'}};
+  const quarters=['Sep 2025','Dec 2025','Mar 2026'];
+
+  // ---- Chart 1: Mobile Telephony Subscriptions ----
+  const el1=document.getElementById('chart-mobile-subs');
+  if(el1){
+    charts['mob']=echarts.init(el1);
+    charts['mob'].setOption({
+      backgroundColor:T.bg,
+      tooltip:{...tooltip,trigger:'axis'},
+      legend:{show:false},
+      grid:{left:'3%',right:'3%',top:'8%',bottom:'8%',containLabel:true},
+      xAxis:{type:'category',data:quarters,axisLabel,axisLine,splitLine:{show:false}},
+      yAxis:{type:'value',axisLabel:{...axisLabel,formatter:v=>(v/1e6).toFixed(1)+'M'},axisLine,splitLine,min:500000},
+      series:[
+        {name:'Orange',type:'line',data:[1961321,1999593,2001759],smooth:true,symbol:'circle',symbolSize:7,
+         lineStyle:{color:'#FF6B35',width:2.5},itemStyle:{color:'#FF6B35'},
+         areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(255,107,53,0.3)'},{offset:1,color:'rgba(255,107,53,0)'}]}}},
+        {name:'Mascom',type:'line',data:[1762526,1850564,1917230],smooth:true,symbol:'circle',symbolSize:7,
+         lineStyle:{color:CYAN,width:2.5},itemStyle:{color:CYAN},
+         areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(0,212,255,0.25)'},{offset:1,color:'rgba(0,212,255,0)'}]}}},
+        {name:'BTC Mobile',type:'line',data:[646503,690222,757529],smooth:true,symbol:'circle',symbolSize:7,
+         lineStyle:{color:BLUE,width:2.5},itemStyle:{color:BLUE},
+         areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(41,121,255,0.2)'},{offset:1,color:'rgba(41,121,255,0)'}]}}},
+      ]
+    });
+  }
+
+  // ---- Chart 2: Mobile Market Share Q4 Donut ----
+  const el2=document.getElementById('chart-mobile-share');
+  if(el2){
+    charts['mobShare']=echarts.init(el2);
+    charts['mobShare'].setOption({
+      backgroundColor:T.bg,
+      tooltip:{trigger:'item',backgroundColor:T.tooltip.bg,borderColor:T.tooltip.border,textStyle:{color:T.tooltip.text},formatter:'{b}: {c} ({d}%)'},
+      series:[{
+        type:'pie',radius:['50%','75%'],center:['50%','50%'],
+        label:{color:T.text,fontSize:11},
+        emphasis:{itemStyle:{shadowBlur:20}},
+        data:[
+          {value:2001759,name:'Orange',itemStyle:{color:'#FF6B35'}},
+          {value:1917230,name:'Mascom',itemStyle:{color:CYAN}},
+          {value:757529,name:'BTC Mobile',itemStyle:{color:BLUE}},
+        ]
+      }]
+    });
+  }
+
+  // ---- Chart 3: Mobile Broadband ----
+  const el3=document.getElementById('chart-mbb');
+  if(el3){
+    charts['mbb']=echarts.init(el3);
+    charts['mbb'].setOption({
+      backgroundColor:T.bg,
+      tooltip:{...tooltip},
+      grid:{left:'3%',right:'3%',top:'8%',bottom:'8%',containLabel:true},
+      xAxis:{type:'category',data:quarters,axisLabel,axisLine,splitLine:{show:false}},
+      yAxis:{type:'value',axisLabel:{...axisLabel,formatter:v=>(v/1e6).toFixed(1)+'M'},axisLine,splitLine},
+      series:[
+        {name:'Orange',type:'bar',data:[1493285,1599175,1582619],itemStyle:{color:'#FF6B35',borderRadius:[4,4,0,0]}},
+        {name:'Mascom',type:'bar',data:[1361626,1408337,1410458],itemStyle:{color:CYAN,borderRadius:[4,4,0,0]}},
+        {name:'BTC',type:'bar',data:[251342,264806,281835],itemStyle:{color:BLUE,borderRadius:[4,4,0,0]}},
+      ]
+    });
+  }
+
+  // ---- Chart 4: Fixed Broadband ----
+  const el4=document.getElementById('chart-fixed-bb');
+  if(el4){
+    charts['fbb']=echarts.init(el4);
+    charts['fbb'].setOption({
+      backgroundColor:T.bg,
+      tooltip:{...tooltip},
+      legend:{bottom:0,textStyle:{color:T.subtext,fontSize:11}},
+      grid:{left:'3%',right:'3%',top:'8%',bottom:'18%',containLabel:true},
+      xAxis:{type:'category',data:quarters,axisLabel,axisLine,splitLine:{show:false}},
+      yAxis:{type:'value',axisLabel:{...axisLabel,formatter:v=>v.toLocaleString()},axisLine,splitLine},
+      series:[
+        {name:'Orange',type:'bar',stack:'total',data:[84757,96766,100857],itemStyle:{color:'#FF6B35'}},
+        {name:'Mascom',type:'bar',stack:'total',data:[89975,91595,94012],itemStyle:{color:CYAN}},
+        {name:'BTC',type:'bar',stack:'total',data:[20780,20748,20810],itemStyle:{color:BLUE}},
+        {name:'Starlink',type:'bar',stack:'total',data:[11444,17352,19958],itemStyle:{color:GREEN}},
+        {name:'Others',type:'bar',stack:'total',data:[4425,18877,18849],itemStyle:{color:PURPLE,borderRadius:[4,4,0,0]}},
+      ]
+    });
+  }
+
+  // ---- Chart 5: Mobile Money ----
+  const el5=document.getElementById('chart-mobile-money');
+  if(el5){
+    charts['mm']=echarts.init(el5);
+    charts['mm'].setOption({
+      backgroundColor:T.bg,
+      tooltip:{...tooltip},
+      legend:{bottom:0,textStyle:{color:T.subtext,fontSize:11}},
+      grid:{left:'3%',right:'3%',top:'8%',bottom:'18%',containLabel:true},
+      xAxis:{type:'category',data:quarters,axisLabel,axisLine,splitLine:{show:false}},
+      yAxis:{type:'value',axisLabel:{...axisLabel,formatter:v=>(v/1e6).toFixed(2)+'M'},axisLine,splitLine},
+      series:[
+        {name:'Orange',type:'line',data:[996833,1009774,1023822],smooth:true,symbol:'circle',symbolSize:6,
+         lineStyle:{color:'#FF6B35',width:2},itemStyle:{color:'#FF6B35'},
+         areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(255,107,53,0.2)'},{offset:1,color:'rgba(255,107,53,0)'}]}}},
+        {name:'Mascom',type:'line',data:[337471,367214,457738],smooth:true,symbol:'circle',symbolSize:6,
+         lineStyle:{color:GREEN,width:2.5},itemStyle:{color:GREEN},
+         areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(0,230,118,0.25)'},{offset:1,color:'rgba(0,230,118,0)'}]}}},
+        {name:'BTC Mobile',type:'line',data:[103477,114407,122260],smooth:true,symbol:'circle',symbolSize:6,
+         lineStyle:{color:BLUE,width:2},itemStyle:{color:BLUE}},
+        {name:'BotswanaPost',type:'line',data:[18035,18550,19602],smooth:true,symbol:'circle',symbolSize:6,
+         lineStyle:{color:ORANGE,width:2},itemStyle:{color:ORANGE}},
+      ]
+    });
+  }
+
+  // ---- Chart 6: Fixed Telephony ----
+  const el6=document.getElementById('chart-fixed-tel');
+  if(el6){
+    charts['ftel']=echarts.init(el6);
+    charts['ftel'].setOption({
+      backgroundColor:T.bg,
+      tooltip:{...tooltip},
+      grid:{left:'3%',right:'3%',top:'8%',bottom:'8%',containLabel:true},
+      xAxis:{type:'category',data:quarters,axisLabel,axisLine,splitLine:{show:false}},
+      yAxis:{type:'value',axisLabel:{...axisLabel,formatter:v=>(v/1000).toFixed(0)+'K'},axisLine,splitLine,min:79000},
+      series:[{
+        name:'Fixed Telephony',type:'line',data:[81697,81081,80817],smooth:true,symbol:'circle',symbolSize:7,
+        lineStyle:{color:RED,width:2.5},itemStyle:{color:RED},
+        areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(255,69,96,0.3)'},{offset:1,color:'rgba(255,69,96,0.02)'}]}},
+        markLine:{data:[{type:'min',label:{color:RED}}],lineStyle:{color:RED,type:'dashed'}}
+      }]
+    });
+  }
+
+  // ---- Chart 7: SAR Radio ----
+  const el7=document.getElementById('chart-sar-radio');
+  if(el7){
+    charts['sar']=echarts.init(el7);
+    const qs=['Q2 Jul-Sep 25','Q3 Oct-Dec 25','Q4 Jan-Mar 26'];
+    charts['sar'].setOption({
+      backgroundColor:T.bg,
+      tooltip:{...tooltip},
+      legend:{bottom:0,textStyle:{color:T.subtext,fontSize:11}},
+      grid:{left:'3%',right:'3%',top:'8%',bottom:'18%',containLabel:true},
+      xAxis:{type:'category',data:qs,axisLabel,axisLine,splitLine:{show:false}},
+      yAxis:{type:'value',min:88,max:102,axisLabel:{...axisLabel,formatter:v=>v+'%'},axisLine,splitLine},
+      series:[
+        {name:'Duma FM',type:'line',data:[97,99,99],smooth:true,symbol:'circle',symbolSize:8,
+         lineStyle:{color:CYAN,width:2.5},itemStyle:{color:CYAN}},
+        {name:'Gabz FM',type:'line',data:[95.03,93.04,96],smooth:true,symbol:'circle',symbolSize:8,
+         lineStyle:{color:BLUE,width:2.5},itemStyle:{color:BLUE}},
+        {name:'Yarona FM',type:'line',data:[99.01,95.31,94.2],smooth:true,symbol:'circle',symbolSize:8,
+         lineStyle:{color:'#FF6B35',width:2.5},itemStyle:{color:'#FF6B35'}},
+        {name:'YTV',type:'line',data:[99.8,98,98.9],smooth:true,symbol:'diamond',symbolSize:10,
+         lineStyle:{color:GREEN,width:2.5},itemStyle:{color:GREEN}},
+        {name:'Min. Threshold 98%',type:'line',data:[98,98,98],lineStyle:{color:'rgba(255,69,96,0.5)',type:'dashed',width:1.5},itemStyle:{color:RED},symbol:'none'},
+      ]
+    });
+  }
+
+  // ---- Chart 8: Local Content ----
+  const el8=document.getElementById('chart-local-content');
+  if(el8){
+    charts['lc']=echarts.init(el8);
+    const cats=['Q2 Jul-Sep 25','Q3 Oct-Dec 25','Q4 Jan-Mar 26'];
+    charts['lc'].setOption({
+      backgroundColor:T.bg,
+      tooltip:{...tooltip,formatter:params=>{
+        let s=`<b>${params[0].name}</b><br/>`;
+        params.forEach(p=>s+=`${p.marker}${p.seriesName}: ${p.value}%<br/>`);
+        return s;
+      }},
+      legend:{bottom:0,textStyle:{color:T.subtext,fontSize:11}},
+      grid:{left:'3%',right:'3%',top:'8%',bottom:'18%',containLabel:true},
+      xAxis:{type:'category',data:cats,axisLabel,axisLine,splitLine:{show:false}},
+      yAxis:{type:'value',min:40,max:80,axisLabel:{...axisLabel,formatter:v=>v+'%'},axisLine,splitLine},
+      series:[
+        {name:'Duma FM',type:'bar',data:[62,67,69],itemStyle:{color:CYAN,borderRadius:[4,4,0,0]}},
+        {name:'Gabz FM',type:'bar',data:[50.3,50.92,51],itemStyle:{color:BLUE,borderRadius:[4,4,0,0]}},
+        {name:'Yarona FM',type:'bar',data:[63,52,56],itemStyle:{color:'#FF6B35',borderRadius:[4,4,0,0]}},
+        {name:'YTV',type:'bar',data:[57,58,58],itemStyle:{color:GREEN,borderRadius:[4,4,0,0]}},
+        {name:'Radio Min 45%',type:'line',data:[45,45,45],symbol:'none',lineStyle:{color:'rgba(255,69,96,0.6)',type:'dashed',width:1.5},itemStyle:{color:RED}},
+      ]
+    });
+  }
+
+  // ---- Chart 9: Market Share Q3 ----
+  const el9=document.getElementById('chart-ms-q3');
+  if(el9){
+    charts['msQ3']=echarts.init(el9);
+    charts['msQ3'].setOption({
+      backgroundColor:T.bg,
+      tooltip:{trigger:'item',backgroundColor:T.tooltip.bg,borderColor:T.tooltip.border,textStyle:{color:T.tooltip.text},formatter:'{b}: {d}%'},
+      series:[{
+        type:'pie',radius:['42%','68%'],center:['50%','50%'],
+        label:{color:T.text,fontSize:11},
+        data:[
+          {value:40,name:'Duma FM',itemStyle:{color:CYAN}},
+          {value:26,name:'Gabz FM',itemStyle:{color:BLUE}},
+          {value:34,name:'Yarona FM',itemStyle:{color:'#FF6B35'}},
+        ]
+      }]
+    });
+  }
+
+  // ---- Chart 10: Market Share Q4 ----
+  const el10=document.getElementById('chart-ms-q4');
+  if(el10){
+    charts['msQ4']=echarts.init(el10);
+    charts['msQ4'].setOption({
+      backgroundColor:T.bg,
+      tooltip:{trigger:'item',backgroundColor:T.tooltip.bg,borderColor:T.tooltip.border,textStyle:{color:T.tooltip.text},formatter:'{b}: {d}%'},
+      series:[{
+        type:'pie',radius:['42%','68%'],center:['50%','50%'],
+        label:{color:T.text,fontSize:11},
+        data:[
+          {value:37,name:'Duma FM',itemStyle:{color:CYAN}},
+          {value:31,name:'Gabz FM',itemStyle:{color:BLUE}},
+          {value:32,name:'Yarona FM',itemStyle:{color:'#FF6B35'}},
+        ]
+      }]
+    });
+  }
+
+  // ---- Chart 11: Local Content Trend ----
+  const el11=document.getElementById('chart-lc-trend');
+  if(el11){
+    charts['lcTrend']=echarts.init(el11);
+    charts['lcTrend'].setOption({
+      backgroundColor:T.bg,
+      tooltip:{...tooltip},
+      legend:{bottom:0,textStyle:{color:T.subtext,fontSize:11}},
+      grid:{left:'3%',right:'3%',top:'5%',bottom:'18%',containLabel:true},
+      xAxis:{type:'category',data:['Q2','Q3','Q4'],axisLabel,axisLine,splitLine:{show:false}},
+      yAxis:{type:'value',min:40,max:75,axisLabel:{...axisLabel,formatter:v=>v+'%'},axisLine,splitLine},
+      series:[
+        {name:'Duma FM',type:'line',data:[62,67,69],smooth:true,symbol:'circle',symbolSize:7,lineStyle:{color:CYAN,width:2.5},itemStyle:{color:CYAN}},
+        {name:'Gabz FM',type:'line',data:[50.3,50.92,51],smooth:true,symbol:'circle',symbolSize:7,lineStyle:{color:BLUE,width:2.5},itemStyle:{color:BLUE}},
+        {name:'Yarona FM',type:'line',data:[63,52,56],smooth:true,symbol:'circle',symbolSize:7,lineStyle:{color:'#FF6B35',width:2.5},itemStyle:{color:'#FF6B35'}},
+        {name:'YTV (TV)',type:'line',data:[57,58,58],smooth:true,symbol:'diamond',symbolSize:8,lineStyle:{color:GREEN,width:2},itemStyle:{color:GREEN}},
+        {name:'Min Req 45%',type:'line',data:[45,45,45],symbol:'none',lineStyle:{color:'rgba(255,69,96,0.5)',type:'dashed'},itemStyle:{color:RED}},
+      ]
+    });
+  }
+
+  // ---- Chart 12: Mail Volumes ----
+  const el12=document.getElementById('chart-mail-volumes');
+  if(el12){
+    charts['mail']=echarts.init(el12);
+    charts['mail'].setOption({
+      backgroundColor:T.bg,
+      tooltip:{...tooltip},
+      legend:{bottom:0,textStyle:{color:T.subtext,fontSize:11}},
+      grid:{left:'3%',right:'3%',top:'8%',bottom:'18%',containLabel:true},
+      xAxis:{type:'category',data:quarters,axisLabel,axisLine,splitLine:{show:false}},
+      yAxis:{type:'value',axisLabel:{...axisLabel,formatter:v=>(v/1000).toFixed(0)+'K'},axisLine,splitLine},
+      series:[
+        {name:'Ordinary Mail',type:'bar',stack:'total',data:[825342,640960,559126],itemStyle:{color:RED}},
+        {name:'Dom. Express',type:'bar',stack:'total',data:[251803,257571,246408],itemStyle:{color:ORANGE}},
+        {name:'Int\'l Express',type:'bar',stack:'total',data:[23301,25231,27247],itemStyle:{color:GREEN,borderRadius:[4,4,0,0]}},
+      ]
+    });
+  }
+
+  // ---- Chart 13: Postal Revenue ----
+  const el13=document.getElementById('chart-postal-rev');
+  if(el13){
+    charts['postRev']=echarts.init(el13);
+    charts['postRev'].setOption({
+      backgroundColor:T.bg,
+      tooltip:{...tooltip,formatter:params=>{
+        const p=Array.isArray(params)?params[0]:params;
+        return `${p.name}<br/>${p.marker}Revenue: BWP ${(p.value/1e6).toFixed(2)}M`;
+      }},
+      grid:{left:'3%',right:'3%',top:'8%',bottom:'8%',containLabel:true},
+      xAxis:{type:'category',data:quarters,axisLabel,axisLine,splitLine:{show:false}},
+      yAxis:{type:'value',axisLabel:{...axisLabel,formatter:v=>'P'+(v/1e6).toFixed(1)+'M'},axisLine,splitLine},
+      series:[{
+        name:'Revenue',type:'bar',data:[26103907,19746628,24751203],
+        itemStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:CYAN},{offset:1,color:BLUE}]},borderRadius:[6,6,0,0]},
+        emphasis:{itemStyle:{opacity:0.85}}
+      }]
+    });
+  }
+
+  // ---- Chart 14: Postal Share Q4 ----
+  const el14=document.getElementById('chart-postal-share');
+  if(el14){
+    charts['postShare']=echarts.init(el14);
+    charts['postShare'].setOption({
+      backgroundColor:T.bg,
+      tooltip:{trigger:'item',backgroundColor:T.tooltip.bg,borderColor:T.tooltip.border,textStyle:{color:T.tooltip.text},formatter:'{b}: {d}%'},
+      series:[{
+        type:'pie',radius:['38%','65%'],center:['50%','48%'],
+        label:{color:T.text,fontSize:11},
+        data:[
+          {value:83,name:'Sprint Couriers',itemStyle:{color:CYAN}},
+          {value:7,name:'BotswanaPost',itemStyle:{color:GREEN}},
+          {value:4,name:'DHL',itemStyle:{color:ORANGE}},
+          {value:2,name:'Aramex',itemStyle:{color:BLUE}},
+          {value:3,name:'Others',itemStyle:{color:T.subtext}},
+        ]
+      }]
+    });
+  }
+
+  // ---- Chart 15: CSR ----
+  const el15=document.getElementById('chart-csr');
+  if(el15){
+    charts['csr']=echarts.init(el15);
+    charts['csr'].setOption({
+      backgroundColor:T.bg,
+      tooltip:{...tooltip,formatter:p=>`${p[0].name}<br/>CSI Spend: BWP ${p[0].value.toLocaleString()}`},
+      grid:{left:'3%',right:'3%',top:'8%',bottom:'8%',containLabel:true},
+      xAxis:{type:'category',data:['Q3 Oct-Dec 2025','Q4 Jan-Mar 2026'],axisLabel,axisLine,splitLine:{show:false}},
+      yAxis:{type:'value',axisLabel:{...axisLabel,formatter:v=>'P'+(v/1000).toFixed(0)+'K'},axisLine,splitLine},
+      series:[{
+        type:'bar',data:[601760,105000],
+        itemStyle:{color:(params)=>params.dataIndex===0?{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:CYAN},{offset:1,color:BLUE}]}:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:GREEN},{offset:1,color:'#00c853'}]},borderRadius:[6,6,0,0]},
+        label:{show:true,position:'top',formatter:p=>'P'+p.value.toLocaleString(),color:T.subtext,fontSize:11}
+      }]
+    });
+  }
+
+  // ---- Chart 16: Radar Scorecard ----
+  const el16=document.getElementById('chart-radar');
+  if(el16){
+    charts['radar']=echarts.init(el16);
+    charts['radar'].setOption({
+      backgroundColor:T.bg,
+      tooltip:{trigger:'item',backgroundColor:T.tooltip.bg,borderColor:T.tooltip.border,textStyle:{color:T.tooltip.text}},
+      legend:{bottom:10,textStyle:{color:T.subtext,fontSize:12}},
+      radar:{
+        indicator:[
+          {name:'Mobile Telephony',max:100},{name:'Mobile Broadband',max:100},
+          {name:'Fixed Broadband',max:100},{name:'Mobile Money',max:100},
+          {name:'Broadcasting SAR',max:100},{name:'Local Content',max:100},
+          {name:'Postal Revenue',max:100},{name:'Digital Inclusion',max:100},
+        ],
+        radius:'60%',
+        axisLine:{lineStyle:{color:T.grid}},
+        splitLine:{lineStyle:{color:T.grid}},
+        splitArea:{areaStyle:{color:['rgba(0,212,255,0.02)','rgba(0,212,255,0.04)']}},
+        name:{textStyle:{color:T.subtext,fontSize:11}},
+      },
+      series:[
+        {name:'Q3 Oct-Dec 2025',type:'radar',
+         data:[{value:[72,68,58,62,71,85,48,75],name:'Q3'}],
+         lineStyle:{color:BLUE,width:2},itemStyle:{color:BLUE},
+         areaStyle:{color:'rgba(41,121,255,0.15)'}},
+        {name:'Q4 Jan-Mar 2026',type:'radar',
+         data:[{value:[80,69,65,82,78,88,62,85],name:'Q4'}],
+         lineStyle:{color:CYAN,width:2.5},itemStyle:{color:CYAN},
+         areaStyle:{color:'rgba(0,212,255,0.2)'}},
+      ]
+    });
+  }
+
+  // Resize all charts on window resize
+  window.addEventListener('resize',()=>Object.values(charts).forEach(c=>{try{c.resize();}catch(e){}}));
+}
+</script>
+</body>
+</html>

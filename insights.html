@@ -1,0 +1,2096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOCRA — Tariff Reductions | ICT Market Outlook</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bocra-blue:      #1A4B8C;
+    --bocra-blue-deep: #0F2D56;
+    --bocra-blue-mid:  #2E6FBF;
+    --bocra-red:       #C0392B;
+    --bocra-green:     #1A8A50;
+    --bocra-yellow:    #E8960A;
+    --bocra-orange:    #E67E22;
+    --ink:             #0D1B2A;
+    --ink-mid:         #3A4A5C;
+    --ink-light:       #6B7C93;
+    --paper:           #F7F9FC;
+    --paper-warm:      #FDFBF7;
+    --rule:            #D4DCE8;
+    --green-bg:        #E8F7EE;
+    --red-bg:          #FDF0EE;
+    --blue-bg:         #EBF2FA;
+    --yellow-bg:       #FEF8EC;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ──────────────────────────────────────── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--bocra-blue-deep);
+  }
+
+  .hero-bg-img {
+    position: absolute; inset: 0;
+    background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1600&q=80');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.18;
+  }
+
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .hero-gradient {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg,
+      rgba(15,45,86,0.95) 0%,
+      rgba(26,75,140,0.85) 50%,
+      rgba(46,111,191,0.7) 100%);
+  }
+
+  /* Animated floating circles */
+  .hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    animation: drift 12s ease-in-out infinite alternate;
+  }
+  .hero-orb-1 { width: 500px; height: 500px; background: rgba(46,111,191,0.25); top: -100px; right: -100px; animation-delay: 0s; }
+  .hero-orb-2 { width: 350px; height: 350px; background: rgba(26,138,80,0.15); bottom: 100px; left: -80px; animation-delay: 3s; }
+  .hero-orb-3 { width: 250px; height: 250px; background: rgba(192,57,43,0.1); top: 40%; right: 20%; animation-delay: 6s; }
+
+  @keyframes drift {
+    from { transform: translate(0,0) scale(1); }
+    to   { transform: translate(30px, 40px) scale(1.1); }
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    min-height: 100vh;
+    padding: 0 60px;
+  }
+
+  .hero-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .logo-block {
+    display: flex; align-items: center; gap: 16px;
+  }
+
+  .logo-dots {
+    display: flex; gap: 6px;
+  }
+
+  .logo-dot {
+    width: 14px; height: 14px; border-radius: 50%;
+  }
+
+  .logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 4px;
+  }
+
+  .nav-tag {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .hero-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 0 60px;
+    max-width: 900px;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .eyebrow-line {
+    width: 40px; height: 2px;
+    background: var(--bocra-yellow);
+  }
+
+  .eyebrow-text {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--bocra-yellow);
+    font-weight: 600;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(52px, 8vw, 96px);
+    font-weight: 900;
+    line-height: 0.95;
+    color: #fff;
+    margin-bottom: 32px;
+  }
+
+  .hero-title span {
+    display: block;
+    color: rgba(255,255,255,0.25);
+    font-size: 0.55em;
+    letter-spacing: 6px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .hero-subtitle {
+    font-size: 17px;
+    color: rgba(255,255,255,0.6);
+    max-width: 560px;
+    line-height: 1.8;
+    margin-bottom: 56px;
+    font-weight: 300;
+  }
+
+  /* Hero stat pills */
+  .hero-stats {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .hero-stat {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    padding: 20px 28px;
+    border-radius: 4px;
+    min-width: 160px;
+    transition: background 0.3s;
+  }
+
+  .hero-stat:hover { background: rgba(255,255,255,0.14); }
+
+  .stat-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 38px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-val.green { color: #4AE08A; }
+  .stat-val.yellow { color: var(--bocra-yellow); }
+  .stat-val.red { color: #FF7B6B; }
+
+  .stat-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* Hero bottom image strip */
+  .hero-bottom {
+    position: relative; z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    height: 160px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .hero-img-cell {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-img-cell img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: 0.45;
+    filter: grayscale(0.3);
+    transition: opacity 0.4s, filter 0.4s;
+  }
+
+  .hero-img-cell:hover img { opacity: 0.7; filter: grayscale(0); }
+
+  .hero-img-cell::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(15,45,86,0.6) 100%);
+  }
+
+  .hero-img-label {
+    position: absolute;
+    bottom: 12px; left: 16px;
+    z-index: 1;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.7);
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* ── NAV RAIL ──────────────────────────────────── */
+  .nav-rail {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15,45,86,0.97);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .nav-rail-inner {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 0 60px;
+    overflow-x: auto;
+  }
+
+  .nav-rail-inner::-webkit-scrollbar { display: none; }
+
+  .nav-link {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: rgba(255,255,255,0.45);
+    padding: 18px 20px;
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .nav-link:hover {
+    color: rgba(255,255,255,0.9);
+    border-color: var(--bocra-yellow);
+  }
+
+  /* ── LAYOUT ────────────────────────────────────── */
+  .container {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 60px;
+  }
+
+  .section {
+    padding: 100px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .section:last-child { border-bottom: none; }
+
+  /* Section label */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .section-label-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--bocra-blue-mid);
+    font-weight: 500;
+  }
+
+  .section-label-line {
+    flex: 1; height: 1px;
+    background: var(--rule);
+    max-width: 60px;
+  }
+
+  .section-label-text {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    font-weight: 600;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+
+  .section-lead {
+    font-size: 17px;
+    color: var(--ink-mid);
+    max-width: 680px;
+    line-height: 1.8;
+    font-weight: 300;
+    margin-bottom: 56px;
+  }
+
+  /* ── INTRO SPLIT ───────────────────────────────── */
+  .intro-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  .intro-img-stack {
+    position: relative;
+    height: 480px;
+  }
+
+  .img-main {
+    position: absolute;
+    width: 80%; height: 380px;
+    top: 0; right: 0;
+    border-radius: 2px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(26,75,140,0.2);
+  }
+
+  .img-main img { width: 100%; height: 100%; object-fit: cover; }
+
+  .img-accent {
+    position: absolute;
+    width: 52%; height: 240px;
+    bottom: 0; left: 0;
+    border-radius: 2px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    border: 4px solid var(--paper);
+  }
+
+  .img-accent img { width: 100%; height: 100%; object-fit: cover; }
+
+  .img-badge {
+    position: absolute;
+    top: 32px; left: -20px;
+    background: var(--bocra-blue);
+    color: #fff;
+    padding: 14px 20px;
+    border-radius: 2px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    z-index: 2;
+  }
+
+  .intro-text { padding-top: 20px; }
+
+  .intro-text p {
+    color: var(--ink-mid);
+    margin-bottom: 20px;
+    line-height: 1.85;
+  }
+
+  .mandate-box {
+    background: var(--bocra-blue);
+    color: #fff;
+    padding: 28px 32px;
+    border-radius: 2px;
+    margin-top: 36px;
+  }
+
+  .mandate-box-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .mandate-box p {
+    font-size: 16px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.85);
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  /* ── WHOLESALE SECTION ─────────────────────────── */
+  .wholesale-bg {
+    background: var(--bocra-blue-deep);
+    color: #fff;
+  }
+
+  .wholesale-bg .section-title { color: #fff; }
+  .wholesale-bg .section-lead { color: rgba(255,255,255,0.6); }
+  .wholesale-bg .section-label-text { color: rgba(255,255,255,0.35); }
+  .wholesale-bg .section-label-line { background: rgba(255,255,255,0.15); }
+  .wholesale-bg .section-label-num { color: rgba(255,255,255,0.4); }
+
+  /* Termination rate timeline */
+  .rate-timeline {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-bottom: 60px;
+  }
+
+  .rate-card {
+    padding: 40px 32px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s;
+  }
+
+  .rate-card:hover { transform: translateY(-4px); }
+
+  .rate-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .rate-card-0 { background: rgba(255,255,255,0.05); }
+  .rate-card-0::before { background: rgba(255,255,255,0.2); }
+
+  .rate-card-1 { background: rgba(26,138,80,0.25); border: 1px solid rgba(26,138,80,0.4); }
+  .rate-card-1::before { background: #4AE08A; }
+
+  .rate-card-2 { background: rgba(46,111,191,0.2); }
+  .rate-card-2::before { background: var(--bocra-blue-mid); }
+
+  .rate-card-3 { background: rgba(15,45,86,0.5); }
+  .rate-card-3::before { background: var(--bocra-yellow); }
+
+  .rate-card-year {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .live-badge {
+    background: #4AE08A;
+    color: #0a2d1a;
+    font-size: 9px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  .rate-card-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .rate-card-unit {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    font-weight: 300;
+  }
+
+  .rate-card-delta {
+    margin-top: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .delta-down { color: #4AE08A; }
+  .delta-none { color: rgba(255,255,255,0.3); }
+
+  /* Chart containers */
+  .chart-wrap {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 2px;
+    padding: 40px;
+    margin-bottom: 40px;
+  }
+
+  .chart-wrap-light {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 40px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 24px rgba(26,75,140,0.06);
+  }
+
+  .chart-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 6px;
+  }
+
+  .chart-title-light {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .chart-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 32px;
+  }
+
+  .chart-sub-light {
+    font-size: 13px;
+    color: var(--ink-light);
+    margin-bottom: 32px;
+  }
+
+  /* Callout boxes */
+  .callout {
+    padding: 32px 36px;
+    border-radius: 2px;
+    border-left: 4px solid;
+    margin: 40px 0;
+  }
+
+  .callout-green {
+    background: rgba(26,138,80,0.12);
+    border-color: #4AE08A;
+  }
+
+  .callout-yellow {
+    background: var(--yellow-bg);
+    border-color: var(--bocra-yellow);
+  }
+
+  .callout-blue {
+    background: var(--blue-bg);
+    border-color: var(--bocra-blue);
+  }
+
+  .callout-title {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 8px;
+    color: rgba(255,255,255,0.95);
+  }
+
+  .callout-title-dark { color: var(--ink); }
+
+  .callout-text {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.7;
+  }
+
+  .callout-text-dark { color: var(--ink-mid); }
+
+  /* BoFiNet grid */
+  .bofi-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+
+  .bofi-img {
+    border-radius: 2px;
+    overflow: hidden;
+    height: 280px;
+    position: relative;
+  }
+
+  .bofi-img img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: brightness(0.6) hue-rotate(180deg);
+  }
+
+  .bofi-img-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(26,75,140,0.7), rgba(26,138,80,0.4));
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 28px;
+  }
+
+  .bofi-stat-big {
+    font-family: 'Playfair Display', serif;
+    font-size: 72px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .bofi-stat-label {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 1px;
+  }
+
+  /* ── RETAIL / OPERATOR SECTION ─────────────────── */
+  .operator-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--rule);
+    margin-bottom: 48px;
+  }
+
+  .op-tab {
+    padding: 16px 28px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--ink-light);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .op-tab:hover { color: var(--bocra-blue); }
+
+  .op-tab.active {
+    color: var(--bocra-blue);
+    border-color: var(--bocra-blue);
+  }
+
+  .op-logo-sm {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  .op-panel { display: none; }
+  .op-panel.active { display: block; }
+
+  /* Operator header */
+  .op-header {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 40px;
+    margin-bottom: 40px;
+    align-items: start;
+  }
+
+  .op-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+
+  .op-desc {
+    font-size: 15px;
+    color: var(--ink-mid);
+    line-height: 1.8;
+  }
+
+  .op-img {
+    border-radius: 2px;
+    overflow: hidden;
+    height: 200px;
+    position: relative;
+  }
+
+  .op-img img { width: 100%; height: 100%; object-fit: cover; }
+
+  .op-img-overlay {
+    position: absolute; inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── TABLES ────────────────────────────────────── */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    margin-bottom: 12px;
+  }
+
+  .data-table thead tr {
+    background: var(--bocra-blue);
+    color: #fff;
+  }
+
+  .data-table th {
+    padding: 14px 16px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .data-table th.center,
+  .data-table td.center { text-align: center; }
+
+  .data-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink-mid);
+    vertical-align: middle;
+  }
+
+  .data-table tbody tr:last-child td { border-bottom: none; }
+
+  .data-table tbody tr:nth-child(even) td {
+    background: rgba(235,242,250,0.4);
+  }
+
+  .data-table tbody tr:hover td {
+    background: rgba(26,75,140,0.04);
+  }
+
+  .td-highlight { color: var(--bocra-green) !important; font-weight: 700; }
+  .td-zero { color: var(--ink-light) !important; }
+  .td-label { color: var(--ink); font-weight: 600; }
+  .td-peak { color: var(--bocra-blue); font-weight: 600; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+  .td-offpeak { color: var(--bocra-red); font-weight: 600; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+  .td-24h { color: var(--ink-light); font-weight: 600; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+
+  .change-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .badge-green { background: var(--green-bg); color: var(--bocra-green); }
+  .badge-neutral { background: #F0F3F7; color: var(--ink-light); }
+  .badge-strong { background: #C8EDD8; color: #0F5C33; font-size: 13px; padding: 5px 14px; }
+
+  /* Table caption */
+  .table-caption {
+    font-size: 12px;
+    color: var(--ink-light);
+    font-style: italic;
+    margin-top: 8px;
+    margin-bottom: 32px;
+    padding-left: 4px;
+  }
+
+  /* ── BUNDLES ───────────────────────────────────── */
+  .bundles-section { background: var(--paper-warm); }
+
+  .bundle-period-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 48px;
+  }
+
+  .bundle-period {
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(26,75,140,0.06);
+    transition: box-shadow 0.3s, transform 0.3s;
+  }
+
+  .bundle-period:hover {
+    box-shadow: 0 8px 32px rgba(26,75,140,0.12);
+    transform: translateY(-2px);
+  }
+
+  .bundle-period-header {
+    padding: 16px 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .bundle-row {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .bundle-row:last-child { border-bottom: none; }
+
+  .bundle-data {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--ink);
+  }
+
+  .bundle-price-wrap { text-align: right; }
+
+  .bundle-price-new {
+    font-family: 'DM Mono', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--bocra-green);
+  }
+
+  .bundle-price-old {
+    font-size: 11px;
+    color: var(--ink-light);
+    text-decoration: line-through;
+    display: block;
+  }
+
+  .bundle-tag {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin-left: 6px;
+  }
+
+  .tag-new { background: var(--green-bg); color: var(--bocra-green); }
+  .tag-disc { background: #FEE; color: var(--bocra-red); }
+
+  /* ── COMPARISON ────────────────────────────────── */
+  .comparison-section {}
+
+  .compare-table thead tr { background: var(--bocra-blue-deep); }
+
+  .mno-col-orange { background: rgba(230,126,34,0.08); }
+  .mno-col-mascom { background: rgba(192,57,43,0.06); }
+  .mno-col-btc    { background: rgba(26,75,140,0.06); }
+
+  .compare-table .td-avail {
+    font-family: 'DM Mono', monospace;
+    font-weight: 600;
+    color: var(--bocra-green);
+    font-size: 13px;
+  }
+
+  .compare-table .td-na {
+    color: #DDE3EC;
+    font-size: 16px;
+    text-align: center;
+  }
+
+  /* ── CONCLUSION ────────────────────────────────── */
+  .conclusion-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2px;
+    margin: 56px 0;
+  }
+
+  .conclusion-card {
+    padding: 48px 36px;
+    position: relative;
+    overflow: hidden;
+    border-top: 3px solid;
+    transition: transform 0.3s;
+  }
+
+  .conclusion-card:hover { transform: translateY(-6px); }
+
+  .cc-1 { background: var(--blue-bg); border-color: var(--bocra-blue); }
+  .cc-2 { background: var(--green-bg); border-color: var(--bocra-green); }
+  .cc-3 { background: var(--yellow-bg); border-color: var(--bocra-yellow); }
+
+  .cc-icon {
+    font-size: 36px;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .cc-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+
+  .cc-text {
+    font-size: 14px;
+    color: var(--ink-mid);
+    line-height: 1.8;
+  }
+
+  .conclusion-commitment {
+    background: var(--bocra-blue-deep);
+    color: #fff;
+    padding: 56px 60px;
+    text-align: center;
+  }
+
+  .commitment-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.5;
+    color: rgba(255,255,255,0.92);
+    max-width: 800px;
+    margin: 0 auto 24px;
+  }
+
+  .commitment-attr {
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    font-weight: 600;
+  }
+
+  /* ── FOOTER ────────────────────────────────────── */
+  .footer {
+    background: #070F1A;
+    padding: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  .footer-logo { display: flex; align-items: center; gap: 14px; }
+
+  .footer-logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 4px;
+  }
+
+  .footer-info {
+    font-size: 12px;
+    color: rgba(255,255,255,0.25);
+    line-height: 2;
+    text-align: right;
+  }
+
+  /* ── ANIMATIONS ────────────────────────────────── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ────────────────────────────────── */
+  @media (max-width: 900px) {
+    .container { padding: 0 24px; }
+    .hero-content { padding: 0 24px; }
+    .intro-split { grid-template-columns: 1fr; }
+    .intro-img-stack { height: 300px; }
+    .rate-timeline { grid-template-columns: repeat(2, 1fr); }
+    .bundle-period-grid { grid-template-columns: repeat(2, 1fr); }
+    .conclusion-grid { grid-template-columns: 1fr; }
+    .bofi-grid { grid-template-columns: 1fr; }
+    .op-header { grid-template-columns: 1fr; }
+    .footer { flex-direction: column; align-items: flex-start; }
+    .footer-info { text-align: left; }
+    .hero-bottom { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════ HERO -->
+<section class="hero">
+  <div class="hero-bg-img"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-gradient"></div>
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+
+  <div class="hero-content">
+    <nav class="hero-nav">
+      <div class="logo-block">
+        <img src="https://admin.dqos.bocra.org.bw/storage/BOCRA.png" alt="BOCRA Logo" height="32px" width="auto">
+      </div>
+      <span class="nav-tag">ICT Market Outlook</span>
+    </nav>
+
+    <div class="hero-main">
+      <div class="hero-eyebrow">
+        <div class="eyebrow-line"></div>
+        <span class="eyebrow-text">Botswana Communications Regulatory Authority</span>
+      </div>
+
+      <h1 class="hero-title">
+        <span>ICT Market Outlook</span>
+        Tariff<br>Reductions
+      </h1>
+
+      <p class="hero-subtitle">
+        A comprehensive consumer guide to wholesale and retail tariff reductions
+        implemented by BOCRA across Botswana's three Mobile Network Operators —
+        driving affordability, competition, and digital inclusion.
+      </p>
+
+      <div class="hero-stats">
+        <div class="hero-stat fade-in">
+          <div class="stat-val">3</div>
+          <div class="stat-label">MNOs Reviewed</div>
+        </div>
+        <div class="hero-stat fade-in" style="transition-delay:0.1s">
+          <div class="stat-val green">93%</div>
+          <div class="stat-label">Max Wholesale Reduction</div>
+        </div>
+        <div class="hero-stat fade-in" style="transition-delay:0.2s">
+          <div class="stat-val yellow">60%</div>
+          <div class="stat-label">Max Bundle Savings</div>
+        </div>
+        <div class="hero-stat fade-in" style="transition-delay:0.3s">
+          <div class="stat-val red">↓85%</div>
+          <div class="stat-label">Termination Rate Drop</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-bottom">
+    <div class="hero-img-cell">
+      <img src="https://images.unsplash.com/photo-1534536281715-e28d76689b4d?w=400&q=80" alt="Mobile connectivity">
+      <span class="hero-img-label">Mobile Networks</span>
+    </div>
+    <div class="hero-img-cell">
+      <img src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=400&q=80" alt="Digital infrastructure">
+      <span class="hero-img-label">Infrastructure</span>
+    </div>
+    <div class="hero-img-cell">
+      <img src="https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?w=400&q=80" alt="Financial inclusion">
+      <span class="hero-img-label">Digital Finance</span>
+    </div>
+    <div class="hero-img-cell">
+      <img src="https://images.unsplash.com/photo-1612456480283-ded19cf15203?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Botswana people">
+      <span class="hero-img-label">Batswana</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ NAV RAIL -->
+<nav class="nav-rail">
+  <div class="nav-rail-inner">
+    <a class="nav-link" href="#intro">Introduction</a>
+    <a class="nav-link" href="#wholesale">Wholesale</a>
+    <a class="nav-link" href="#retail">Retail Tariffs</a>
+    <a class="nav-link" href="#bundles">Data Bundles</a>
+    <a class="nav-link" href="#comparison">MNO Comparison</a>
+    <a class="nav-link" href="#conclusion">Conclusion</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════ INTRO -->
+<section class="section" id="intro">
+  <div class="container">
+    <div class="section-label">
+      <span class="section-label-num">01</span>
+      <div class="section-label-line"></div>
+      <span class="section-label-text">Introduction</span>
+    </div>
+
+    <div class="intro-split">
+      <div class="intro-text fade-in">
+        <h2 class="section-title">Affordable ICT for All Batswana</h2>
+        <p>In pursuit of its mandate of ensuring affordability of communications services and in line with the ideals of the Botswana Economic Transformation Programme (BETP), BOCRA conducted a comprehensive costing and pricing study aimed at determining the actual costs of delivering various communications services.</p>
+        <p>The study, conducted in consultation with industry stakeholders, covered both wholesale and retail services across Mascom Wireless Botswana, Orange Botswana, and Botswana Telecommunications Corporation (BTC).</p>
+        <p>Following the study, BOCRA directed all operators to implement revised tariffs aligned to actual cost structures — with significant reductions in mobile data prices underscoring the increasing importance of data in Botswana's digital transformation.</p>
+
+        <div class="mandate-box">
+          <div class="mandate-box-label">BOCRA's Mandate</div>
+          <p>"BOCRA remains committed to ensuring that Batswana enjoy accessible, reliable, and affordable communication services, recognising ICT as a key enabler of socio-economic development."</p>
+        </div>
+      </div>
+
+      <div class="intro-img-stack fade-in" style="transition-delay:0.15s">
+        <div class="img-badge">ICT Market Outlook</div>
+        <div class="img-main">
+          <img src="https://i0.wp.com/www.brimco.io/wp-content/uploads/2025/04/Skyline-of-Gaborone-CBD--Botswanas-Growing-Capital-of-Opportunity.jpg?resize=1024%2C576&ssl=1" alt="Botswana skyline connectivity">
+        </div>
+        <div class="img-accent">
+          <img src="https://static.africa-press.net/botswana/sites/38/2022/08/postQueueImg_5-62f7c7b540870.jpg" alt="Mobile phone usage">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ WHOLESALE -->
+<section class="section wholesale-bg" id="wholesale">
+  <div class="container">
+    <div class="section-label">
+      <span class="section-label-num">02</span>
+      <div class="section-label-line"></div>
+      <span class="section-label-text">Wholesale Services</span>
+    </div>
+    <h2 class="section-title">Termination Rate Glide Path</h2>
+    <p class="section-lead">BOCRA directed all MNOs to implement revised Mobile and Fixed Termination Rates effective 1 July 2025 — a progressive three-year reduction from P0.13 to P0.02 per minute.</p>
+
+    <!-- Rate timeline cards -->
+    <div class="rate-timeline fade-in">
+      <div class="rate-card rate-card-0">
+        <div class="rate-card-year">Previous Rate</div>
+        <div class="rate-card-value">P0.13</div>
+        <div class="rate-card-unit">per minute</div>
+        <div class="rate-card-delta delta-none">— Baseline</div>
+      </div>
+      <div class="rate-card rate-card-1">
+        <div class="rate-card-year">1 July 2025 <span class="live-badge">✓ LIVE</span></div>
+        <div class="rate-card-value">P0.09</div>
+        <div class="rate-card-unit">per minute</div>
+        <div class="rate-card-delta delta-down">↓ 31% reduction</div>
+      </div>
+      <div class="rate-card rate-card-2">
+        <div class="rate-card-year">1 July 2026</div>
+        <div class="rate-card-value">P0.05</div>
+        <div class="rate-card-unit">per minute</div>
+        <div class="rate-card-delta delta-down">↓ 44% from prior</div>
+      </div>
+      <div class="rate-card rate-card-3">
+        <div class="rate-card-year">1 July 2027</div>
+        <div class="rate-card-value">P0.02</div>
+        <div class="rate-card-unit">per minute</div>
+        <div class="rate-card-delta delta-down">↓ 85% total drop</div>
+      </div>
+    </div>
+
+    <!-- Bar chart -->
+    <div class="chart-wrap fade-in">
+      <div class="chart-title">Mobile & Fixed Termination Rate Glide Path (2025 – 2027)</div>
+      <div class="chart-sub">BWP per minute — all three MNOs compliant as of 1 July 2025</div>
+      <canvas id="rateChart" height="220"></canvas>
+    </div>
+
+    <div class="callout callout-green fade-in">
+      <div class="callout-title">✓ All MNOs Compliant</div>
+      <div class="callout-text">All three Mobile Network Operators — Mascom, Orange, and BTC — have implemented the first reduction to <strong>P0.09 per minute</strong> effective 1 July 2025.</div>
+    </div>
+
+    <!-- BoFiNet -->
+    <div style="margin-top: 72px">
+      <div class="section-label" style="margin-bottom:24px">
+        <span class="section-label-num">02B</span>
+        <div class="section-label-line"></div>
+        <span class="section-label-text" style="color:rgba(255,255,255,0.35)">BoFiNet Broadband</span>
+      </div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:28px;color:#fff;margin-bottom:12px;font-weight:700">BoFiNet Wholesale Broadband Reductions</h3>
+      <p style="color:rgba(255,255,255,0.55);margin-bottom:36px;max-width:640px">BOCRA also engaged Botswana Fibre Networks (BoFiNet) to revise its wholesale broadband offerings, approved in October 2025. Prices for National Leased Lines and IP Transit have been reduced by 10%–93% across various capacity offerings.</p>
+
+      <div class="bofi-grid fade-in">
+        <div class="bofi-img">
+          <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=800&q=80" alt="Fibre network cables">
+          <div class="bofi-img-overlay">
+            <div class="bofi-stat-big">93%</div>
+            <div class="bofi-stat-label">Maximum price reduction on National Leased Lines</div>
+          </div>
+        </div>
+        <div style="padding:12px 0">
+          <table class="data-table" style="background:rgba(255,255,255,0.04)">
+            <thead>
+              <tr style="background:rgba(255,255,255,0.1)">
+                <th>Service</th>
+                <th>Price Reduction</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="color:rgba(255,255,255,0.7)">National Leased Lines</td>
+                <td><span class="change-badge badge-green">↓ 10% – 93%</span></td>
+              </tr>
+              <tr style="background:rgba(255,255,255,0.03)">
+                <td style="color:rgba(255,255,255,0.7)">Internet Protocol (IP) Transit</td>
+                <td><span class="change-badge badge-green">↓ 10% – 93%</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="color:rgba(255,255,255,0.35);font-size:12px;font-style:italic;margin-top:8px">Table 1: BoFiNet Wholesale Broadband Reductions — Approved October 2025</div>
+          <div style="margin-top:28px;color:rgba(255,255,255,0.55);font-size:14px;line-height:1.8">These reductions enable MNOs and ISPs to purchase bandwidth at significantly lower prices, creating downward pressure on retail data costs for Botswana consumers.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ RETAIL -->
+<section class="section" id="retail">
+  <div class="container">
+    <div class="section-label">
+      <span class="section-label-num">03</span>
+      <div class="section-label-line"></div>
+      <span class="section-label-text">Retail Services</span>
+    </div>
+    <h2 class="section-title">Approved Prepaid Tariffs</h2>
+    <p class="section-lead">BOCRA directed MNOs to submit revised retail tariffs by 15 August 2025. Mascom Wireless and Orange Botswana received approval. BTC did not adjust its tariffs. Approved tariffs serve as price ceilings for prepaid voice, SMS, and data.</p>
+
+    <div class="callout callout-yellow fade-in">
+      <div class="callout-title callout-title-dark"> Key Finding: Data Leads the Way</div>
+      <div class="callout-text callout-text-dark">While minor adjustments were made to voice tariffs, <strong>significant reductions were observed in mobile data prices</strong> — underscoring data's increasing importance in Botswana's digital transformation journey.</div>
+    </div>
+
+    <!-- Operator tabs -->
+    <div class="operator-tabs">
+      <div class="op-tab active" onclick="showOp('mascom',this)">
+        <div class="op-logo-sm" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/3/35/Mascom_logo.png') ;background-size:cover;background-position:center" alt="Fibre network cables"></div>
+        Mascom Wireless
+      </div>
+      <div class="op-tab" onclick="showOp('orange',this)">
+        <div class="op-logo-sm" style="background-image:url('https://static.wikia.nocookie.net/logopedia/images/c/c8/Orange_logo.svg/revision/latest?cb=20230119162706') ;background-size:cover;background-position:center" alt="Fibre network cables"></div>
+        Orange Botswana
+      </div>
+      <div class="op-tab" onclick="showOp('btc',this)">
+        <div class="op-logo-sm" style="background-image:url('https://btc.bw/wp-content/uploads/2020/09/Logo-Small.png') ;background-size:cover;background-position:center" alt="Fibre network cables"></div>
+        BTC
+      </div>
+    </div>
+
+    <!-- MASCOM PANEL -->
+    <div class="op-panel active" id="panel-mascom">
+      <div class="op-header">
+        <div>
+          <h3 class="op-title">Mascom Wireless Botswana</h3>
+          <p class="op-desc">Mascom received approval for revised prepaid tariffs. The most notable reductions are in mobile data (↓18.56%) and on-net SMS (↓15%). Voice call rates saw modest adjustments of 1–2%.</p>
+        </div>
+        <div class="op-img">
+          <img src="https://scontent.fgbe3-1.fna.fbcdn.net/v/t39.30808-6/680577065_1408800471288912_7482051116770679462_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=7b2446&_nc_eui2=AeGs-jfilYkVyTkPx9oIZ_eHGFdatwhzuOMYV1q3CHO443J3ufF2xetc9gtAPX3HtqoWep23xWFEP_FNTqWduApW&_nc_ohc=E7Y4o2VW5vIQ7kNvwFS8OqT&_nc_oc=AdrOXkHMBa74TD91c-HS1MjK-jx9eQ9fmvh3re5owezagX3FTUSOSxPaUjasaXIQGhA&_nc_zt=23&_nc_ht=scontent.fgbe3-1.fna&_nc_gid=pUuKB7VwnnP8LDHTNd7wQA&_nc_ss=7c2a8&oh=00_Af25Nufh_7dy_hf_EMoyxWO-nMu27N3rZKOFDkAC-iYC_g&oe=69F91681" alt="Mobile user Mascom">
+          <div class="op-img-overlay" style="background:linear-gradient(135deg,rgba(192,57,43,0.5),rgba(26,75,140,0.4))">
+          </div>
+        </div>
+      </div>
+
+      <table class="data-table fade-in">
+        <thead>
+          <tr>
+            <th>Time Period</th>
+            <th>Service</th>
+            <th class="center">Old Price</th>
+            <th class="center">New Price</th>
+            <th class="center">Change</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td rowspan="2" class="td-peak">PEAK<br><span style="font-weight:400;color:var(--ink-light);font-size:11px;letter-spacing:0;text-transform:none">Mon–Fri 7am–11pm<br>Sat 7am–7pm</span></td>
+            <td class="td-label">Onnet voice (per min)</td>
+            <td class="center">P1.32</td>
+            <td class="center td-highlight">P1.30</td>
+            <td class="center"><span class="change-badge badge-green">↓ 1.52%</span></td>
+          </tr>
+          <tr>
+            <td class="td-label">Offnet voice (per min)</td>
+            <td class="center">P1.32</td>
+            <td class="center td-highlight">P1.30</td>
+            <td class="center"><span class="change-badge badge-green">↓ 1.52%</span></td>
+          </tr>
+          <tr>
+            <td rowspan="2" class="td-offpeak">OFF PEAK<br><span style="font-weight:400;color:var(--ink-light);font-size:11px;letter-spacing:0;text-transform:none">Mon–Fri 11pm–7am<br>Sat 7pm–7am; Sun & PH</span></td>
+            <td class="td-label">Onnet voice (per min)</td>
+            <td class="center">P0.81</td>
+            <td class="center td-highlight">P0.80</td>
+            <td class="center"><span class="change-badge badge-green">↓ 1.23%</span></td>
+          </tr>
+          <tr>
+            <td class="td-label">Offnet voice (per min)</td>
+            <td class="center">P0.81</td>
+            <td class="center td-highlight">P0.80</td>
+            <td class="center"><span class="change-badge badge-green">↓ 1.23%</span></td>
+          </tr>
+          <tr>
+            <td class="td-24h">24 HRS DAILY</td>
+            <td class="td-label">Onnet SMS</td>
+            <td class="center">P0.20</td>
+            <td class="center td-highlight">P0.17</td>
+            <td class="center"><span class="change-badge badge-green">↓ 15.00%</span></td>
+          </tr>
+          <tr>
+            <td class="td-24h">24 HRS DAILY</td>
+            <td class="td-label">Offnet SMS</td>
+            <td class="center">P0.40</td>
+            <td class="center td-highlight">P0.36</td>
+            <td class="center"><span class="change-badge badge-green">↓ 4.00%</span></td>
+          </tr>
+          <tr style="background:var(--green-bg)!important">
+            <td class="td-24h">24 HRS DAILY</td>
+            <td class="td-label" style="color:var(--bocra-green)">Data per MB ★</td>
+            <td class="center">P0.97</td>
+            <td class="center" style="color:var(--bocra-green);font-weight:800;font-size:16px">P0.79</td>
+            <td class="center"><span class="change-badge badge-strong">↓ 18.56%</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="table-caption">Table 2: Mascom Wireless — Approved Prepaid Retail Tariffs</div>
+    </div>
+
+    <!-- ORANGE PANEL -->
+    <div class="op-panel" id="panel-orange">
+      <div class="op-header">
+        <div>
+          <h3 class="op-title">Orange Botswana</h3>
+          <p class="op-desc">Orange Botswana received approval for revised prepaid tariffs. Voice and SMS tariffs remain unchanged, but the standout achievement is a <strong>30.30% reduction in mobile data</strong> (from P0.99 to P0.69 per MB) — the largest single data price cut among MNOs.</p>
+        </div>
+        <div class="op-img">
+          <img src="https://scontent.fgbe3-1.fna.fbcdn.net/v/t39.30808-6/671716992_1355216539968941_8218122269673255759_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=13d280&_nc_eui2=AeGWNECgVhzn5m0A5JgFqtYB3vtaIKdwfUze-1ogp3B9TGCfBz-zPJtt8j61AW_zVRp9S0AyxyNTFv9YsyLtRevC&_nc_ohc=EFBc5xLtNc8Q7kNvwF8lPDh&_nc_oc=AdqzIEcp4EAQ2Uhrivyf5fbpL8V4u_JjtYpVCxbZ0abVfCCIO0e9WOZDA3Z2JYnkbOU&_nc_zt=23&_nc_ht=scontent.fgbe3-1.fna&_nc_gid=TaIwUTXD_MAc5kjFzz8BFA&_nc_ss=7c2a8&oh=00_Af3nRpHEvj1U6HelZ90R17eJfxAquDHnXvz6__LuzeQiJg&oe=69F92858" alt="Orange digital services">
+          <div class="op-img-overlay" style="background:linear-gradient(135deg,rgba(230,126,34,0.5),rgba(26,75,140,0.4))">
+          </div>
+        </div>
+      </div>
+
+      <table class="data-table fade-in">
+        <thead>
+          <tr>
+            <th>Time Period</th>
+            <th>Service</th>
+            <th class="center">Old Price</th>
+            <th class="center">New Price</th>
+            <th class="center">Change</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td rowspan="2" class="td-peak">PEAK<br><span style="font-weight:400;color:var(--ink-light);font-size:11px;letter-spacing:0;text-transform:none">7am – 9pm</span></td>
+            <td class="td-label">Onnet voice (per min)</td>
+            <td class="center">P1.37</td>
+            <td class="center td-zero">P1.37</td>
+            <td class="center"><span class="change-badge badge-neutral">0%</span></td>
+          </tr>
+          <tr>
+            <td class="td-label">Offnet voice (per min)</td>
+            <td class="center">P1.37</td>
+            <td class="center td-zero">P1.37</td>
+            <td class="center"><span class="change-badge badge-neutral">0%</span></td>
+          </tr>
+          <tr>
+            <td rowspan="2" class="td-offpeak">OFF PEAK<br><span style="font-weight:400;color:var(--ink-light);font-size:11px;letter-spacing:0;text-transform:none">9pm – 7am</span></td>
+            <td class="td-label">Onnet voice (per min)</td>
+            <td class="center">P0.89</td>
+            <td class="center td-zero">P0.89</td>
+            <td class="center"><span class="change-badge badge-neutral">0%</span></td>
+          </tr>
+          <tr>
+            <td class="td-label">Offnet voice (per min)</td>
+            <td class="center">P0.89</td>
+            <td class="center td-zero">P0.89</td>
+            <td class="center"><span class="change-badge badge-neutral">0%</span></td>
+          </tr>
+          <tr>
+            <td class="td-24h">24 HRS DAILY</td>
+            <td class="td-label">Onnet SMS</td>
+            <td class="center">P0.25</td>
+            <td class="center td-zero">P0.25</td>
+            <td class="center"><span class="change-badge badge-neutral">0%</span></td>
+          </tr>
+          <tr>
+            <td class="td-24h">24 HRS DAILY</td>
+            <td class="td-label">Offnet SMS</td>
+            <td class="center">P0.25</td>
+            <td class="center td-zero">P0.25</td>
+            <td class="center"><span class="change-badge badge-neutral">0%</span></td>
+          </tr>
+          <tr style="background:var(--green-bg)!important">
+            <td class="td-24h">24 HRS DAILY</td>
+            <td class="td-label" style="color:var(--bocra-green)">Data per MB ★</td>
+            <td class="center">P0.99</td>
+            <td class="center" style="color:var(--bocra-green);font-weight:800;font-size:16px">P0.69</td>
+            <td class="center"><span class="change-badge badge-strong">↓ 30.30%</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="table-caption">Table 3: Orange Botswana — Approved Prepaid Retail Tariffs</div>
+    </div>
+
+    <!-- BTC PANEL -->
+    <div class="op-panel" id="panel-btc">
+      <div class="op-header">
+        <div>
+          <h3 class="op-title">Botswana Telecommunications Corporation (BTC)</h3>
+          <p class="op-desc">BTC did not adjust its retail tariffs at this stage. However, BTC introduced significantly improved data bundle packages effective 27 January 2026 — see the Data Bundles section for details.</p>
+        </div>
+        <div class="op-img">
+          <img src="https://scontent.fgbe3-1.fna.fbcdn.net/v/t39.30808-6/591396837_1307336421434320_6426778419153748433_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=7b2446&_nc_eui2=AeHwEXK89svnwtZWkSP8dE63PZtJgAISFhg9m0mAAhIWGO-V09Si7wfpmwx5bsK4WZpClQn6vRYbWVpIxrLE_myQ&_nc_ohc=7Jo9WRNETF0Q7kNvwGsDR2y&_nc_oc=AdqdzXE5FcMzaKYVVD1Yw_S3z4O2lEimShzDYKxA0MV5j9YFeHxP3qYFaP3JaXoRfJw&_nc_zt=23&_nc_ht=scontent.fgbe3-1.fna&_nc_gid=0WU3XJ9R715PxTQm64Q1Dg&_nc_ss=7c2a8&oh=00_Af1YiP9sJ70fhK8xMknd-Oyp7VzBiX95G1yvA6iAhNOlVQ&oe=69F91DAD" alt="BTC telecom infrastructure">
+          <div class="op-img-overlay" style="background:linear-gradient(135deg,rgba(26,75,140,0.6),rgba(15,45,86,0.5))">
+          </div>
+        </div>
+      </div>
+
+      <table class="data-table fade-in">
+        <thead>
+          <tr>
+            <th>Time Period</th>
+            <th>Service</th>
+            <th class="center">Old Price</th>
+            <th class="center">Current Price</th>
+            <th class="center">Change</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td rowspan="2" class="td-peak">PEAK<br><span style="font-weight:400;color:var(--ink-light);font-size:11px;letter-spacing:0;text-transform:none">Mon–Fri 0700–2059<br>Sat 0500–2059</span></td>
+            <td class="td-label">Onnet voice (per min)</td>
+            <td class="center">P1.34</td>
+            <td class="center td-zero">P1.34</td>
+            <td class="center"><span class="change-badge badge-neutral">0%</span></td>
+          </tr>
+          <tr>
+            <td class="td-label">Offnet voice (per min)</td>
+            <td class="center">P1.34</td>
+            <td class="center td-zero">P1.34</td>
+            <td class="center"><span class="change-badge badge-neutral">0%</span></td>
+          </tr>
+          <tr>
+            <td rowspan="2" class="td-offpeak">OFF PEAK<br><span style="font-weight:400;color:var(--ink-light);font-size:11px;letter-spacing:0;text-transform:none">Mon–Fri 2100–0659<br>Sat 2100–0500</span></td>
+            <td class="td-label">Onnet voice (per min)</td>
+            <td class="center">P0.61</td>
+            <td class="center td-zero">P0.61</td>
+            <td class="center"><span class="change-badge badge-neutral">0%</span></td>
+          </tr>
+          <tr>
+            <td class="td-label">Offnet voice (per min)</td>
+            <td class="center">P0.61</td>
+            <td class="center td-zero">P0.61</td>
+            <td class="center"><span class="change-badge badge-neutral">0%</span></td>
+          </tr>
+          <tr>
+            <td class="td-24h">24 HRS DAILY</td>
+            <td class="td-label">Onnet SMS</td>
+            <td class="center">P0.30</td>
+            <td class="center td-zero">P0.30</td>
+            <td class="center"><span class="change-badge badge-neutral">0%</span></td>
+          </tr>
+          <tr>
+            <td class="td-24h">24 HRS DAILY</td>
+            <td class="td-label">Offnet SMS</td>
+            <td class="center">P0.30</td>
+            <td class="center td-zero">P0.30</td>
+            <td class="center"><span class="change-badge badge-neutral">0%</span></td>
+          </tr>
+          <tr>
+            <td class="td-24h">24 HRS DAILY</td>
+            <td class="td-label">Data per MB</td>
+            <td class="center">P1.00</td>
+            <td class="center td-zero">P1.00</td>
+            <td class="center"><span class="change-badge badge-neutral">0%</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="table-caption">Table 4: BTC — Approved Prepaid Retail Tariffs (No change from previous)</div>
+    </div>
+
+    <!-- Data per MB chart -->
+    <div class="chart-wrap-light fade-in" style="margin-top:56px">
+      <div class="chart-title-light">Data Price Comparison: Old vs New (BWP per MB)</div>
+      <div class="chart-sub-light">Mascom, Orange, and BTC — retail per-megabyte data prices before and after BOCRA directive</div>
+      <canvas id="dataMbChart" height="240"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ BUNDLES -->
+<section class="section bundles-section" id="bundles">
+  <div class="container">
+    <div class="section-label">
+      <span class="section-label-num">04</span>
+      <div class="section-label-line"></div>
+      <span class="section-label-text">Data Bundles</span>
+    </div>
+    <h2 class="section-title">New Data Package Offerings</h2>
+    <p class="section-lead">Beyond per-MB pricing, Orange Botswana and BTC have introduced significantly improved bundle packages — offering substantially more data at lower prices.</p>
+
+    <!-- Orange bundles -->
+    <h3 style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--ink);margin-bottom:8px">Orange — All My Internet Data Bundles</h3>
+    <p style="color:var(--ink-mid);margin-bottom:32px;max-width:640px">New packages with up to <strong>60% price reductions</strong>, implemented effective 15 October 2025. Discontinued packages have been replaced with higher-value offerings.</p>
+
+    <div class="bundle-period-grid fade-in">
+      <!-- 1 Day -->
+      <div class="bundle-period">
+        <div class="bundle-period-header" style="background:var(--bocra-blue)">
+          <span>⏱</span> 1 Day
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">100 MB</span>
+          <div class="bundle-price-wrap">
+            <span class="bundle-price-old">was P5.00</span>
+            <span class="bundle-price-new">P2.00</span>
+          </div>
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">300 MB <span class="bundle-tag tag-new">NEW</span></span>
+          <div class="bundle-price-wrap">
+            <span class="bundle-price-new">P5.00</span>
+          </div>
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">1.5 GB <span class="bundle-tag tag-new">NEW</span></span>
+          <div class="bundle-price-wrap">
+            <span class="bundle-price-new">P10.00</span>
+          </div>
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">2.5 GB <span class="bundle-tag tag-new">NEW</span></span>
+          <div class="bundle-price-wrap">
+            <span class="bundle-price-new">P18.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1 Week -->
+      <div class="bundle-period">
+        <div class="bundle-period-header" style="background:var(--bocra-blue-mid)">
+          <span>📅</span> 1 Week
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">2 GB <span class="bundle-tag tag-new">NEW</span></span>
+          <div class="bundle-price-wrap">
+            <span class="bundle-price-new">P35.00</span>
+          </div>
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">4 GB <span class="bundle-tag tag-new">NEW</span></span>
+          <div class="bundle-price-wrap">
+            <span class="bundle-price-new">P50.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2 Weeks -->
+      <div class="bundle-period">
+        <div class="bundle-period-header" style="background:var(--bocra-green)">
+          <span>🗓</span> 2 Weeks
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">4 GB</span>
+          <div class="bundle-price-wrap">
+            <span class="bundle-price-old">was P80.00</span>
+            <span class="bundle-price-new">P60.00</span>
+          </div>
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">8 GB <span class="bundle-tag tag-new">NEW</span></span>
+          <div class="bundle-price-wrap">
+            <span class="bundle-price-new">P80.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1 Month -->
+      <div class="bundle-period">
+        <div class="bundle-period-header" style="background:#0F2D56">
+          <span>🗓</span> 1 Month
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">4 GB</span>
+          <div class="bundle-price-wrap">
+            <span class="bundle-price-old">was P99.00</span>
+            <span class="bundle-price-new">P69.00</span>
+          </div>
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">8 GB <span class="bundle-tag tag-new">NEW</span></span>
+          <div class="bundle-price-wrap">
+            <span class="bundle-price-new">P99.00</span>
+          </div>
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">30 GB <span class="bundle-tag tag-new">NEW</span></span>
+          <div class="bundle-price-wrap">
+            <span class="bundle-price-new">P199.00</span>
+          </div>
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">80 GB <span class="bundle-tag tag-new">NEW</span></span>
+          <div class="bundle-price-wrap">
+            <span class="bundle-price-new">P399.00</span>
+          </div>
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">150 GB <span class="bundle-tag tag-new">NEW</span></span>
+          <div class="bundle-price-wrap">
+            <span class="bundle-price-new">P599.00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BTC bundles -->
+    <h3 style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--ink);margin-bottom:8px;margin-top:60px">BTC — Revised TurnUp Data Packages</h3>
+    <p style="color:var(--ink-mid);margin-bottom:32px;max-width:640px">BTC introduced new and revised data packages effective <strong>27 January 2026</strong>, offering significantly more data for the same or lower price.</p>
+
+    <div class="bundle-period-grid fade-in">
+      <div class="bundle-period">
+        <div class="bundle-period-header" style="background:var(--bocra-blue)">
+          <span>⏱</span> 1 Day
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">100 MB <span class="bundle-tag tag-new">NEW</span></span>
+          <div class="bundle-price-wrap"><span class="bundle-price-new">P2.00</span></div>
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">300 MB <span class="bundle-tag tag-new">NEW</span></span>
+          <div class="bundle-price-wrap"><span class="bundle-price-new">P5.00</span></div>
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">1.5 GB <span class="bundle-tag tag-new">NEW</span></span>
+          <div class="bundle-price-wrap"><span class="bundle-price-new">P10.00</span></div>
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">2.5 GB <span class="bundle-tag tag-new">NEW</span></span>
+          <div class="bundle-price-wrap"><span class="bundle-price-new">P18.00</span></div>
+        </div>
+      </div>
+      <div class="bundle-period">
+        <div class="bundle-period-header" style="background:var(--bocra-blue-mid)">
+          <span>⏱</span> 1 Week
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">500 MB</span>
+          <div class="bundle-price-wrap">
+            <span class="bundle-price-old">was P28.00</span>
+            <span class="bundle-price-new">P20.00</span>
+          </div>
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">2.5 GB</span>
+          <div class="bundle-price-wrap">
+            <span class="bundle-price-old">was P50.00</span>
+            <span class="bundle-price-new">P40.00</span>
+          </div>
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">5 GB <span class="bundle-tag tag-new">NEW</span></span>
+          <div class="bundle-price-wrap"><span class="bundle-price-new">P50.00</span></div>
+        </div>
+      </div>
+      <div class="bundle-period">
+        <div class="bundle-period-header" style="background:var(--bocra-green)">
+          <span>🗓</span> 2 Weeks
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">5 GB</span>
+          <div class="bundle-price-wrap">
+            <span class="bundle-price-old">was P99.00</span>
+            <span class="bundle-price-new">P60.00</span>
+          </div>
+        </div>
+      </div>
+      <div class="bundle-period">
+        <div class="bundle-period-header" style="background:#0F2D56">
+          <span>⏱</span> 1 Month
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">4 GB <span class="bundle-tag tag-new">NEW</span></span>
+          <div class="bundle-price-wrap"><span class="bundle-price-new">P65.00</span></div>
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">8 GB <span class="bundle-tag tag-new">NEW</span></span>
+          <div class="bundle-price-wrap"><span class="bundle-price-new">P99.00</span></div>
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">30 GB <span class="bundle-tag tag-new">NEW</span></span>
+          <div class="bundle-price-wrap"><span class="bundle-price-new">P199.00</span></div>
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">50 GB <span class="bundle-tag tag-new">NEW</span></span>
+          <div class="bundle-price-wrap"><span class="bundle-price-new">P269.00</span></div>
+        </div>
+        <div class="bundle-row">
+          <span class="bundle-data">100 GB <span class="bundle-tag tag-new">NEW</span></span>
+          <div class="bundle-price-wrap"><span class="bundle-price-new">P349.00</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bundle value chart -->
+    <div class="chart-wrap-light fade-in" style="margin-top:48px">
+      <div class="chart-title-light">Orange Monthly Bundle Value — Old vs New</div>
+      <div class="chart-sub-light">GB per BWP spent (higher = better value) — new packages deliver dramatically more data per pula</div>
+      <canvas id="bundleValueChart" height="240"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ COMPARISON -->
+<section class="section" id="comparison">
+  <div class="container">
+    <div class="section-label">
+      <span class="section-label-num">05</span>
+      <div class="section-label-line"></div>
+      <span class="section-label-text">MNO Comparison</span>
+    </div>
+    <h2 class="section-title">30-Day Bundle Comparison</h2>
+    <p class="section-lead">Compare available 30-day data bundles across all three MNOs to make an informed choice based on your data needs and budget.</p>
+
+    <div class="chart-wrap-light fade-in">
+      <div class="chart-title-light">30-Day Bundle Price Comparison by MNO</div>
+      <div class="chart-sub-light">Orange, Mascom, and BTC — selected 30-day data package prices (BWP)</div>
+      <canvas id="compareChart" height="280"></canvas>
+    </div>
+
+    <div class="fade-in" style="overflow-x:auto;margin-top:40px">
+      <table class="data-table compare-table">
+        <thead>
+          <tr>
+            <th style="width:120px">Duration</th>
+            <th style="width:100px">Data Bundle</th>
+            <th class="center mno-col-orange" style="background-image:url('https://static.wikia.nocookie.net/logopedia/images/c/c8/Orange_logo.svg/revision/latest?cb=20230119162706') ;background-size:cover;background-position:center">Orange (BWP)</th>
+            <th class="center mno-col-mascom" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/3/35/Mascom_logo.png') ;background-size:cover;background-position:center"> Mascom (BWP)</th>
+            <th class="center mno-col-btc" style="background-image:url('https://btc.bw/wp-content/uploads/2020/09/Logo-Small.png') ;background-size:cover;background-position:center" >BTC (BWP)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 1 Day rows -->
+          <tr><td class="td-24h" rowspan="5">1 DAY</td><td>25 MB</td><td class="center td-na mno-col-orange">—</td><td class="center td-avail mno-col-mascom">2.00</td><td class="center td-na mno-col-btc">—</td></tr>
+          <tr><td>100 MB</td><td class="center td-avail mno-col-orange">2.00</td><td class="center td-avail mno-col-mascom">5.00</td><td class="center td-avail mno-col-btc">2.00</td></tr>
+          <tr><td>300 MB</td><td class="center td-avail mno-col-orange">5.00</td><td class="center td-na mno-col-mascom">—</td><td class="center td-avail mno-col-btc">5.00</td></tr>
+          <tr><td>1.5 GB</td><td class="center td-avail mno-col-orange">10.00</td><td class="center td-na mno-col-mascom">—</td><td class="center td-avail mno-col-btc">10.00</td></tr>
+          <tr><td>2.5 GB</td><td class="center td-avail mno-col-orange">18.00</td><td class="center td-na mno-col-mascom">—</td><td class="center td-avail mno-col-btc">18.00</td></tr>
+          <!-- 30 Day rows -->
+          <tr><td class="td-peak" rowspan="8">30 DAYS</td><td>2 GB</td><td class="center td-na mno-col-orange">—</td><td class="center td-avail mno-col-mascom">69.00</td><td class="center td-na mno-col-btc">—</td></tr>
+          <tr><td>4 GB</td><td class="center td-avail mno-col-orange">69.00</td><td class="center td-na mno-col-mascom">—</td><td class="center td-avail mno-col-btc">65.00</td></tr>
+          <tr><td>8 GB</td><td class="center td-avail mno-col-orange">99.00</td><td class="center td-na mno-col-mascom">—</td><td class="center td-avail mno-col-btc">99.00</td></tr>
+          <tr><td>30 GB</td><td class="center td-avail mno-col-orange">199.00</td><td class="center td-na mno-col-mascom">—</td><td class="center td-avail mno-col-btc">199.00</td></tr>
+          <tr><td>50 GB</td><td class="center td-na mno-col-orange">—</td><td class="center td-avail mno-col-mascom">650.00</td><td class="center td-avail mno-col-btc">269.00</td></tr>
+          <tr><td>80 GB</td><td class="center td-avail mno-col-orange">399.00</td><td class="center td-na mno-col-mascom">—</td><td class="center td-na mno-col-btc">—</td></tr>
+          <tr><td>100 GB</td><td class="center td-na mno-col-orange">—</td><td class="center td-avail mno-col-mascom">990.00</td><td class="center td-avail mno-col-btc">349.00</td></tr>
+          <tr><td>150 GB</td><td class="center td-avail mno-col-orange">599.00</td><td class="center td-na mno-col-mascom">—</td><td class="center td-na mno-col-btc">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-caption">Table 7: Comparison of Mobile Data Bundles for MNOs (selected rows)</div>
+
+    <!-- Photo strip -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px" class="fade-in">
+      <div style="border-radius:2px;overflow:hidden;height:220px;position:relative">
+        <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80" alt="Digital community" style="width:100%;height:100%;object-fit:cover">
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(26,75,140,0.8));display:flex;align-items:flex-end;padding:20px">
+          <span style="color:#fff;font-size:13px;font-weight:600">Digital Communities</span>
+        </div>
+      </div>
+      <div style="border-radius:2px;overflow:hidden;height:220px;position:relative">
+        <img src="https://images.unsplash.com/photo-1491975474562-1f4e30bc9468?w=600&q=80" alt="Mobile banking" style="width:100%;height:100%;object-fit:cover">
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(26,138,80,0.8));display:flex;align-items:flex-end;padding:20px">
+          <span style="color:#fff;font-size:13px;font-weight:600">Mobile Finance</span>
+        </div>
+      </div>
+      <div style="border-radius:2px;overflow:hidden;height:220px;position:relative">
+        <img src="https://www.usf.edu/arts-sciences/chronicles/images/2023/botswana-supporting.jpg" alt="Connectivity" style="width:100%;height:100%;object-fit:cover">
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(15,45,86,0.8));display:flex;align-items:flex-end;padding:20px">
+          <span style="color:#fff;font-size:13px;font-weight:600">Rural Connectivity</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ CONCLUSION -->
+<section class="section" id="conclusion" style="border:none">
+  <div class="container">
+    <div class="section-label">
+      <span class="section-label-num">06</span>
+      <div class="section-label-line"></div>
+      <span class="section-label-text">Conclusion</span>
+    </div>
+    <h2 class="section-title">Impact & Outlook</h2>
+    <p class="section-lead">The reduction in wholesale and retail services is expected to enhance market competitiveness and consumer welfare through lower prices across Botswana.</p>
+
+    <div class="conclusion-grid fade-in">
+      <div class="conclusion-card cc-1">
+        <span class="cc-icon"></span>
+        <div class="cc-title">Lower Prices</div>
+        <div class="cc-text">Wholesale and retail reductions drive down the cost of communications for all consumers and businesses, making connectivity more accessible across Botswana.</div>
+      </div>
+      <div class="conclusion-card cc-2">
+        <span class="cc-icon"></span>
+        <div class="cc-title">Market Competition</div>
+        <div class="cc-text">Reduced termination rates level the playing field between operators, spurring innovation, better service offerings, and improved quality for subscribers.</div>
+      </div>
+      <div class="conclusion-card cc-3">
+        <span class="cc-icon"></span>
+        <div class="cc-title">Digital Inclusion</div>
+        <div class="cc-text">Affordable data empowers rural communities and individuals without traditional banking access to participate fully in Botswana's digital economy.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Commitment block -->
+  <div class="conclusion-commitment">
+    <div class="commitment-quote">
+      "BOCRA remains committed to ensuring that Batswana enjoy accessible, reliable, and affordable communication services — recognising ICT as a key enabler of socio-economic development."
+    </div>
+    <div class="commitment-attr">Botswana Communications Regulatory Authority</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ FOOTER -->
+<footer class="footer">
+  <div class="footer-logo">
+    <img src="https://admin.dqos.bocra.org.bw/storage/BOCRA.png" alt="BOCRA Logo" height="32px" width="auto">
+  </div>
+  <div class="footer-info">
+    <div>Botswana Communications Regulatory Authority</div>
+    <div>ICT Market Outlook — Tariff Reductions</div>
+    <div style="margin-top:8px;color:rgba(255,255,255,0.15)">www.bocra.org.bw</div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════ JS -->
+<script>
+// ── Operator tab switching ──────────────────────────────────────────
+function showOp(id, el) {
+  document.querySelectorAll('.op-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.op-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  el.classList.add('active');
+}
+
+// ── Intersection observer for fade-ins ─────────────────────────────
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// Trigger hero stats immediately
+document.querySelectorAll('.hero .fade-in').forEach((el,i) => {
+  setTimeout(() => el.classList.add('visible'), 200 + i*120);
+});
+
+// ── CHART 1: Termination Rate Glide Path ───────────────────────────
+const rateCtx = document.getElementById('rateChart').getContext('2d');
+new Chart(rateCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Previous Rate', '1 July 2025 ✓ Live', '1 July 2026', '1 July 2027'],
+    datasets: [{
+      label: 'Rate (BWP/min)',
+      data: [0.13, 0.09, 0.05, 0.02],
+      backgroundColor: ['rgba(255,255,255,0.15)', 'rgba(74,224,138,0.6)', 'rgba(46,111,191,0.5)', 'rgba(232,150,10,0.5)'],
+      borderColor: ['rgba(255,255,255,0.3)', '#4AE08A', '#2E6FBF', '#E8960A'],
+      borderWidth: 2,
+      borderRadius: 2,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` P${ctx.parsed.y.toFixed(2)} per minute`
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: 'rgba(255,255,255,0.08)' },
+        ticks: { color: 'rgba(255,255,255,0.5)', font: { size: 12 } }
+      },
+      y: {
+        grid: { color: 'rgba(255,255,255,0.08)' },
+        ticks: { color: 'rgba(255,255,255,0.5)', font: { size: 12 }, callback: v => `P${v.toFixed(2)}` },
+        max: 0.16
+      }
+    }
+  }
+});
+
+// ── CHART 2: Data per MB old vs new ────────────────────────────────
+const mbCtx = document.getElementById('dataMbChart').getContext('2d');
+new Chart(mbCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Mascom', 'Orange', 'BTC'],
+    datasets: [
+      {
+        label: 'Old Price',
+        data: [0.97, 0.99, 1.00],
+        backgroundColor: 'rgba(190,200,215,0.7)',
+        borderColor: '#B0BCC8',
+        borderWidth: 1,
+        borderRadius: 2,
+      },
+      {
+        label: 'New Price',
+        data: [0.79, 0.69, 1.00],
+        backgroundColor: ['rgba(26,138,80,0.7)', 'rgba(26,138,80,0.7)', 'rgba(190,200,215,0.5)'],
+        borderColor: ['#1A8A50', '#1A8A50', '#B0BCC8'],
+        borderWidth: 1,
+        borderRadius: 2,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { labels: { color: '#3A4A5C', font: { size: 13 } } },
+      tooltip: { callbacks: { label: ctx => ` P${ctx.parsed.y.toFixed(2)}/MB` } }
+    },
+    scales: {
+      x: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#6B7C93', font: { size: 13 } } },
+      y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#6B7C93', callback: v => `P${v.toFixed(2)}` }, max: 1.2 }
+    }
+  }
+});
+
+// ── CHART 3: Bundle value chart (GB per BWP) ───────────────────────
+const bvCtx = document.getElementById('bundleValueChart').getContext('2d');
+new Chart(bvCtx, {
+  type: 'bar',
+  data: {
+    labels: ['4GB/P99\n(Old)', '4GB/P69\n(New)', '8GB/P99\n(New)', '30GB/P199\n(New)', '80GB/P399\n(New)', '150GB/P599\n(New)'],
+    datasets: [{
+      label: 'GB per BWP 100',
+      data: [
+        (4/99*100).toFixed(2),
+        (4/69*100).toFixed(2),
+        (8/99*100).toFixed(2),
+        (30/199*100).toFixed(2),
+        (80/399*100).toFixed(2),
+        (150/599*100).toFixed(2)
+      ],
+      backgroundColor: [
+        'rgba(190,200,215,0.7)',
+        'rgba(26,138,80,0.7)',
+        'rgba(26,138,80,0.75)',
+        'rgba(26,138,80,0.8)',
+        'rgba(26,138,80,0.85)',
+        'rgba(26,138,80,0.9)',
+      ],
+      borderColor: ['#B0BCC8','#1A8A50','#1A8A50','#1A8A50','#1A8A50','#1A8A50'],
+      borderWidth: 1,
+      borderRadius: 2
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} GB per P100 spent` } }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: '#6B7C93', font: { size: 11 } } },
+      y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#6B7C93' }, title: { display: true, text: 'GB per P100', color: '#6B7C93' } }
+    }
+  }
+});
+
+// ── CHART 4: 30-day comparison bar chart ───────────────────────────
+const cmpCtx = document.getElementById('compareChart').getContext('2d');
+new Chart(cmpCtx, {
+  type: 'bar',
+  data: {
+    labels: ['4 GB', '8 GB', '30 GB', '50 GB', '80 GB', '100 GB'],
+    datasets: [
+      {
+        label: 'Orange',
+        data: [69, 99, 199, null, 399, null],
+        backgroundColor: 'rgba(230,126,34,0.75)',
+        borderColor: '#E67E22',
+        borderWidth: 1,
+        borderRadius: 2,
+      },
+      {
+        label: 'Mascom',
+        data: [null, null, null, 650, null, 990],
+        backgroundColor: 'rgba(192,57,43,0.75)',
+        borderColor: '#C0392B',
+        borderWidth: 1,
+        borderRadius: 2,
+      },
+      {
+        label: 'BTC',
+        data: [65, 99, 199, 269, null, 349],
+        backgroundColor: 'rgba(26,75,140,0.75)',
+        borderColor: '#1A4B8C',
+        borderWidth: 1,
+        borderRadius: 2,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { labels: { color: '#3A4A5C', font: { size: 13 } } },
+      tooltip: { callbacks: { label: ctx => ctx.parsed.y != null ? ` P${ctx.parsed.y}` : ' Not available' } }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: '#6B7C93', font: { size: 12 } } },
+      y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#6B7C93', callback: v => `P${v}` } }
+    }
+  }
+});
+</script>
+</body>
+</html>
