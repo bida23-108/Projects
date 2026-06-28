@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>BOCRA | Impact of Starlink — Botswana Communications Market 2026</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Leaflet (satellite map) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<style>
+/* ── ROOT PALETTE — BOCRA OFFICIAL COLOURS ─────────────────── */
+:root {
+  --b-blue:   #0078a0;   /* BOCRA Blue  */
+  --b-green:  #1b5e20;   /* BOCRA Green */
+  --b-red:    #8b0000;   /* BOCRA Red   */
+  --b-yellow: #ffc107;   /* BOCRA Yellow*/
+  --b-grey:   #58595b;   /* BOCRA Grey  */
+  --navy:     #071520;
+  --navy2:    #0d2235;
+  --ink:      #1a1a2e;
+  --slate:    #475569;
+  --mist:     #f0f4f8;
+  --rule:     #e2e8f0;
+  --white:    #ffffff;
+  --sans:     'Inter', system-ui, sans-serif;
+  --serif:    'Playfair Display', Georgia, serif;
+  --mono:     'JetBrains Mono', monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--mist);color:var(--ink);line-height:1.7;font-size:15px}
+
+/* ── LAYOUT ──────────────────────────────────────────────── */
+.wrap{display:grid;grid-template-columns:252px 1fr;min-height:100vh}
+
+/* ── SIDEBAR ──────────────────────────────────────────────── */
+.sb{
+  background:var(--navy);position:sticky;top:0;height:100vh;
+  overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;
+  border-right:1px solid rgba(255,193,7,.18);
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent;
+}
+.sb-brand{padding:22px 20px 16px;border-bottom:1px solid rgba(255,193,7,.15)}
+.sb-logo-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.sb-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.sb-wordmark{font-family:var(--serif);font-size:20px;font-weight:900;color:var(--white);letter-spacing:.04em}
+.sb-sub{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:rgba(255,193,7,.55);text-transform:uppercase}
+.sb-nav{padding:14px 0 20px;flex:1}
+.nav-grp{font-family:var(--mono);font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.22);padding:12px 20px 4px;display:block}
+.nav-a{display:flex;align-items:center;gap:9px;padding:7px 20px;color:rgba(255,255,255,.48);text-decoration:none;font-size:11.5px;font-weight:500;border-left:2px solid transparent;transition:.18s;line-height:1.3}
+.nav-a:hover,.nav-a.on{color:var(--white);background:rgba(255,255,255,.05);border-left-color:var(--b-yellow)}
+.nd{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sb-foot{padding:14px 20px;border-top:1px solid rgba(255,255,255,.07);font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.22);line-height:1.7}
+.conf{display:inline-block;background:rgba(139,0,0,.28);color:#ff9090;border:1px solid rgba(139,0,0,.45);padding:2px 8px;font-size:8px;letter-spacing:.12em;border-radius:2px;margin-bottom:5px;text-transform:uppercase}
+
+/* ── HERO ─────────────────────────────────────────────────── */
+.hero{position:relative;overflow:hidden;min-height:600px;display:flex;flex-direction:column;justify-content:flex-end;padding:0 60px 52px}
+.hero-bg{position:absolute;inset:0;background:url('https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Starlink_Mission_%2847926144123%29.jpg/1280px-Starlink_Mission_%2847926144123%29.jpg') center/cover no-repeat}
+.hero-ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,21,32,.4) 0%,rgba(7,21,32,.72) 45%,rgba(7,21,32,.97) 100%)}
+.hero-stripe{position:absolute;bottom:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--b-blue) 0%,var(--b-green) 25%,var(--b-red) 50%,var(--b-yellow) 75%,var(--b-grey) 100%)}
+.hero-c{position:relative;z-index:2;max-width:900px}
+.hero-row{display:flex;align-items:center;gap:12px;margin-bottom:22px;flex-wrap:wrap}
+.htag{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;padding:4px 11px;border-radius:2px}
+.ht-blue{background:rgba(0,120,160,.22);color:#7ed8f0;border:1px solid rgba(0,120,160,.38)}
+.ht-red{background:rgba(139,0,0,.2);color:#ff9090;border:1px solid rgba(139,0,0,.38)}
+.ht-grey{color:rgba(255,255,255,.3);font-family:var(--mono);font-size:9.5px;letter-spacing:.1em}
+.hero h1{font-family:var(--serif);font-size:clamp(28px,3.6vw,46px);font-weight:900;color:var(--white);line-height:1.1;margin-bottom:12px}
+.hero h1 em{font-style:italic;color:#ffd54f}
+.hero-sub{font-size:14px;color:rgba(255,255,255,.5);max-width:580px;line-height:1.65;margin-bottom:34px}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.11);border-radius:4px;overflow:hidden}
+.kpi{background:rgba(0,0,0,.32);padding:16px 18px;transition:.2s}
+.kpi:hover{background:rgba(255,255,255,.07)}
+.kpi-l{font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.32);margin-bottom:5px;display:block}
+.kpi-v{font-family:var(--serif);font-size:23px;font-weight:700;color:var(--white);line-height:1;margin-bottom:3px}
+.ky{color:#ffd54f}.kg{color:#69f0ae}.kb{color:#82d8ff}.kr{color:#ff8a80}
+.kpi-d{font-size:10.5px;color:rgba(255,255,255,.3)}
+
+/* ── GENERIC SECTION ──────────────────────────────────────── */
+.sec{padding:50px 60px;border-bottom:1px solid var(--rule);background:var(--white)}
+.sec.alt{background:var(--mist)}
+.sec.dark{
+  background:var(--navy2);
+  background-image:url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1600&q=80');
+  background-size:cover;background-position:center;position:relative;
+}
+.sec.dark::before{content:'';position:absolute;inset:0;background:rgba(13,34,53,.94);pointer-events:none;z-index:0}
+.sec.dark>*{position:relative;z-index:1}
+.sec-h{display:flex;align-items:baseline;gap:13px;margin-bottom:26px}
+.sec-n{font-family:var(--mono);font-size:10.5px;color:var(--b-yellow);padding:2px 9px;background:rgba(255,193,7,.1);border:1px solid rgba(255,193,7,.22);border-radius:2px}
+.sec-t{font-family:var(--serif);font-size:24px;font-weight:700;color:var(--navy)}
+.sec-t.w{color:var(--white)}
+.rule{height:2px;border:none;margin-bottom:26px}
+.rule-blue{background:linear-gradient(90deg,var(--b-blue),var(--rule))}
+.rule-gold{background:linear-gradient(90deg,var(--b-yellow),rgba(255,255,255,.08))}
+.sub-h{font-family:var(--serif);font-size:16.5px;font-weight:700;color:var(--navy2);margin:26px 0 11px;padding-left:11px;border-left:3px solid var(--b-blue)}
+.sub-h.w{color:rgba(255,255,255,.88);border-left-color:var(--b-yellow)}
+.body{color:var(--slate);font-size:13.5px;line-height:1.78;margin-bottom:13px;max-width:820px}
+.body.w{color:rgba(255,255,255,.6)}
+
+/* ── CALLOUTS ─────────────────────────────────────────────── */
+.box{border-radius:4px;padding:16px 20px;margin:18px 0;position:relative;overflow:hidden}
+.box::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.bx-amber{background:#fffbf0;border:1px solid #e8d070}.bx-amber::before{background:var(--b-yellow)}
+.bx-blue{background:#f0f8ff;border:1px solid #b0d4ec}.bx-blue::before{background:var(--b-blue)}
+.bx-green{background:#f0faf4;border:1px solid #a8dcbc}.bx-green::before{background:var(--b-green)}
+.bx-red{background:#fff4f4;border:1px solid #f0b0b0}.bx-red::before{background:var(--b-red)}
+.bx-dark{background:rgba(255,255,255,.04);border:1px solid rgba(255,193,7,.2)}.bx-dark::before{background:var(--b-yellow)}
+.bx-lbl{font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;display:block;margin-bottom:5px}
+.bx-amber .bx-lbl{color:#8a6400}.bx-blue .bx-lbl{color:var(--b-blue)}.bx-green .bx-lbl{color:var(--b-green)}.bx-red .bx-lbl{color:var(--b-red)}.bx-dark .bx-lbl{color:var(--b-yellow)}
+.box p{font-size:13px;line-height:1.65}
+.box p.w{color:rgba(255,255,255,.72)}
+
+/* ── BULLETS ──────────────────────────────────────────────── */
+ul.bl{list-style:none;margin:11px 0 16px}
+ul.bl li{display:flex;gap:10px;padding:5px 0;font-size:13px;color:var(--slate);line-height:1.65;border-bottom:1px solid rgba(0,0,0,.04);max-width:840px}
+ul.bl li.w{color:rgba(255,255,255,.58);border-bottom-color:rgba(255,255,255,.05)}
+ul.bl li::before{content:'◆';font-size:6px;flex-shrink:0;margin-top:6px}
+ul.bl li.bbl::before{color:var(--b-blue)}
+ul.bl li.bgy::before{color:var(--b-green)}
+ul.bl li.brd::before{color:var(--b-red)}
+ul.bl li.byl::before{color:var(--b-yellow)}
+
+/* ── TABLES ───────────────────────────────────────────────── */
+.tw{overflow-x:auto;margin:20px 0;border-radius:6px;border:1px solid var(--rule);box-shadow:0 2px 10px rgba(0,0,0,.05)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+thead tr{background:var(--navy)}
+thead th{padding:10px 13px;text-align:left;font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;white-space:nowrap;color:var(--white)}
+th.r,td.r{text-align:right;font-family:var(--mono)}
+th.c,td.c{text-align:center}
+tbody tr{border-bottom:1px solid var(--rule)}
+tbody tr:last-child{border-bottom:none}
+tbody tr:nth-child(even){background:#fafbfd}
+tbody tr:hover{background:rgba(0,120,160,.04)}
+td{padding:8px 13px;color:var(--slate);vertical-align:middle}
+td.b{font-weight:600;color:var(--ink)}
+td.na{color:#bbb;font-style:italic}
+td.g{color:var(--b-green);font-weight:600;font-family:var(--mono)}
+td.rr{color:var(--b-red);font-weight:600;font-family:var(--mono)}
+td.sl{background:#f0faf4!important;font-weight:600;color:var(--b-green);font-family:var(--mono)}
+.pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:600;white-space:nowrap}
+.p-g{background:#d4edda;color:#155724}.p-r{background:#f8d7da;color:#721c24}
+.p-a{background:#fff3cd;color:#856404}.p-b{background:#d1ecf1;color:#0c5460}
+.p-gr{background:#e2e3e5;color:#383d41}
+
+/* ── CHARTS ───────────────────────────────────────────────── */
+.ch{background:var(--white);border:1px solid var(--rule);border-radius:7px;padding:22px;margin:18px 0;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+.ch.dk{background:#0d1929;border-color:rgba(255,255,255,.09)}
+.ch-t{font-family:var(--serif);font-size:14.5px;font-weight:700;color:var(--navy);margin-bottom:3px}
+.ch-t.w{color:rgba(255,255,255,.9)}
+.ch-s{font-family:var(--mono);font-size:9px;color:#aaa;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;display:block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px 0}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:16px 0}
+
+/* ── SATELLITE MAP ────────────────────────────────────────── */
+#satmap{height:480px;border-radius:8px;border:2px solid rgba(255,193,7,.35);box-shadow:0 4px 24px rgba(0,0,0,.4);margin:22px 0}
+.map-legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:10px;padding:10px 16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:4px}
+.ml-item{display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,.7)}
+.ml-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+
+/* ── OPERATOR CARDS ───────────────────────────────────────── */
+.og{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin:20px 0}
+.oc{background:var(--white);border:1px solid var(--rule);border-radius:6px;padding:17px;transition:.2s;position:relative;overflow:hidden}
+.oc:hover{box-shadow:0 6px 22px rgba(0,0,0,.08);transform:translateY(-2px)}
+.oc::after{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.oc.gr::after{background:var(--b-green)}.oc.dc::after{background:var(--b-red)}
+.oc.st::after{background:var(--b-yellow)}.oc.su::after{background:linear-gradient(90deg,var(--b-blue),var(--b-green))}
+.on{font-family:var(--serif);font-size:14.5px;font-weight:700;color:var(--navy);margin-bottom:2px}
+.ot{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:#999;margin-bottom:11px}
+.os{display:flex;gap:11px;margin-bottom:11px}
+.osi{flex:1}
+.osl{font-size:8.5px;color:#bbb;font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:1px}
+.osv{font-family:var(--mono);font-size:12.5px;font-weight:600}
+.vu{color:var(--b-green)}.vd{color:var(--b-red)}.vn{color:var(--b-yellow)}
+.on2{font-size:11px;color:var(--slate);line-height:1.5;padding-top:9px;border-top:1px solid var(--rule)}
+
+/* ── OPPORTUNITY CARDS ────────────────────────────────────── */
+.oppg{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin:18px 0}
+.oppc{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:6px;padding:18px;transition:.2s}
+.oppc:hover{border-color:var(--b-yellow);box-shadow:0 4px 18px rgba(255,193,7,.1)}
+.oppi{font-size:20px;margin-bottom:7px;display:block}
+.oppt{font-family:var(--serif);font-size:13.5px;font-weight:700;color:#ffd54f;margin-bottom:6px;line-height:1.3}
+.opptx{font-size:11.5px;color:rgba(255,255,255,.52);line-height:1.6}
+
+/* ── RISK GRID ────────────────────────────────────────────── */
+.rg{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:18px 0}
+.rc{border-left:3px solid;padding:13px 15px;border-radius:0 4px 4px 0;border-top:1px solid rgba(255,255,255,.08);border-right:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04)}
+.rc.h{border-left-color:var(--b-red)}.rc.m{border-left-color:var(--b-yellow)}.rc.lo{border-left-color:var(--b-green)}
+.rct{font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;margin-bottom:3px}
+.rc.h .rct{color:#ff8a80}.rc.m .rct{color:var(--b-yellow)}.rc.lo .rct{color:#5de8a0}
+.rch{font-size:13px;font-weight:600;color:rgba(255,255,255,.88);margin-bottom:3px}
+.rcd{font-size:11.5px;color:rgba(255,255,255,.48);line-height:1.55}
+
+/* ── RECOMMENDATIONS ──────────────────────────────────────── */
+.recl{counter-reset:recs;margin:14px 0}
+.reci{counter-increment:recs;display:flex;gap:15px;padding:14px 17px;border:1px solid rgba(255,255,255,.09);border-radius:6px;margin-bottom:9px;background:rgba(255,255,255,.04);transition:border-color .2s}
+.reci:hover{border-color:var(--b-yellow)}
+.recn{font-family:var(--serif);font-size:19px;font-weight:900;color:var(--b-yellow);flex-shrink:0;line-height:1;padding-top:1px;min-width:22px}
+.recn::before{content:counter(recs,decimal-leading-zero)}
+.rect{font-size:13px;font-weight:600;color:rgba(255,255,255,.88);margin-bottom:3px}
+.recd{font-size:11.5px;color:rgba(255,255,255,.48);line-height:1.6}
+
+/* ── IMAGE COMPONENTS ─────────────────────────────────────── */
+.img-hero{width:100%;border-radius:8px;display:block;box-shadow:0 4px 20px rgba(0,0,0,.15);margin:18px 0}
+.img-cap{font-family:var(--mono);font-size:9.5px;color:#999;letter-spacing:.08em;margin:-10px 0 18px;text-align:center;display:block}
+.ig{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
+.if{border-radius:8px;overflow:hidden;position:relative}
+.if img{width:100%;display:block;object-fit:cover;height:220px}
+.if-cap{position:absolute;bottom:0;left:0;right:0;padding:10px 13px;background:linear-gradient(0,rgba(0,0,0,.82),transparent);color:rgba(255,255,255,.85);font-size:10.5px;font-family:var(--mono);letter-spacing:.07em}
+.sat-banner{position:relative;overflow:hidden;height:240px;border-radius:8px;margin:18px 0}
+.sat-banner img{width:100%;height:100%;object-fit:cover;display:block}
+.sat-ov{position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,21,32,.9) 0%,rgba(7,21,32,.4) 55%,transparent 100%);display:flex;align-items:center;padding:0 36px}
+.sat-ov h3{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--white);max-width:380px;line-height:1.3}
+.sat-ov p{font-size:12.5px;color:rgba(255,255,255,.62);margin-top:6px;max-width:380px;line-height:1.6}
+
+/* ── COUNTRY BENCHMARKS ───────────────────────────────────── */
+.bench{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:18px 0}
+.bc{border-radius:6px;padding:13px;border:1px solid var(--rule);background:var(--white)}
+.bc-f{font-size:22px;margin-bottom:6px}
+.bc-c{font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--b-blue);margin-bottom:5px;font-weight:600}
+.bc-t{font-size:11px;color:var(--slate);line-height:1.5}
+
+/* ── TIMELINE ─────────────────────────────────────────────── */
+.tl{position:relative;padding-left:18px;margin:16px 0}
+.tl::before{content:'';position:absolute;left:5px;top:0;bottom:0;width:2px;background:linear-gradient(var(--b-blue),var(--b-green),var(--b-yellow),var(--b-red));border-radius:2px}
+.tl-item{margin-bottom:14px;position:relative}
+.tl-item::before{content:'';position:absolute;left:-14px;top:5px;width:9px;height:9px;border-radius:50%;background:var(--b-yellow);border:2px solid var(--white);box-shadow:0 0 0 2px var(--b-blue)}
+.tl-d{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.05em;color:var(--b-blue)}
+.tl-t{font-size:12.5px;color:var(--slate);line-height:1.5}
+
+/* ── PRICING CARDS ────────────────────────────────────────── */
+.pcg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}
+.pcc{border-radius:6px;padding:15px;border:1px solid var(--rule);background:var(--white)}
+.pcc.hl{background:var(--b-blue);border-color:var(--b-blue)}
+.pcc.hl *{color:var(--white)!important}
+.pc-op{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:#aaa;margin-bottom:7px;display:block}
+.pc-p{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--navy);margin-bottom:1px}
+.pc-per{font-size:10px;color:#aaa;margin-bottom:8px;display:block}
+.pc-s{font-size:11px;font-weight:600;color:var(--ink)}
+
+/* ── QUOTE BLOCKS ─────────────────────────────────────────── */
+.qg{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin:18px 0}
+.qc{background:rgba(139,0,0,.12);border:1px solid rgba(139,0,0,.25);border-left:3px solid var(--b-red);border-radius:0 6px 6px 0;padding:16px 18px}
+.qc p{font-size:12.5px;color:rgba(255,255,255,.72);line-height:1.6;font-style:italic}
+.ql{font-family:var(--mono);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--b-red);margin-bottom:6px;display:block}
+
+/* ── SCROLL REVEAL ────────────────────────────────────────── */
+.reveal{opacity:0;transform:translateY(15px);transition:opacity .5s,transform .5s}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* ── TWO-COL ──────────────────────────────────────────────── */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:18px 0}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:16px 0}
+
+/* ── FOOTER ───────────────────────────────────────────────── */
+.foot{background:var(--navy);padding:28px 60px;display:flex;align-items:center;justify-content:space-between;border-top:3px solid transparent;border-image:linear-gradient(90deg,var(--b-blue),var(--b-green),var(--b-red),var(--b-yellow)) 1}
+.fl{font-family:var(--mono);font-size:9.5px;color:rgba(255,255,255,.3);line-height:1.7}
+.fr{font-family:var(--serif);font-size:12px;color:rgba(255,193,7,.5);font-style:italic;text-align:right}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ── SIDEBAR ─────────────────────────────────────────────── -->
+<aside class="sb">
+  <div class="sb-brand">
+    <div class="sb-logo-row">
+      <span class="sb-dot" style="background:var(--b-blue)"></span>
+      <span class="sb-dot" style="background:var(--b-green)"></span>
+      <span class="sb-dot" style="background:var(--b-red)"></span>
+      <span class="sb-dot" style="background:var(--b-yellow)"></span>
+      <span class="sb-wordmark">BOCRA</span>
+    </div>
+    <div class="sb-sub">Regulatory Research · April 2026</div>
+  </div>
+  <nav class="sb-nav">
+    <span class="nav-grp">Report Contents</span>
+    <a href="#exec" class="nav-a on"><span class="nd" style="background:var(--b-yellow)"></span>Executive Summary</a>
+    <a href="#s1" class="nav-a"><span class="nd" style="background:var(--b-blue)"></span>1 · Introduction</a>
+    <a href="#s2" class="nav-a"><span class="nd" style="background:var(--b-blue)"></span>2 · Licensing &amp; Obligations</a>
+    <a href="#s3" class="nav-a"><span class="nd" style="background:var(--b-green)"></span>3 · Network Deployment</a>
+    <a href="#smap" class="nav-a"><span class="nd" style="background:var(--b-yellow)"></span>↳ Satellite Ground Stations Map</a>
+    <a href="#s4" class="nav-a"><span class="nd" style="background:var(--b-green)"></span>4 · Data Sovereignty</a>
+    <a href="#s5" class="nav-a"><span class="nd" style="background:var(--b-yellow)"></span>5 · Market Performance</a>
+    <a href="#s6" class="nav-a"><span class="nd" style="background:var(--b-yellow)"></span>6 · Revenue Analysis</a>
+    <a href="#s7" class="nav-a"><span class="nd" style="background:var(--b-yellow)"></span>7 · Investment &amp; Employment</a>
+    <a href="#s8" class="nav-a"><span class="nd" style="background:var(--b-red)"></span>8 · Competitive Pricing</a>
+    <a href="#s9" class="nav-a"><span class="nd" style="background:var(--b-red)"></span>9 · Operator Perspectives</a>
+    <a href="#s10" class="nav-a"><span class="nd" style="background:var(--b-red)"></span>10 · Conclusion &amp; Recs</a>
+  </nav>
+  <div class="sb-foot">
+    <span class="conf">Official Use Only</span><br>
+    Botswana Communications<br>Regulatory Authority<br>
+    BUSINESS DEVELOPMENT &amp; LICENSING DEPARTMENT
+  </div>
+</aside>
+
+<!-- ── MAIN ────────────────────────────────────────────────── -->
+<main>
+
+<!-- HERO -->
+<section class="hero" id="exec">
+  <div class="hero-bg"></div>
+  <div class="hero-ov"></div>
+  <div class="hero-stripe"></div>
+  <div class="hero-c">
+    <div class="hero-row">
+      <span class="htag ht-blue">BOCRA Research</span>
+      <span class="htag ht-red">Regulatory — Official Use</span>
+      <span class="ht-grey">April 2026</span>
+    </div>
+    <h1>The Impact of <em>Starlink</em> Licensing on<br>Botswana's Communications Market</h1>
+    <p class="hero-sub">A comprehensive regulatory analysis of subscription trends, revenue dynamics, employment, capital expenditure, network deployment, and competitive responses — covering the period September 2024 to March 2026.</p>
+    <div class="kpi-row">
+      <div class="kpi"><span class="kpi-l">Market Subscriptions (Q4 2025)</span><div class="kpi-v ky">640,446</div><div class="kpi-d">+17.1% since Starlink launch (Q3 2024)</div></div>
+      <div class="kpi"><span class="kpi-l">Starlink — First 5 Quarters</span><div class="kpi-v kg">19,958</div><div class="kpi-d">+547% growth · 4th largest operator</div></div>
+      <div class="kpi"><span class="kpi-l">Starlink Revenue (Q1 2026)</span><div class="kpi-v kb">BWP 27.4M</div><div class="kpi-d">+506% · Exceeds all small ISPs</div></div>
+      <div class="kpi"><span class="kpi-l">Local Starlink Employees</span><div class="kpi-v kr">1</div><div class="kpi-d">vs. BWP 27.4M/qtr revenue generated</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 1: INTRODUCTION ────────────────────────────── -->
+<section class="sec alt" id="s1">
+  <div class="sec-h reveal"><span class="sec-n">01</span><h2 class="sec-t">Introduction</h2></div>
+  <hr class="rule rule-blue">
+  <div class="two reveal">
+    <div>
+      <h3 class="sub-h">Abstract</h3>
+      <p class="body">The introduction of Starlink in Botswana in 2024 marked a significant shift in the market. Leveraging Low Earth Orbit (LEO) satellite technology, Starlink offers high-speed broadband services without the need for extensive terrestrial infrastructure. This enables it to reach geographically dispersed populations, including those in rural and remote areas historically underserved by conventional fixed and mobile broadband providers.</p>
+      <p class="body">This study assesses and evaluates the impact of Starlink's entry into Botswana's communications market and its adherence to licensing conditions.</p>
+      <h3 class="sub-h" style="margin-top:22px;">Background</h3>
+      <p class="body">Botswana's broadband industry has undergone significant changes over the last decade. The fixed broadband sector comprises both infrastructure-based ISPs and MNOs offering fixed broadband via LTE, 5G, radio, and fibre services. Starlink's entry introduced a fundamentally new technology layer — satellite broadband — that operates independently of all existing terrestrial infrastructure.</p>
+      <div class="box bx-blue">
+        <span class="bx-lbl">Problem Statement</span>
+        <p>While all licensees are subject to regulatory requirements, operators have raised concerns regarding perceived regulatory asymmetry. MNOs and ISPs comply with strict KYC obligations, citizen employment requirements, and local infrastructure investment mandates. Operators contend that Starlink has not been held to the same standards, creating an uneven competitive playing field.</p>
+      </div>
+    </div>
+    <div>
+      <h3 class="sub-h">Study Objectives</h3>
+      <ul class="bl">
+        <li class="bbl">Analyse fixed broadband subscription trends across MNOs, ISPs, and Starlink; assess market share changes</li>
+        <li class="bgy">Evaluate the impact of Starlink's entry on operator revenues across the market</li>
+        <li class="byl">Assess changes in employment levels including evidence of job creation or displacement</li>
+        <li class="brd">Examine capital expenditure trends to determine whether Starlink's presence has influenced infrastructure rollout decisions</li>
+        <li class="bbl">Evaluate competitive responses of existing operators — pricing strategies, product offerings, and service innovation</li>
+        <li class="bgy">Assess Starlink's compliance with its licensing conditions, including alignment between approved terms and actual market practices</li>
+      </ul>
+      <div style="background:var(--white);border:1px solid var(--rule);border-radius:6px;padding:18px;margin-top:16px">
+        <span style="font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--b-blue);display:block;margin-bottom:12px">Starlink Licensing Timeline</span>
+        <div class="tl">
+          <div class="tl-item"><div class="tl-d">14 May 2024</div><div class="tl-t">SAP (Services &amp; Applications) licence issued — provisional, 2-year term</div></div>
+          <div class="tl-item"><div class="tl-d">Sep 2024</div><div class="tl-t">Commercial launch — first subscriptions recorded (Q4 2024)</div></div>
+          <div class="tl-item"><div class="tl-d">10 Jan 2025</div><div class="tl-t">NFP (Network Facilities Provider) licence issued</div></div>
+          <div class="tl-item"><div class="tl-d">4 Feb 2026</div><div class="tl-t">BOCRA meeting at Starlink's office — Plot 4858, Lecha Close, Gaborone</div></div>
+          <div class="tl-item" style="margin-bottom:0"><div class="tl-d" style="color:var(--b-red)">13 May 2026</div><div class="tl-t">SAP licence due for long-term renewal — BOCRA review in progress</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 2: LICENSING ────────────────────────────────── -->
+<section class="sec" id="s2">
+  <div class="sec-h reveal"><span class="sec-n">02</span><h2 class="sec-t">Licensing &amp; Financial Obligations</h2></div>
+  <hr class="rule rule-blue">
+  <div class="two reveal">
+    <div>
+      <p class="body">Starlink was issued its SAP licence on 14 May 2024 and NFP licence on 10 January 2025, both on a provisional basis. Three earth stations were established in Gaborone, Lobatse, and Francistown as part of mandatory infrastructure investment obligations. All three facilities are fully operational.</p>
+      <div class="box bx-amber">
+        <span class="bx-lbl">⚠ Turnover Levy — Non-Payment</span>
+        <p>While Starlink has paid annual licence fees for SAP and NFP licences since 2024, <strong>no invoices have been issued and consequently no payments made</strong> in respect of BOCRA turnover levies — a mandatory requirement under Starlink's licence. Starlink's financial year ended in December 2025 and BOCRA is in the process of determining the applicable levy amount.</p>
+      </div>
+      <div class="box bx-red" style="margin-top:12px">
+        <span class="bx-lbl">⚠ UASF Levy — Outstanding</span>
+        <p>The 2025 UASF levy contribution framework categorises Starlink as a mandatory contributor based on annual turnover from regulated services. Together with other new contributors, Starlink has been notified of this obligation, but no payments have been received.</p>
+      </div>
+      <h3 class="sub-h" style="margin-top:22px">Regional Benchmarks</h3>
+      <div class="bench">
+        <div class="bc"><div class="bc-f">🇳🇬</div><div class="bc-c">Nigeria</div><div class="bc-t">Licensed 2022. NCC imposes strict KYC mirroring SIM rules; local data retention encouraged.</div></div>
+        <div class="bc"><div class="bc-f">🇬🇭</div><div class="bc-c">Ghana</div><div class="bc-t">Approved Apr 2024, launched Aug 2024 under new satellite licensing framework.</div></div>
+        <div class="bc"><div class="bc-f">🇿🇲</div><div class="bc-c">Zambia</div><div class="bc-t">ZICTA licence June 2023. Operates via Paratus reseller. MTN trialling Starlink Direct-to-Cell.</div></div>
+        <div class="bc"><div class="bc-f">🇿🇼</div><div class="bc-c">Zimbabwe</div><div class="bc-t">POTRAZ licensed Sept 2024. Nationwide satellite service; unlicensed kit sales banned.</div></div>
+        <div class="bc"><div class="bc-f">🇱🇸</div><div class="bc-c">Lesotho</div><div class="bc-t">LCA 10-year licence Apr 2025. Direct-to-consumer; no public local shareholding.</div></div>
+      </div>
+    </div>
+    <div>
+      <h3 class="sub-h">Licence Compliance Status</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>#</th><th>Condition</th><th class="c">Status</th></tr></thead>
+          <tbody>
+            <tr><td class="r b">1</td><td>Establish physical local office in Gaborone</td><td class="c"><span class="pill p-g">✓ Complied</span></td></tr>
+            <tr><td class="r b">2</td><td>Pay annual SAP &amp; NFP licence fees</td><td class="c"><span class="pill p-g">✓ Complied</span></td></tr>
+            <tr><td class="r b">3</td><td>Set up earth stations (Gaborone, Lobatse, Francistown)</td><td class="c"><span class="pill p-g">✓ Complied</span></td></tr>
+            <tr><td class="r b">4</td><td>Submit audited financial statements</td><td class="c"><span class="pill p-a">⏳ Pending</span></td></tr>
+            <tr><td class="r b">5</td><td>Pay BOCRA turnover levies</td><td class="c"><span class="pill p-r">✗ Unpaid</span></td></tr>
+            <tr><td class="r b">6</td><td>UASF levy contributions</td><td class="c"><span class="pill p-r">✗ Outstanding</span></td></tr>
+            <tr><td class="r b">7</td><td>Data Protection Act 2024 compliance</td><td class="c"><span class="pill p-a">⏳ In Review</span></td></tr>
+            <tr><td class="r b">8</td><td>KYC (Know Your Customer) obligations</td><td class="c"><span class="pill p-a">⏳ Partial</span></td></tr>
+            <tr><td class="r b">9</td><td>BINX peering / local internet routing</td><td class="c"><span class="pill p-r">✗ Non-compliant</span></td></tr>
+            <tr><td class="r b">10</td><td>Citizen employment requirements</td><td class="c"><span class="pill p-r">✗ 1 employee only</span></td></tr>
+            <tr><td class="r b">11</td><td>Customer service centre</td><td class="c"><span class="pill p-a">⏳ In Progress</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 3: NETWORK DEPLOYMENT + MAP ─────────────────── -->
+<section class="sec dark" id="s3">
+  <div class="sec-h reveal"><span class="sec-n" style="background:rgba(255,193,7,.15);border-color:rgba(255,193,7,.3)">03</span><h2 class="sec-t w">Network Deployment</h2></div>
+  <hr class="rule rule-gold">
+
+  <!-- IMAGE GALLERY -->
+  <div class="ig reveal">
+    <div class="if" style="height:260px">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Starlink_satellite_train.jpg/1280px-Starlink_satellite_train.jpg" alt="Starlink LEO constellation train">
+      <div class="if-cap">Starlink LEO Constellation — 550 km altitude, ~27,000 km/h orbital speed</div>
+    </div>
+    <div class="if" style="height:260px">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Ground_station_satellite_dish.jpg/1280px-Ground_station_satellite_dish.jpg" alt="Satellite ground station dish" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Starlink_dish.jpg/800px-Starlink_dish.jpg'">
+      <div class="if-cap">Ground Station Satellite Dish — Starlink earth stations at Gaborone, Lobatse &amp; Francistown</div>
+    </div>
+  </div>
+
+  <div class="two reveal">
+    <div>
+      <h3 class="sub-h w">LEO Network Infrastructure</h3>
+      <ul class="bl">
+        <li class="byl w">Three fully operational earth stations: <strong style="color:var(--white)">Gaborone (primary gateway), Lobatse, and Francistown</strong></li>
+        <li class="byl w">LEO orbit altitude ~550 km provides near-national coverage, including geographically hard-to-reach areas of the Kalahari and Okavango</li>
+        <li class="byl w">Satellites orbit at ~27,000 km/h with 53° inclination — each pass over Botswana lasts 8–12 minutes</li>
+        <li class="byl w">Low latency of 25–60ms (typical real-world range) — competitive with many terrestrial broadband services</li>
+        <li class="byl w">Supports homes, businesses, schools, clinics, enterprises, and government facilities across the full national territory</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="sub-h w">Traffic Routing &amp; BINX Non-Compliance</h3>
+      <ul class="bl">
+        <li class="brd w"><strong style="color:var(--white)">Starlink does not peer with BINX</strong> (Botswana Internet Exchange). All traffic is routed internationally — via Nigeria or South Africa — bypassing domestic internet exchange infrastructure</li>
+        <li class="brd w">This creates a measurable economic externality: local internet traffic that could be exchanged domestically costs other operators more by forcing international routing</li>
+        <li class="byl w">In late 2025, BOCRA received a Starlink application for spectrum in the Mobile Satellite Services (MSS) band — under review</li>
+        <li class="brd w">Starlink is preparing to launch <strong style="color:var(--white)">Very Low Earth Orbit (VLEO)</strong> satellites enabling voice services — potentially competing directly with MNO voice revenues if MSS licence is granted</li>
+      </ul>
+      <div class="box bx-dark" style="margin-top:14px">
+        <span class="bx-lbl">Spectrum Pricing Asymmetry</span>
+        <p class="w">BOCRA's existing spectrum pricing structure sets IMT (terrestrial mobile) licences significantly higher than satellite licences. Domestic operators face higher input costs for equivalent coverage capabilities — a structural competitive disadvantage that BOCRA is in the process of reviewing.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIVE SATELLITE MAP OF BOTSWANA -->
+  <div id="smap" style="margin-top:30px">
+    <h3 class="sub-h w reveal">Live Satellite View — Botswana Ground Station Locations</h3>
+    <div id="satmap" class="reveal"></div>
+    <div class="map-legend reveal">
+      <div class="ml-item"><span class="ml-dot" style="background:#ffc107;border:2px solid #fff"></span>Gaborone — Primary Internet Gateway</div>
+      <div class="ml-item"><span class="ml-dot" style="background:#0078a0;border:2px solid #fff"></span>Lobatse — Secondary Gateway Station</div>
+      <div class="ml-item"><span class="ml-dot" style="background:#1b5e20;border:2px solid #fff"></span>Francistown — Northern Gateway Station</div>
+      <div class="ml-item"><span class="ml-dot" style="background:rgba(255,255,255,.3);border:2px solid rgba(255,255,255,.5)"></span>Botswana National Territory</div>
+    </div>
+    <span class="img-cap" style="color:rgba(255,255,255,.3);margin-top:6px">Map Source: Esri World Imagery · Ground station coordinates: BOCRA, 2026 · Map tiles © Esri, Maxar, Earthstar Geographics</span>
+  </div>
+</section>
+
+<!-- ── SECTION 4: DATA SOVEREIGNTY ────────────────────────── -->
+<section class="sec alt" id="s4">
+  <div class="sec-h reveal"><span class="sec-n">04</span><h2 class="sec-t">Data Sovereignty &amp; Privacy</h2></div>
+  <hr class="rule rule-blue">
+  <div class="two reveal">
+    <div>
+      <div class="box bx-red">
+        <span class="bx-lbl">⚠ Data Protection Act 2024 — Compliance Gap</span>
+        <p>Section 74 of the 2024 Data Protection Act requires all personal data collected in Botswana to be kept locally, and any cross-border data transfer to be subject to adequacy requirements. Starlink's architecture routes all user data through satellite links to ground stations and then overseas before reaching the public internet — a design that may not satisfy domestic data localisation obligations.</p>
+      </div>
+      <div class="box bx-amber" style="margin-top:14px">
+        <span class="bx-lbl">Generic Global Privacy Policy — Insufficient</span>
+        <p>Starlink has submitted a <em>generic Global Privacy Policy</em> to BOCRA rather than a Botswana-specific policy as required. KYC obligations — mandatory for all licensed operators — remain only partially met. Unlike SIM-card based MNO services, Starlink's dish-based service model does not inherently capture subscriber identity at point of activation without additional compliance controls mandated by BOCRA.</p>
+      </div>
+    </div>
+    <div>
+      <h3 class="sub-h">Regional Regulatory Comparison</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Country</th><th>KYC Approach</th><th>Data Localisation</th><th class="c">Assessment</th></tr></thead>
+          <tbody>
+            <tr><td class="b">Nigeria</td><td>Strict — mirrors SIM registration</td><td>Local retention encouraged</td><td class="c"><span class="pill p-g">Stringent</span></td></tr>
+            <tr><td class="b">Ghana</td><td>Satellite framework conditions</td><td>Data handling requirements included</td><td class="c"><span class="pill p-b">Moderate</span></td></tr>
+            <tr><td class="b">Zambia</td><td>National data security provisions</td><td>Subscriber ID requirements</td><td class="c"><span class="pill p-b">Moderate</span></td></tr>
+            <tr><td class="b">Zimbabwe</td><td>National ISP licence conditions</td><td>Under POTRAZ review</td><td class="c"><span class="pill p-a">Partial</span></td></tr>
+            <tr><td class="b">Botswana</td><td>Generic policy pending IDPC review</td><td>Required — not yet confirmed</td><td class="c"><span class="pill p-r">Gap</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="box bx-blue" style="margin-top:14px">
+        <span class="bx-lbl">Required Regulatory Action</span>
+        <p>BOCRA should require Starlink to submit a <strong>Botswana-specific data protection policy</strong> approved by the Information and Data Protection Commissioner (IDPC) as a precondition for SAP licence renewal. Compliance with lawful interception, cybersecurity incident reporting, and local data storage obligations must be codified as licence conditions prior to any long-term licence being issued.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 5: MARKET PERFORMANCE ─────────────────────── -->
+<section class="sec" id="s5">
+  <div class="sec-h reveal"><span class="sec-n">05</span><h2 class="sec-t">Market Performance — Fixed Broadband Subscriptions</h2></div>
+  <hr class="rule rule-blue">
+
+  <!-- FULL TREND CHART -->
+  <div class="ch reveal">
+    <div class="ch-t">Figure 1 · Fixed Broadband Subscriptions by Operator — All Periods (Jul 2023 – Mar 2026)</div>
+    <span class="ch-s">Source: BOCRA, 2026 · ★ Vertical line marks Starlink commercial launch Q4 2024</span>
+    <canvas id="cSubsTrend" height="100"></canvas>
+  </div>
+
+  <div class="grid2 reveal">
+    <div class="ch">
+      <div class="ch-t">Figure 1.1 · MNO Fixed Broadband Subscriptions</div>
+      <span class="ch-s">Orange, Mascom, BTC · Jan 2024 – Oct 2025 · Source: BOCRA, 2026</span>
+      <canvas id="cMno" height="200"></canvas>
+    </div>
+    <div class="ch">
+      <div class="ch-t">Figure 1.2 · ISP Subscriptions — Decline After Starlink Entry</div>
+      <span class="ch-s">Paratus, Abaricom, GcSat, Ngami Net, Cene Media · Source: BOCRA, 2026</span>
+      <canvas id="cIsp" height="200"></canvas>
+    </div>
+  </div>
+
+  <!-- STARLINK GROWTH -->
+  <div class="ch reveal">
+    <div class="ch-t">Figure 2 · Starlink Quarterly Subscription &amp; Revenue Growth (Oct 2024 – Mar 2026)</div>
+    <span class="ch-s">Dual-axis: Bars = Subscriptions (left) · Line = Revenue BWP (right) · Source: BOCRA, 2026</span>
+    <canvas id="cStarlink" height="95"></canvas>
+  </div>
+
+  <!-- MARKET SHARE DOUGHNUTS -->
+  <div class="grid2 reveal">
+    <div class="ch">
+      <div class="ch-t">Figure 3 · Market Share by Subscriptions — Pre-Starlink (Jul–Sep 2024)</div>
+      <span class="ch-s">Total tracked: 546,969 subscriptions · Source: BOCRA, 2026</span>
+      <canvas id="cSharePre" height="230"></canvas>
+    </div>
+    <div class="ch">
+      <div class="ch-t">Figure 4 · Market Share by Subscriptions — Post-Starlink (Oct–Dec 2025) ★</div>
+      <span class="ch-s">Total tracked: 640,446 subscriptions · Starlink = 4th largest operator · Source: BOCRA, 2026</span>
+      <canvas id="cSharePost" height="230"></canvas>
+    </div>
+  </div>
+
+  <div class="box bx-amber reveal">
+    <span class="bx-lbl">Key Market Finding — Pre vs Post Starlink Entry</span>
+    <p><strong>Pre-Starlink (July 2023 – Sep 2024):</strong> The market was characterised by stable, modest growth primarily by MNOs. Orange recorded consistent growth from 197,423 (Jan–Mar 2024) to 223,412 (Jul–Sep 2024). Mascom grew significantly from 164,899 to 237,772 in the same period. BTC experienced gradual decline, while all ISPs maintained broadly stable subscriber bases.<br><br><strong>Post-Starlink (Oct 2024 – Mar 2026):</strong> Starlink accumulated 3,085 subscribers in its first quarter, reaching 19,958 by Q1 2026 — a 547% increase. The total market grew 17.1%, but the composition shifted materially: Orange and Mascom collectively hold 84.6% of subscriptions while all five independent ISPs are now in sustained decline.</p>
+  </div>
+
+  <h3 class="sub-h reveal">Table 4 · Market Share by Subscriptions — Pre vs Post Starlink (Source: BOCRA, 2026)</h3>
+  <div class="tw reveal">
+    <table>
+      <thead>
+        <tr><th>Operator</th><th class="c">Jul–Sep 2024</th><th class="c">Share %</th><th class="c">Oct–Dec 2025</th><th class="c">Share %</th><th class="c">Change</th><th class="c">Trend</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="b">Orange</td><td class="r">223,412</td><td class="r">41.3%</td><td class="r">280,381</td><td class="r">43.8%</td><td class="g r">+56,969</td><td class="c" style="color:var(--b-green);font-weight:700">▲</td></tr>
+        <tr><td class="b">Mascom</td><td class="r">237,772</td><td class="r">44.0%</td><td class="r">261,570</td><td class="r">40.8%</td><td class="g r">+23,798</td><td class="c" style="color:var(--b-green);font-weight:700">▲</td></tr>
+        <tr><td class="b">BTC</td><td class="r">64,189</td><td class="r">11.9%</td><td class="r">62,266</td><td class="r">9.7%</td><td class="rr r">−1,923</td><td class="c" style="color:var(--b-red);font-weight:700">▼</td></tr>
+        <tr style="background:#f0faf4!important"><td class="b" style="color:var(--b-green)">Starlink ★</td><td class="na c">Not active</td><td class="na c">—</td><td class="sl r">17,352</td><td class="r" style="color:var(--b-green);font-weight:700">2.7%</td><td class="g r">+17,352</td><td class="c" style="color:var(--b-green);font-weight:900">★</td></tr>
+        <tr><td class="b">Paratus</td><td class="r">13,259</td><td class="r">2.5%</td><td class="r">12,826</td><td class="r">2.0%</td><td class="rr r">−433</td><td class="c" style="color:var(--b-red)">▼</td></tr>
+        <tr><td class="b">Abaricom</td><td class="r">2,848</td><td class="r">0.5%</td><td class="r">2,482</td><td class="r">0.4%</td><td class="rr r">−366</td><td class="c" style="color:var(--b-red)">▼</td></tr>
+        <tr><td class="b">GcSat</td><td class="r">2,408</td><td class="r">0.4%</td><td class="r">1,501</td><td class="r">0.2%</td><td class="rr r">−907</td><td class="c" style="color:var(--b-red)">▼</td></tr>
+        <tr><td class="b">Ngami Net</td><td class="r">1,966</td><td class="r">0.4%</td><td class="r">1,484</td><td class="r">0.2%</td><td class="rr r">−482</td><td class="c" style="color:var(--b-red)">▼</td></tr>
+        <tr><td class="b">Cene Media</td><td class="r">1,115</td><td class="r">0.2%</td><td class="r">584</td><td class="r">0.1%</td><td class="rr r">−531</td><td class="c" style="color:var(--b-red)">▼</td></tr>
+        <tr><td class="b">BoFiNet</td><td class="r">5,371</td><td class="r">1.0%</td><td class="na r">N/A</td><td class="na r">—</td><td class="na r">N/A</td><td class="na c">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- OPERATOR CARDS -->
+  <h3 class="sub-h reveal">Operator Assessment Dashboard</h3>
+  <div class="og reveal">
+    <div class="oc su"><div class="on">Starlink</div><div class="ot">LEO Satellite ISP · Licensed Sep 2024</div><div class="os"><div class="osi"><span class="osl">Subs Δ</span><span class="osv vu">+547%</span></div><div class="osi"><span class="osl">Rev Δ</span><span class="osv vu">+506%</span></div><div class="osi"><span class="osl">Staff</span><span class="osv vn">1</span></div></div><div class="on2">Fastest-growing operator. Q1 2026 revenue BWP 27.4M now exceeds all small ISPs. Near-zero local economic footprint raises concern.</div></div>
+    <div class="oc gr"><div class="on">Orange Botswana</div><div class="ot">MNO · Market Leader Q4 2025</div><div class="os"><div class="osi"><span class="osl">Subs Δ</span><span class="osv vu">+42.0%</span></div><div class="osi"><span class="osl">Rev Δ</span><span class="osv vu">+23.6%</span></div><div class="osi"><span class="osl">Share</span><span class="osv vu">43.8%</span></div></div><div class="on2">Dominant leader. ARPU compression of ~13% reflects competitive pricing adjustments. Urban base insulates against satellite competition.</div></div>
+    <div class="oc gr"><div class="on">Mascom Botswana</div><div class="ot">MNO · Fastest Subscription Growth</div><div class="os"><div class="osi"><span class="osl">Subs Δ</span><span class="osv vu">+58.6%</span></div><div class="osi"><span class="osl">Revenue</span><span class="osv vn">Partial</span></div><div class="osi"><span class="osl">Share</span><span class="osv vu">40.8%</span></div></div><div class="on2">Highest subscription growth in market. Incomplete revenue reporting beyond Q1 2024 is a regulatory concern. BWP 420.3M peak in Q4 2025.</div></div>
+    <div class="oc dc"><div class="on">BTC</div><div class="ot">Incumbent Fixed-Line Operator</div><div class="os"><div class="osi"><span class="osl">Subs Δ</span><span class="osv vd">−4.8%</span></div><div class="osi"><span class="osl">Rev Δ</span><span class="osv vd">−2.0%</span></div><div class="osi"><span class="osl">ARPU</span><span class="osv vn">BWP 664</span></div></div><div class="on2">Pre-existing structural decline driven by legacy infrastructure. Revenue fall milder than subscription loss — higher ARPU through enterprise. Stabilised at ~BWP 124M/quarter.</div></div>
+    <div class="oc st"><div class="on">Paratus</div><div class="ot">ISP · Enterprise Focus</div><div class="os"><div class="osi"><span class="osl">Subs Δ</span><span class="osv vd">−3.0%</span></div><div class="osi"><span class="osl">Rev Δ</span><span class="osv vd">−4.8%</span></div><div class="osi"><span class="osl">Staff</span><span class="osv vn">~73–81</span></div></div><div class="on2">Most resilient independent ISP. Enterprise customer focus provides contractual stickiness. Medium-term risk as Starlink expands into business-grade offerings.</div></div>
+    <div class="oc dc"><div class="on">Cene Media</div><div class="ot">ISP · Critical Decline</div><div class="os"><div class="osi"><span class="osl">Subs Δ</span><span class="osv vd">−49.0%</span></div><div class="osi"><span class="osl">Rev Δ</span><span class="osv vd">−67.7%</span></div><div class="osi"><span class="osl">Staff</span><span class="osv vn">14</span></div></div><div class="on2">Most severely affected operator. Revenue collapse (−67.7%) far exceeds subscriber loss (−49%) — catastrophic ARPU deterioration. Near-existential risk.</div></div>
+  </div>
+</section>
+
+<!-- ── SECTION 6: REVENUE ──────────────────────────────────── -->
+<section class="sec alt" id="s6">
+  <div class="sec-h reveal"><span class="sec-n">06</span><h2 class="sec-t">Revenue Analysis</h2></div>
+  <hr class="rule rule-blue">
+
+  <!-- SATELLITE IMAGE BANNER -->
+  <div class="sat-banner reveal">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Starlink_Mission_%2847926139272%29.jpg/1280px-Starlink_Mission_%2847926139272%29.jpg" alt="Starlink satellites deployment" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Starlink_Mission_%2847926144123%29.jpg/1280px-Starlink_Mission_%2847926144123%29.jpg'">
+    <div class="sat-ov">
+      <div>
+        <h3>Revenue Redistribution Underway</h3>
+        <p>Starlink's Q1 2026 revenue of BWP 27.4M now exceeds every independent ISP in Botswana. Orange peaked at BWP 486.7M in Q4 2025 — growing 23.6% since Q1 2024.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ch reveal">
+    <div class="ch-t">Figure 5 · Revenue from Fixed Broadband — All Operators (BWP) · Jul 2024 – Mar 2026</div>
+    <span class="ch-s">Source: BOCRA, 2026 · Starlink line highlighted in green · MNO revenues dominate scale</span>
+    <canvas id="cRev" height="100"></canvas>
+  </div>
+
+  <div class="grid2 reveal">
+    <div class="ch">
+      <div class="ch-t">Figure 6 · Starlink Revenue Ramp (BWP)</div>
+      <span class="ch-s">Q4 2024 – Q1 2026 · Source: BOCRA, 2026</span>
+      <canvas id="cSlRev" height="220"></canvas>
+    </div>
+    <div class="ch">
+      <div class="ch-t">Figure 7 · Revenue Market Share Distribution — Q4 2025</div>
+      <span class="ch-s">Estimated from available operator revenue data · Source: BOCRA, 2026</span>
+      <canvas id="cRevShare" height="220"></canvas>
+    </div>
+  </div>
+
+  <h3 class="sub-h reveal">Table 6 · Revenue Market Share by Operator (%) — Oct 2023 to Dec 2025</h3>
+  <div class="tw reveal">
+    <table>
+      <thead><tr><th>Operator</th><th class="c">Oct–Dec 23</th><th class="c">Apr–Jun 24</th><th class="c">Jul–Sep 24</th><th class="c">Oct–Dec 24 ★</th><th class="c">Jan–Mar 25</th><th class="c">Jul–Sep 25</th><th class="c">Oct–Dec 25</th><th class="c">Avg Share</th></tr></thead>
+      <tbody>
+        <tr><td class="b">Orange</td><td class="r">72.4%</td><td class="r">73.1%</td><td class="r">73.2%</td><td class="r">73.4%</td><td class="r">73.6%</td><td class="r">74.3%</td><td class="r">75.9%</td><td class="r b">73.7%</td></tr>
+        <tr><td class="b">BTC</td><td class="r">9.2%</td><td class="r">7.8%</td><td class="r">7.9%</td><td class="r">7.9%</td><td class="r">7.9%</td><td class="r">7.7%</td><td class="r">7.7%</td><td class="r b">8.0%</td></tr>
+        <tr><td class="b">BoFiNet</td><td class="r">7.9%</td><td class="r">6.4%</td><td class="r">6.0%</td><td class="r">5.9%</td><td class="r">5.7%</td><td class="r">5.8%</td><td class="r">5.9%</td><td class="r b">6.2%</td></tr>
+        <tr><td class="b">Paratus</td><td class="r">2.5%</td><td class="r">2.1%</td><td class="r">2.1%</td><td class="r">1.9%</td><td class="r">1.9%</td><td class="r">1.7%</td><td class="r">1.6%</td><td class="r b">2.0%</td></tr>
+        <tr><td class="b">Abaricom</td><td class="r">1.9%</td><td class="r">1.7%</td><td class="r">1.7%</td><td class="r">1.7%</td><td class="r">1.5%</td><td class="r">1.3%</td><td class="r">1.3%</td><td class="r b">1.6%</td></tr>
+        <tr style="background:#f0faf4!important"><td class="b" style="color:var(--b-green)">Starlink ★</td><td class="na c">—</td><td class="na c">—</td><td class="na c">—</td><td class="sl r">0.5%</td><td class="sl r">1.1%</td><td class="sl r">2.3%</td><td class="sl r">3.7%</td><td class="sl r">1.9%</td></tr>
+        <tr><td class="b">Others</td><td class="r">6.1%</td><td class="r">4.8%</td><td class="r">4.7%</td><td class="r">4.5%</td><td class="r">4.2%</td><td class="r">3.5%</td><td class="r">3.3%</td><td class="r b">4.4%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="box bx-green reveal">
+    <span class="bx-lbl">Revenue Displacement — Quantified</span>
+    <p>BoFiNet's revenue market share dropped from 7.9% to 6.0% — a structural substitution effect as Starlink utilises its own LEO constellation for backhaul, bypassing the traditional national backbone. Combined small ISP revenue (Ngami Net + Abaricom + GcSat + Paratus) declined from approximately <strong>BWP 32.1M (Q3 2024) to BWP 26.9M (Q4 2025)</strong>. Over the same period, Starlink grew from zero to BWP 23.5M — a near-direct revenue transfer within the ISP segment. The market is not shrinking; it is redistributing.</p>
+  </div>
+</section>
+
+<!-- ── SECTION 7: INVESTMENT & EMPLOYMENT ─────────────────── -->
+<section class="sec" id="s7">
+  <div class="sec-h reveal"><span class="sec-n">07</span><h2 class="sec-t">Investment &amp; Employment</h2></div>
+  <hr class="rule rule-blue">
+
+  <div class="grid2 reveal">
+    <div class="ch">
+      <div class="ch-t">Figure 8 · Capital Expenditure — Mascom &amp; Orange (BWP)</div>
+      <span class="ch-s">Pre and post-Starlink investment trends · Source: BOCRA, 2026</span>
+      <canvas id="cCapex" height="210"></canvas>
+    </div>
+    <div class="ch">
+      <div class="ch-t">Figure 9 · Employment — Selected Operators Pre vs Post Starlink</div>
+      <span class="ch-s">Staff numbers: Jul–Sep 2024 vs Jan–Mar 2026 · Source: BOCRA, 2026</span>
+      <canvas id="cEmp" height="210"></canvas>
+    </div>
+  </div>
+
+  <div class="two reveal">
+    <div class="box bx-amber">
+      <span class="bx-lbl">CAPEX Insight — Investment Slowdown Risk</span>
+      <p>In Q4 2025, the sector saw a general CAPEX decline. Mascom reduced capital spending by 20.7% to BWP 307.1M, while Orange reduced by 28.7% to BWP 132.5M. This is consistent with operators adopting a more cautious posture in response to competitive uncertainty from satellite broadband — a pattern with concerning long-term implications for Botswana's broadband infrastructure quality and geographic coverage expansion.</p>
+    </div>
+    <div class="box bx-red">
+      <span class="bx-lbl">Starlink Employment Anomaly</span>
+      <p>Starlink maintains <strong>only 1 recorded local employee</strong> across all observed periods while generating BWP 27.4M per quarter in revenue. By contrast, domestic operators collectively employ hundreds of Batswana across technical, retail, and customer service roles. Small ISPs are now adjusting employment downward — GcSat reduced to 9 staff, Ngami Net to 12 — reflecting competitive pressure. Abaricom paradoxically grew from 78 to 108 staff despite revenue declining 34%.</p>
+    </div>
+  </div>
+
+  <!-- ARPU CHART -->
+  <div class="ch reveal">
+    <div class="ch-t">Figure 10 · Implied Monthly ARPU by Operator (BWP/month) — Q4 2025</div>
+    <span class="ch-s">Derived from quarterly revenue ÷ subscriptions ÷ 3 · Source: BOCRA, 2026</span>
+    <canvas id="cArpu" height="95"></canvas>
+  </div>
+</section>
+
+<!-- ── SECTION 8: PRICING ──────────────────────────────────── -->
+<section class="sec alt" id="s8">
+  <div class="sec-h reveal"><span class="sec-n">08</span><h2 class="sec-t">Competitive Responses — Pricing Adjustments</h2></div>
+  <hr class="rule rule-blue">
+
+  <p class="body reveal">Operators across the market have been forced to adjust their pricing in direct response to Starlink's entry. One operator described being "forced to drop rates aggressively" to retain subscribers. Another doubled bandwidth on all shared packages without price increases (March 2026). A third adjusted home packages in May 2025 by simultaneously improving speeds and lowering prices, and scrapped long-term two- and three-year contracts to give customers more flexibility. What is clear across all operators is that these adjustments were <strong>not driven by improved efficiency</strong> — they were defensive moves made under financial pressure.</p>
+
+  <div class="ch reveal">
+    <div class="ch-t">Figure 11 · Entry-Level Monthly Package Price (BWP) — Pre vs Post Starlink</div>
+    <span class="ch-s">Source: Operator submissions to BOCRA, 2026 · GcSat adopted most aggressive price cuts</span>
+    <canvas id="cPricing" height="110"></canvas>
+  </div>
+
+  <h3 class="sub-h reveal">Starlink Package Pricing (Post-Entry)</h3>
+  <div class="pcg reveal">
+    <div class="pcc hl"><span class="pc-op">Starlink — Standard</span><div class="pc-p">BWP 649</div><span class="pc-per">/month · entry tier</span><div class="pc-s">50–200 Mbps download · 10 Mbps upload</div></div>
+    <div class="pcc"><span class="pc-op">Starlink — Local Priority</span><div class="pc-p">BWP 1,200</div><span class="pc-per">/month</span><div class="pc-s">Up to 500 Mbps · Priority domestic data</div></div>
+    <div class="pcc"><span class="pc-op">Starlink — Global Priority</span><div class="pc-p">BWP 1,800</div><span class="pc-per">/month</span><div class="pc-s">Priority international routing · Enterprise use</div></div>
+    <div class="pcc"><span class="pc-op">Hardware Kit (One-Time)</span><div class="pc-p">BWP 3,200</div><span class="pc-per">one-time cost</span><div class="pc-s">Dish + router + mounting hardware</div></div>
+  </div>
+
+  <h3 class="sub-h reveal">Operator Response Summary</h3>
+  <div class="tw reveal">
+    <table>
+      <thead><tr><th>Operator</th><th>Strategy</th><th>Key Action Taken</th><th class="c">Outcome</th></tr></thead>
+      <tbody>
+        <tr><td class="b">GcSat</td><td>Aggressive price cuts + speed upgrades</td><td>Reduced entry-level price; significantly upgraded speeds across all tiers</td><td class="c"><span class="pill p-a">Partial</span></td></tr>
+        <tr><td class="b">Abaricom</td><td>Value enhancement (not price cuts)</td><td>Entry-level upgraded from 4 Mbps to 10 Mbps at same monthly price (P299)</td><td class="c"><span class="pill p-a">Partial</span></td></tr>
+        <tr><td class="b">Cene Media</td><td>Capacity enhancement</td><td>Speed improvements across packages without price increases</td><td class="c"><span class="pill p-r">Limited</span></td></tr>
+        <tr><td class="b">BTC</td><td>Aggressive speed-led repositioning</td><td>Entry package: 4 Mbps → 100 Mbps (+2,400%). Removed long-term contracts.</td><td class="c"><span class="pill p-g">Notable</span></td></tr>
+        <tr><td class="b">Orange</td><td>Bundled broadband + mobile</td><td>Continued aggressive bundle pricing; accepted ARPU compression</td><td class="c"><span class="pill p-g">Strong</span></td></tr>
+        <tr style="background:#f0faf4!important"><td class="b" style="color:var(--b-green)">Starlink ★</td><td>Customer segmentation via Local/Global Priority</td><td>Introduced Local vs Global Priority tiers post-entry; serves domestic and international users differently</td><td class="c"><span class="pill p-g">Dominant</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ── SECTION 9: OPERATOR PERSPECTIVES ───────────────────── -->
+<section class="sec dark" id="s9">
+  <div class="sec-h reveal"><span class="sec-n" style="background:rgba(255,193,7,.15);border-color:rgba(255,193,7,.3)">09</span><h2 class="sec-t w">Operator Perspectives</h2></div>
+  <hr class="rule rule-gold">
+
+  <div class="ig reveal">
+    <div class="if" style="height:250px">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/SpaceX_Starlink_satellite_dish_%28Dishy_McFlatface%29.jpg/1280px-SpaceX_Starlink_satellite_dish_%28Dishy_McFlatface%29.jpg" alt="Starlink dish" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Starlink_Mission_%2847926144123%29.jpg/1280px-Starlink_Mission_%2847926144123%29.jpg'">
+      <div class="if-cap">Starlink user terminal ("Dishy") — installed at customer premises across Botswana</div>
+    </div>
+    <div class="if" style="height:250px">
+      <img src="https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&w=800&q=80" alt="Africa satellite connectivity" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Starlink_Mission_%2847926139272%29.jpg/1280px-Starlink_Mission_%2847926139272%29.jpg'">
+      <div class="if-cap">Expanding satellite broadband connectivity across Southern Africa's underserved regions</div>
+    </div>
+  </div>
+
+  <div class="qg reveal">
+    <div class="qc"><span class="ql">ISP Operator A</span><p>"The business has been <strong style="color:white">devastated</strong> to the point where we are now in the process of selling up, as we can no longer operate profitably."</p></div>
+    <div class="qc"><span class="ql">ISP Operator B</span><p>"Despite offering good service and competitive pricing since as far back as <strong style="color:white">2007</strong>, none of that counted for much once customers saw a faster, cheaper option from a satellite."</p></div>
+    <div class="qc"><span class="ql">ISP Operator C</span><p>"Revenue is <strong style="color:white">down 22% from previous years</strong>. We are now seriously looking at restructuring — which means retrenchments and cutting back on spending."</p></div>
+  </div>
+
+  <h3 class="sub-h w reveal">MNO Collective Response</h3>
+  <div class="two reveal">
+    <div>
+      <p class="body w">In March 2026, BTC, Mascom, and Orange approached BOCRA collectively under the newly formed <strong style="color:var(--white)">Botswana Telecommunications Operators Association</strong>. The association raised concerns about regulatory asymmetry — specifically that domestic operators comply with citizen employment requirements, invest in local infrastructure, and carry the cost of regulatory compliance, while Starlink operates with a fundamentally lighter regulatory burden.</p>
+      <p class="body w" style="margin-top:10px">BTC noted that subscriber losses have been most concentrated among residential and small business customers who previously relied on fixed wireless and FTTH services — the exact market segment Starlink has entered aggressively.</p>
+    </div>
+    <div>
+      <div class="box bx-dark">
+        <span class="bx-lbl">Common Operator Thread</span>
+        <p class="w">Across all submissions, a consistent frustration emerged — not just at Starlink's competitive strength, but at the <strong style="color:var(--white)">conditions under which it was licensed</strong>. Operators felt the playing field is not level, that the regulator has allowed Starlink to operate without meeting the same obligations as domestic licensees, and that regulatory inaction will have irreversible consequences for the local telecommunications industry.</p>
+      </div>
+      <div class="box bx-dark" style="margin-top:12px;background:rgba(27,94,32,.15);border-color:rgba(27,94,32,.3)">
+        <span class="bx-lbl" style="color:#5de8a0">MNO Resilience</span>
+        <p class="w">Despite competitive disruption, the three MNOs have demonstrated remarkable revenue resilience. Orange peaked at BWP 486.7M in Q4 2025; Mascom achieved BWP 420.3M in the same period. Their urban customer base, bundled service offerings, and retail distribution networks provide structural protection not available to smaller ISPs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 10: CONCLUSION & RECOMMENDATIONS ───────────── -->
+<section class="sec dark" id="s10">
+  <div class="sec-h reveal"><span class="sec-n" style="background:rgba(255,193,7,.15);border-color:rgba(255,193,7,.3)">10</span><h2 class="sec-t w">Conclusion &amp; Recommendations</h2></div>
+  <hr class="rule rule-gold">
+
+  <div class="box bx-dark reveal" style="background:rgba(255,193,7,.08);border:1px solid rgba(255,193,7,.3);border-left:4px solid var(--b-yellow)">
+    <span class="bx-lbl">Overall Market Assessment</span>
+    <p class="w">Botswana's fixed broadband market is undergoing a structural transition. Starlink has introduced a new competitive dimension — satellite broadband — that complements terrestrial services in some segments and directly competes in others. The market is <strong style="color:var(--white)">growing in volume but declining in diversity</strong>. The erosion of the independent ISP segment represents a structural risk to long-term competition, geographic coverage, and economic inclusivity.</p>
+  </div>
+
+  <div class="grid2 reveal" style="margin-top:24px">
+    <div class="ch dk" style="padding:20px">
+      <div class="ch-t w">Figure 12 · Market Structure Evolution (2024 vs 2026)</div>
+      <span class="ch-s">Three-tier market fragmentation — Source: BOCRA Analysis 2026</span>
+      <canvas id="cEvol" height="230"></canvas>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="background:rgba(0,120,160,.15);border:1px solid rgba(0,120,160,.3);border-left:3px solid var(--b-blue);border-radius:0 6px 6px 0;padding:14px 16px">
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#82d8ff;margin-bottom:4px">Tier 1 — Dominant MNOs</div>
+        <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.9);margin-bottom:3px">Orange &amp; Mascom (84.6% combined share)</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.5">High-revenue leaders. Continue growing despite new satellite competition. Structurally insulated by bundling and urban coverage dominance.</div>
+      </div>
+      <div style="background:rgba(27,94,32,.15);border:1px solid rgba(27,94,32,.3);border-left:3px solid var(--b-green);border-radius:0 6px 6px 0;padding:14px 16px">
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#5de8a0;margin-bottom:4px">Tier 2 — The Tech Disruptor</div>
+        <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.9);margin-bottom:3px">Starlink (+547% in 5 quarters)</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.5">Fastest-growing operator. Infrastructure-light model generates BWP 27.4M/quarter with 1 employee. Expanding from rural into peri-urban segments.</div>
+      </div>
+      <div style="background:rgba(139,0,0,.15);border:1px solid rgba(139,0,0,.3);border-left:3px solid var(--b-red);border-radius:0 6px 6px 0;padding:14px 16px">
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#ff8a80;margin-bottom:4px">Tier 3 — Under Pressure ISPs</div>
+        <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.9);margin-bottom:3px">Paratus, Abaricom, GcSat, Ngami Net, Cene Media</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.5">Facing existential competitive strain. At least one actively selling. Others cutting staff. Collectively lost over 35% of revenue since Starlink entry.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sub-h w reveal">Key Risks</h3>
+  <div class="rg reveal">
+    <div class="rc h"><div class="rct">High Risk</div><div class="rch">Small ISP Market Exit</div><div class="rcd">At least one ISP actively selling the business. Cene Media, GcSat, and Ngami Net are on exit trajectories within 12–24 months. Loss of geographic coverage in rural Botswana.</div></div>
+    <div class="rc h"><div class="rct">High Risk</div><div class="rcd rch">Data Sovereignty &amp; Privacy</div><div class="rcd">Starlink routes all user data internationally. Potential non-compliance with Data Protection Act 2024. Generic global privacy policy insufficient under Section 74.</div></div>
+    <div class="rc m"><div class="rct">Medium Risk</div><div class="rch">Regulatory Equity Gap</div><div class="rcd">Outstanding turnover levies, UASF contributions unpaid. KYC obligations only partially met. Spectrum pricing asymmetry disadvantages domestic operators.</div></div>
+    <div class="rc m"><div class="rct">Medium Risk</div><div class="rcd rch">CAPEX Slowdown</div><div class="rcd">Mascom (−20.7%) and Orange (−28.7%) reduced Q4 2025 CAPEX. Prolonged investment decline will degrade Botswana's long-term broadband infrastructure quality.</div></div>
+    <div class="rc m"><div class="rct">Medium Risk</div><div class="rch">Employment Displacement</div><div class="rcd">MNOs maintain large local workforces. Starlink operates with 1 local employee. Small ISP staff reductions already beginning — systemic job losses possible if exits accelerate.</div></div>
+    <div class="rc m"><div class="rct">Medium Risk</div><div class="rch">Spectrum &amp; VLEO Governance</div><div class="rcd">Starlink's MSS spectrum application (late 2025) under review. VLEO launch could enable voice services competing directly with MNO revenues. Framework required before licensing.</div></div>
+  </div>
+
+  <h3 class="sub-h w reveal" style="margin-top:28px">Key Opportunities</h3>
+  <div class="oppg reveal">
+    <div class="oppc"><span class="oppi"></span><div class="oppt">Digital Inclusion Accelerator</div><div class="opptx">Leverage Starlink's national coverage to advance broadband targets in Ghanzi, Kgalagadi, and Chobe where terrestrial build-out is economically unviable.</div></div>
+    <div class="oppc"><span class="oppi"></span><div class="oppt">Digital Economy Levy &amp; UASF</div><div class="opptx">A 5% levy on satellite broadband revenues ring-fenced for a USAF could generate ~BWP 5.5M annually. Precedent in Nigeria, Rwanda, and Kenya.</div></div>
+    <div class="oppc"><span class="oppi"></span><div class="oppt">ISP Niche Repositioning</div><div class="opptx">Guide displaced ISPs toward enterprise LAN, municipal Wi-Fi, hospitality, and government managed services — verticals insulated from satellite competition.</div></div>
+    <div class="oppc"><span class="oppi"></span><div class="oppt">Enterprise &amp; Public Sector</div><div class="opptx">Starlink's LEO broadband supports mining, agriculture, tourism, and public health. Structured institutional procurement programmes for schools and clinics.</div></div>
+    <div class="oppc"><span class="oppi"></span><div class="oppt">Attract Competing Satellites</div><div class="opptx">License Amazon Kuiper and Eutelsat OneWeb to prevent satellite monopoly formation and introduce pricing discipline in underserved segments.</div></div>
+    <div class="oppc"><span class="oppi"></span><div class="oppt">Network Resilience</div><div class="opptx">As a satellite-based system independent of terrestrial infrastructure, Starlink enhances national network resilience during fibre cuts, power outages, and natural disasters.</div></div>
+    <div class="oppc"><span class="oppi"></span><div class="oppt">MNO Infrastructure Push</div><div class="opptx">Satellite competition may compel Orange and Mascom to accelerate fibre and 5G FWA rollouts beyond urban areas — coverage advancement without public expenditure.</div></div>
+    <div class="oppc"><span class="oppi"></span><div class="oppt">Regulatory Modernisation</div><div class="opptx">Update licensing categories with technology-neutral NTN obligations. Revise spectrum pricing to ensure parity between terrestrial and satellite operators.</div></div>
+    <div class="oppc"><span class="oppi"></span><div class="oppt">Tourism &amp; Remote Economy</div><div class="opptx">Eco-lodges and game ranches across national parks are prime LEO satellite users. Facilitate migration from legacy VSAT; formalise as a premium licence category.</div></div>
+  </div>
+
+  <h3 class="sub-h w reveal" style="margin-top:28px">Strategic Regulatory Recommendations</h3>
+  <div class="recl reveal">
+    <div class="reci"><div class="recn"></div><div><div class="rect">SAP Licence Renewal Conditionality — Due 13 May 2026</div><div class="recd">Make long-term licence renewal conditional on: settlement of all outstanding BOCRA turnover levies and UASF contributions; submission of audited financial statements; approval of a Botswana-specific data protection policy; and a binding local employment commitment above the current 1-person threshold.</div></div></div>
+    <div class="reci"><div class="recn"></div><div><div class="rect">Level Playing Field — Regulatory Obligations</div><div class="recd">Require Starlink to comply with the same citizen employment requirements, KYC obligations, local infrastructure investment mandates, and BINX peering requirements as all other licensed operators. Regulatory asymmetry is a market distortion that BOCRA must not permit to persist.</div></div></div>
+    <div class="reci"><div class="recn"></div><div><div class="rect">Protect Smaller ISPs — Emergency Monitoring Framework</div><div class="recd">At least one ISP is actively selling its business. Others have stopped all capital investment and are cutting staff. BOCRA should develop contingency frameworks for market exit scenarios before multiple exits occur simultaneously, to protect consumers and maintain geographic coverage.</div></div></div>
+    <div class="reci"><div class="recn"></div><div><div class="rect">Require Meaningful Local Presence</div><div class="recd">A company generating over BWP 27 million per quarter must be expected to contribute more meaningfully to the local economy. Minimum staffing thresholds, citizen employment targets, and local customer service centre requirements should be codified as binding licence conditions.</div></div></div>
+    <div class="reci"><div class="recn"></div><div><div class="rect">Data Protection Compliance — Data Protection Act 2024</div><div class="recd">Require a Botswana-tailored data protection policy, approved by the IDPC. Mandate demonstrable local storage of personal data collected from Botswana subscribers. Establish lawful interception compliance arrangements with clear points of contact for security authorities.</div></div></div>
+    <div class="reci"><div class="recn"></div><div><div class="rect">BINX Peering &amp; Local Internet Ecosystem</div><div class="recd">Demand local interconnection and peering to support domestic internet ecosystem development including BINX. This is essential to prevent structural bypass of Botswana's internet exchange infrastructure and to reduce costs for all other operators routing local traffic.</div></div></div>
+    <div class="reci"><div class="recn"></div><div><div class="rect">MSS / VLEO Governance — Future Services</div><div class="recd">Ring-fence any Mobile Satellite Services (MSS) spectrum application or direct-to-phone offering as a separate authorisation, subject to full regulatory impact assessment. Starlink's VLEO launch could directly compete with MNO voice services — a governance framework must be in place before any such licence is granted.</div></div></div>
+    <div class="reci"><div class="recn"></div><div><div class="rect">Mandate Comprehensive Quarterly Reporting</div><div class="recd">Enforce complete revenue, subscription, employment, and CAPEX data submission from all licensed operators with proportionate penalties for non-compliance. Immediately address reporting gaps from Mascom (revenue), BTC (revenue), and Universal Wifi (all variables).</div></div></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="foot">
+  <div class="fl">
+    <strong style="color:rgba(255,255,255,.6)">BOCRA</strong> — Botswana Communications Regulatory Authority<br>
+    Business Development &amp; Licensing Department · April 2026; BY TSHIAMO CHIBUA<br>
+    Classification: Regulatory — For Official Use Only<br>
+    <span style="color:rgba(255,193,7,.35)">Report covers period: September 2024 – March 2026</span>
+  </div>
+  <div class="fr">
+    The Impact of Starlink Licensing<br>on Botswana's Communications Market<br>
+    <span style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.18)">BOCRA Research Paper · April 2026</span>
+  </div>
+</footer>
+
+</main>
+</div>
+
+<!-- ── SCRIPTS ─────────────────────────────────────────────── -->
+<script>
+/* ── LEAFLET SATELLITE MAP ─────────────────────────────────── */
+const map = L.map('satmap', {
+  center: [-22.5, 24.5],
+  zoom: 6,
+  zoomControl: true,
+  attributionControl: true
+});
+
+// Esri World Imagery (satellite tiles)
+L.tileLayer(
+  'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+  { attribution: 'Tiles © Esri, Maxar, Earthstar Geographics, and the GIS User Community', maxZoom: 18 }
+).addTo(map);
+
+// Country border overlay (subtle)
+L.tileLayer(
+  'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+  { opacity: 0.6, maxZoom: 18 }
+).addTo(map);
+
+// Custom icon factory
+function makeIcon(color, label) {
+  return L.divIcon({
+    className: '',
+    html: `<div style="
+      position:relative;display:flex;flex-direction:column;align-items:center;
+    ">
+      <div style="
+        width:18px;height:18px;background:${color};border:3px solid #fff;
+        border-radius:50%;box-shadow:0 0 0 3px ${color}55,0 2px 8px rgba(0,0,0,.6);
+        animation:pulse 2s infinite;
+      "></div>
+      <div style="
+        margin-top:4px;background:rgba(7,21,32,.88);color:#fff;
+        font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;
+        padding:3px 8px;border-radius:3px;white-space:nowrap;
+        border:1px solid ${color}88;letter-spacing:0.05em;
+        box-shadow:0 2px 6px rgba(0,0,0,.5);
+      ">${label}</div>
+    </div>`,
+    iconAnchor: [9, 9],
+    popupAnchor: [0, -20]
+  });
+}
+
+// Ground station markers
+const stations = [
+  {
+    lat: -24.6282, lng: 25.9231,
+    color: '#ffc107', label: 'GABORONE',
+    popup: `<b style="color:#ffc107;font-family:monospace">🛰 Gaborone Gateway Station</b><br>
+    <span style="font-family:monospace;font-size:11px">
+    <b>Type:</b> Primary Internet Gateway<br>
+    <b>Status:</b> ✅ Fully Operational<br>
+    <b>Coordinates:</b> 24.63°S, 25.92°E<br>
+    <b>Role:</b> Main traffic routing point<br>
+    <b>Address:</b> Plot 4858, Lecha Close, Gaborone<br>
+    <b>Licensed:</b> SAP 14 May 2024 · NFP 10 Jan 2025
+    </span>`
+  },
+  {
+    lat: -25.2231, lng: 25.6769,
+    color: '#0078a0', label: 'LOBATSE',
+    popup: `<b style="color:#0078a0;font-family:monospace">🛰 Lobatse Gateway Station</b><br>
+    <span style="font-family:monospace;font-size:11px">
+    <b>Type:</b> Secondary Gateway Station<br>
+    <b>Status:</b> ✅ Fully Operational<br>
+    <b>Coordinates:</b> 25.22°S, 25.68°E<br>
+    <b>Role:</b> Redundancy &amp; southern coverage<br>
+    <b>Distance from Gaborone:</b> ~67 km south
+    </span>`
+  },
+  {
+    lat: -21.1667, lng: 27.5167,
+    color: '#1b5e20', label: 'FRANCISTOWN',
+    popup: `<b style="color:#1b5e20;font-family:monospace">🛰 Francistown Gateway Station</b><br>
+    <span style="font-family:monospace;font-size:11px">
+    <b>Type:</b> Northern Gateway Station<br>
+    <b>Status:</b> ✅ Fully Operational<br>
+    <b>Coordinates:</b> 21.17°S, 27.52°E<br>
+    <b>Role:</b> Northern Botswana coverage<br>
+    <b>Distance from Gaborone:</b> ~400 km north
+    </span>`
+  }
+];
+
+stations.forEach(s => {
+  const marker = L.marker([s.lat, s.lng], { icon: makeIcon(s.color, s.label) }).addTo(map);
+  marker.bindPopup(s.popup, { maxWidth: 280, className: 'sat-popup' });
+  // Pulsing circle
+  L.circle([s.lat, s.lng], {
+    color: s.color, fillColor: s.color, fillOpacity: 0.06,
+    weight: 1.5, opacity: 0.4, radius: 80000
+  }).addTo(map);
+});
+
+// LEO coverage arc overlay (approximate Botswana outline highlight)
+L.polygon([
+  [-17.8, 20.9],[-17.8, 29.3],[-22.0, 29.3],[-22.2, 26.9],
+  [-26.8, 21.6],[-24.2, 20.0],[-20.0, 20.0]
+], {
+  color: '#ffc107', weight: 2, opacity: 0.5, fillOpacity: 0.04, dashArray: '8 4'
+}).addTo(map).bindTooltip('Botswana — Full LEO Coverage Territory', {
+  permanent: false, className: '', direction: 'center'
+});
+
+/* ── CHART DEFAULTS ─────────────────────────────────────────── */
+Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
+Chart.defaults.color = '#64748b';
+const C = {
+  blue: '#0078a0', green: '#1b5e20', red: '#8b0000',
+  yellow: '#ffc107', grey: '#58595b',
+  orange: '#e65100', teal: '#00838f', purple: '#6a1b9a'
+};
+
+const periods = ['Jul–Sep 23','Oct–Dec 23','Jan–Mar 24','Apr–Jun 24','Jul–Sep 24','Oct–Dec 24','Jan–Mar 25','Apr–Jun 25','Jul–Sep 25','Oct–Dec 25','Jan–Mar 26'];
+
+/* ── SUBSCRIPTIONS TREND ───────────────────────────────────── */
+new Chart(document.getElementById('cSubsTrend'), {
+  type: 'line',
+  data: {
+    labels: periods,
+    datasets: [
+      { label:'Orange',   data:[null,null,197423,206244,223412,239147,243188,253045,263091,280381,null], borderColor:C.blue, backgroundColor:'rgba(0,120,160,0.07)', borderWidth:2.5, fill:true, tension:0.35, pointRadius:4, pointBackgroundColor:C.blue },
+      { label:'Mascom',   data:[null,null,164899,199299,237772,260467,269154,265857,265465,261570,null], borderColor:C.orange, backgroundColor:'rgba(230,81,0,0.06)', borderWidth:2.5, fill:true, tension:0.35, pointRadius:4 },
+      { label:'BTC',      data:[null,null,65417,64360,64189,64009,62543,61771,62435,62266,null], borderColor:C.grey, backgroundColor:'rgba(88,89,91,0.05)', borderWidth:2, fill:false, tension:0.3, pointRadius:3 },
+      { label:'Starlink ★', data:[null,null,null,null,null,3085,8075,10881,13461,17352,19958], borderColor:C.green, backgroundColor:'rgba(27,94,32,0.12)', borderWidth:3, fill:true, tension:0.4, pointRadius:6, pointBackgroundColor:C.green },
+      { label:'Paratus',  data:[4332,13021,13103,13211,13259,13255,13211,13070,12960,12826,12857], borderColor:C.purple, borderWidth:1.5, fill:false, tension:0.3, pointRadius:2 },
+      { label:'ISPs (All)',data:[null,null,6413,5483,8337,7825,7404,null,6792,6051,5995], borderColor:C.red, backgroundColor:'rgba(139,0,0,0.05)', borderWidth:1.5, fill:true, tension:0.3, pointRadius:2 },
+    ]
+  },
+  options: {
+    responsive:true, interaction:{mode:'index',intersect:false},
+    plugins:{ legend:{position:'bottom',labels:{usePointStyle:true,font:{size:11},padding:14}} },
+    scales:{
+      y:{ticks:{callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v},grid:{color:'rgba(0,0,0,0.04)'}},
+      x:{grid:{display:false}}
+    }
+  }
+});
+
+/* ── MNO CHART ──────────────────────────────────────────────── */
+new Chart(document.getElementById('cMno'), {
+  type:'bar',
+  data:{
+    labels:['Jan–Mar 24','Apr–Jun 24','Jul–Sep 24','Oct–Dec 24','Jan–Mar 25','Apr–Jun 25','Jul–Sep 25','Oct–Dec 25'],
+    datasets:[
+      {label:'Orange',data:[197423,206244,223412,239147,243188,253045,263091,280381],backgroundColor:'rgba(0,120,160,0.75)',borderRadius:3},
+      {label:'Mascom',data:[164899,199299,237772,260467,269154,265857,265465,261570],backgroundColor:'rgba(230,81,0,0.75)',borderRadius:3},
+      {label:'BTC',   data:[65417,64360,64189,64009,62543,61771,62435,62266],backgroundColor:'rgba(88,89,91,0.65)',borderRadius:3},
+    ]
+  },
+  options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{x:{grid:{display:false}},y:{ticks:{callback:v=>(v/1000).toFixed(0)+'k'},grid:{color:'rgba(0,0,0,0.04)'}}}}
+});
+
+/* ── ISP CHART ──────────────────────────────────────────────── */
+new Chart(document.getElementById('cIsp'), {
+  type:'line',
+  data:{
+    labels:['Jan–Mar 24','Apr–Jun 24','Jul–Sep 24','Oct–Dec 24','Jan–Mar 25','Apr–Jun 25','Jul–Sep 25','Oct–Dec 25','Jan–Mar 26'],
+    datasets:[
+      {label:'Paratus', data:[13103,13211,13259,13255,13211,13070,12960,12826,12857],borderColor:C.purple,borderWidth:2,fill:false,tension:0.3,pointRadius:3},
+      {label:'Abaricom',data:[2924,null,2848,2719,2559,null,2456,2482,2356],borderColor:C.blue,borderWidth:2,fill:false,tension:0.3,pointRadius:3},
+      {label:'GcSat',   data:[2304,2347,2408,2283,2188,1955,1816,1501,1473],borderColor:C.orange,borderWidth:2,fill:false,tension:0.3,pointRadius:3},
+      {label:'Ngami Net',data:[1981,1996,1966,1879,1802,1678,1825,1484,1486],borderColor:C.teal,borderWidth:2,fill:false,tension:0.3,pointRadius:3},
+      {label:'Cene Media',data:[1144,1140,1115,944,855,799,520,584,680],borderColor:C.red,borderWidth:2,fill:false,tension:0.3,pointRadius:3},
+    ]
+  },
+  options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(0,0,0,0.04)'}}}}
+});
+
+/* ── STARLINK GROWTH ────────────────────────────────────────── */
+new Chart(document.getElementById('cStarlink'), {
+  type:'bar',
+  data:{
+    labels:['Oct–Dec 2024','Jan–Mar 2025','Apr–Jun 2025','Jul–Sep 2025','Oct–Dec 2025','Jan–Mar 2026'],
+    datasets:[
+      {type:'bar',label:'Subscriptions',data:[3085,8075,10881,13461,17352,19958],backgroundColor:['rgba(27,94,32,0.55)','rgba(27,94,32,0.6)','rgba(27,94,32,0.65)','rgba(27,94,32,0.72)','rgba(27,94,32,0.8)','rgba(27,94,32,0.9)'],yAxisID:'y',borderRadius:3},
+      {type:'line',label:'Revenue (BWP)',data:[4519062,10500790,15660344,21337227,23503336,27382569],borderColor:C.blue,backgroundColor:'rgba(0,120,160,0.08)',yAxisID:'y2',borderWidth:2.5,fill:true,tension:0.4,pointRadius:5,pointBackgroundColor:C.blue},
+    ]
+  },
+  options:{
+    responsive:true,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{position:'bottom',labels:{usePointStyle:true,font:{size:11}}}},
+    scales:{
+      y:{type:'linear',position:'left',title:{display:true,text:'Subscriptions',font:{size:11}},grid:{color:'rgba(0,0,0,0.04)'}},
+      y2:{type:'linear',position:'right',title:{display:true,text:'Revenue (BWP)',font:{size:11}},grid:{display:false},ticks:{callback:v=>'BWP '+(v/1000000).toFixed(1)+'M'}}
+    }
+  }
+});
+
+/* ── SHARE DONUTS ───────────────────────────────────────────── */
+const donutOpts = {
+  responsive:true,
+  plugins:{legend:{position:'right',labels:{usePointStyle:true,font:{size:11},padding:11}}}
+};
+new Chart(document.getElementById('cSharePre'), {
+  type:'doughnut',
+  data:{
+    labels:['Mascom (44.0%)','Orange (41.3%)','BTC (11.7%)','Paratus (2.4%)','Others (0.6%)'],
+    datasets:[{data:[237772,223412,64189,13259,8337],backgroundColor:[C.orange,C.blue,C.grey,C.purple,'#aaa'],borderWidth:2,borderColor:'#fff',hoverOffset:8}]
+  },
+  options:donutOpts
+});
+new Chart(document.getElementById('cSharePost'), {
+  type:'doughnut',
+  data:{
+    labels:['Orange (43.8%)','Mascom (40.8%)','BTC (9.7%)','Starlink ★ (2.7%)','Paratus (2.0%)','Others (0.9%)'],
+    datasets:[{data:[280381,261570,62266,17352,12826,6051],backgroundColor:[C.blue,C.orange,C.grey,C.green,C.purple,'#aaa'],borderWidth:2,borderColor:'#fff',hoverOffset:8}]
+  },
+  options:donutOpts
+});
+
+/* ── REVENUE CHART ──────────────────────────────────────────── */
+new Chart(document.getElementById('cRev'), {
+  type:'line',
+  data:{
+    labels:['Jul–Sep 24','Oct–Dec 24','Jan–Mar 25','Apr–Jun 25','Jul–Sep 25','Oct–Dec 25'],
+    datasets:[
+      {label:'Orange',data:[427503000,428361000,425456000,458449000,468583000,486699000],borderColor:C.blue,borderWidth:2.5,fill:false,tension:0.35,pointRadius:4},
+      {label:'BTC',   data:[126544738,123011085,124511189,120599340,127784000,124059000],borderColor:C.grey,borderWidth:2,fill:false,tension:0.3,pointRadius:3},
+      {label:'Paratus',data:[12119479,12110797,12029348,11859495,11708804,11536610],borderColor:C.purple,borderWidth:2,fill:false,tension:0.3,pointRadius:3},
+      {label:'Abaricom',data:[16405669,14487223,13600810,null,12711195,12734394],borderColor:C.teal,borderWidth:2,fill:false,tension:0.3,pointRadius:3},
+      {label:'Starlink ★',data:[null,4519062,10500790,15660344,21337227,23503336],borderColor:C.green,backgroundColor:'rgba(27,94,32,0.1)',borderWidth:3,fill:true,tension:0.4,pointRadius:5,pointBackgroundColor:C.green},
+      {label:'Ngami Net',data:[1916640,1764175,1618943,1500892,1369478,1292464],borderColor:C.red,borderWidth:1.5,fill:false,tension:0.3,pointRadius:2},
+    ]
+  },
+  options:{
+    responsive:true,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{position:'bottom',labels:{usePointStyle:true,font:{size:11}}}},
+    scales:{y:{ticks:{callback:v=>v>=1000000?'BWP '+(v/1000000).toFixed(0)+'M':'BWP '+(v/1000).toFixed(0)+'k'},grid:{color:'rgba(0,0,0,0.04)'}},x:{grid:{display:false}}}
+  }
+});
+
+/* ── STARLINK REVENUE ───────────────────────────────────────── */
+new Chart(document.getElementById('cSlRev'), {
+  type:'bar',
+  data:{
+    labels:['Q4 2024','Q1 2025','Q2 2025','Q3 2025','Q4 2025','Q1 2026'],
+    datasets:[{label:'Revenue (BWP)',data:[4519062,10500790,15660344,21337227,23503336,27382569],backgroundColor:[...Array(6)].map((_,i)=>`rgba(27,94,32,${0.5+i*0.08})`),borderRadius:4}]
+  },
+  options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'BWP '+(v/1000000).toFixed(1)+'M'},grid:{color:'rgba(0,0,0,0.04)'}},x:{grid:{display:false}}}}
+});
+
+/* ── REVENUE SHARE ──────────────────────────────────────────── */
+new Chart(document.getElementById('cRevShare'), {
+  type:'doughnut',
+  data:{
+    labels:['Orange (75.9%)','BTC (19.4%)','BoFiNet (6.0%)','Starlink (3.7%)','Others (3.0%)'],
+    datasets:[{data:[486699000,124059000,38000000,23503336,14000000],backgroundColor:[C.blue,C.grey,C.teal,C.green,C.red],borderWidth:2,borderColor:'#fff',hoverOffset:8}]
+  },
+  options:donutOpts
+});
+
+/* ── CAPEX ──────────────────────────────────────────────────── */
+new Chart(document.getElementById('cCapex'), {
+  type:'bar',
+  data:{
+    labels:['Jul–Sep 24','Oct–Dec 24','Jan–Mar 25','Apr–Jun 25','Jul–Sep 25','Oct–Dec 25'],
+    datasets:[
+      {label:'Mascom',data:[387,450,420,390,410,307.1],backgroundColor:'rgba(230,81,0,0.72)',borderRadius:3},
+      {label:'Orange',data:[320,350,340,360,310,132.5],backgroundColor:'rgba(0,120,160,0.72)',borderRadius:3},
+    ]
+  },
+  options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{x:{stacked:false,grid:{display:false}},y:{ticks:{callback:v=>'BWP '+v+'M'},grid:{color:'rgba(0,0,0,0.04)'},title:{display:true,text:'BWP Millions',font:{size:10}}}}}
+});
+
+/* ── EMPLOYMENT ─────────────────────────────────────────────── */
+new Chart(document.getElementById('cEmp'), {
+  type:'bar',
+  data:{
+    labels:['Paratus','Abaricom','Cene Media','GcSat','Ngami Net','Starlink'],
+    datasets:[
+      {label:'Pre-Starlink (Jul–Sep 24)',data:[81,98,14,14,16,1],backgroundColor:'rgba(88,89,91,0.55)',borderRadius:3},
+      {label:'Post-Starlink (Jan–Mar 26)',data:[73,108,14,9,12,1],backgroundColor:'rgba(0,120,160,0.72)',borderRadius:3},
+    ]
+  },
+  options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{x:{stacked:false,grid:{display:false}},y:{grid:{color:'rgba(0,0,0,0.04)'},title:{display:true,text:'Number of Employees',font:{size:10}}}}}
+});
+
+/* ── ARPU ───────────────────────────────────────────────────── */
+new Chart(document.getElementById('cArpu'), {
+  type:'bar',
+  data:{
+    labels:['Abaricom','BTC','Orange','Starlink ★','Paratus','GcSat','Ngami Net'],
+    datasets:[{
+      label:'Monthly ARPU (BWP)',
+      data:[1710,664,579,452,300,289,290],
+      backgroundColor:[C.teal,C.grey,C.blue,C.green,C.purple,C.red,C.orange],
+      borderRadius:4
+    }]
+  },
+  options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{callback:v=>'BWP '+v},grid:{color:'rgba(0,0,0,0.04)'}},y:{grid:{display:false}}}}
+});
+
+/* ── PRICING CHART ──────────────────────────────────────────── */
+new Chart(document.getElementById('cPricing'), {
+  type:'bar',
+  data:{
+    labels:['GcSat','Abaricom','Cene Media','BTC','Orange (est)'],
+    datasets:[
+      {label:'Pre-Starlink Monthly Entry Price (BWP)',data:[330,299,399,599,399],backgroundColor:'rgba(88,89,91,0.6)',borderRadius:3},
+      {label:'Post-Starlink Monthly Entry Price (BWP)',data:[199,299,399,329,349],backgroundColor:'rgba(0,120,160,0.75)',borderRadius:3},
+    ]
+  },
+  options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{x:{stacked:false,grid:{display:false}},y:{ticks:{callback:v=>'BWP '+v},grid:{color:'rgba(0,0,0,0.04)'},title:{display:true,text:'BWP/month',font:{size:10}}}}}
+});
+
+/* ── MARKET EVOLUTION ───────────────────────────────────────── */
+new Chart(document.getElementById('cEvol'), {
+  type:'bar',
+  data:{
+    labels:['Q3 2024\n(Pre-Starlink)','Q4 2025\n(Post-Starlink)'],
+    datasets:[
+      {label:'Orange',data:[223412,280381],backgroundColor:'rgba(0,120,160,0.8)',borderRadius:3},
+      {label:'Mascom',data:[237772,261570],backgroundColor:'rgba(230,81,0,0.8)',borderRadius:3},
+      {label:'BTC',   data:[64189,62266],backgroundColor:'rgba(88,89,91,0.75)',borderRadius:3},
+      {label:'Starlink',data:[0,17352],backgroundColor:'rgba(27,94,32,0.85)',borderRadius:3},
+      {label:'Other ISPs',data:[21596,18793],backgroundColor:'rgba(139,0,0,0.65)',borderRadius:3},
+    ]
+  },
+  options:{
+    responsive:true,
+    plugins:{legend:{position:'bottom',labels:{usePointStyle:true,font:{size:10},color:'rgba(255,255,255,0.7)',padding:10}}},
+    scales:{
+      x:{stacked:true,grid:{display:false},ticks:{color:'rgba(255,255,255,0.5)'}},
+      y:{stacked:true,ticks:{callback:v=>(v/1000).toFixed(0)+'k',color:'rgba(255,255,255,0.4)'},grid:{color:'rgba(255,255,255,0.06)'}}
+    }
+  }
+});
+
+/* ── ACTIVE NAV ─────────────────────────────────────────────── */
+const secEls = document.querySelectorAll('section[id]');
+const navAs  = document.querySelectorAll('.nav-a');
+new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navAs.forEach(a => a.classList.remove('on'));
+      const a = document.querySelector(`.nav-a[href="#${e.target.id}"]`);
+      if (a) a.classList.add('on');
+    }
+  });
+}, { threshold: 0.25 }).observe && secEls.forEach(s =>
+  new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navAs.forEach(a => a.classList.remove('on'));
+        const a = document.querySelector(`.nav-a[href="#${e.target.id}"]`);
+        if (a) a.classList.add('on');
+      }
+    });
+  }, { threshold: 0.25 }).observe(s)
+);
+
+/* ── SCROLL REVEAL ──────────────────────────────────────────── */
+new IntersectionObserver((entries, obs) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('in'), i * 55);
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.07 }).observe && document.querySelectorAll('.reveal').forEach((el, i) =>
+  new IntersectionObserver((entries, obs) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('in'), 60);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.07 }).observe(el)
+);
+</script>
+</body>
+</html>
