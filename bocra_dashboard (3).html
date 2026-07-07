@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BOCRA – MNO Compliance Portal</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f3f4f6;display:flex;min-height:100vh}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:#ccc;border-radius:3px}
+
+.sidebar{width:220px;background:#111827;display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100}
+.brand{padding:20px 16px 14px;border-bottom:1px solid #222}
+.brand-dots{display:flex;gap:5px;margin-top:8px}
+.brand-dot{width:8px;height:8px;border-radius:50%}
+.brand-sub{font-size:10px;color:#555;text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:13px;color:#999;cursor:pointer;border-left:3px solid transparent;transition:all .15s;user-select:none}
+.nav-item:hover{color:#fff;background:#1a1a1a;border-left-color:#1a6fa8}
+.nav-item.active{color:#fff;background:#1e3a5f;border-left-color:#1a6fa8}
+.nav-icon{font-size:15px;width:18px;text-align:center}
+.sidebar-footer{margin-top:auto;padding:14px 16px;border-top:1px solid #222;font-size:10px;color:#444;line-height:1.7}
+
+.main{margin-left:220px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:#fff;border-bottom:1px solid #e5e7eb;padding:13px 26px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:50}
+.topbar h1{flex:1;font-size:15px;font-weight:700;color:#111827}
+.topbar-meta{font-size:11px;color:#6b7280}
+.btn{padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .15s}
+.btn-primary{background:#1a6fa8;color:#fff}
+.btn-outline{background:transparent;border:1px solid #e5e7eb;color:#374151}
+.btn-outline:hover{background:#f3f4f6}
+
+.tabbar{background:#f3f4f6;padding:12px 26px 0;border-bottom:1px solid #e5e7eb;display:flex;gap:2px}
+.tab-btn{padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;border:none;border-radius:6px 6px 0 0;background:#f3f4f6;color:#6b7280;border-bottom:2px solid transparent;transition:all .15s}
+.tab-btn.active{background:#fff;color:#1a6fa8;border-bottom-color:#1a6fa8}
+
+.content{padding:22px 26px;flex:1}
+.section{display:none}.section.active{display:block}
+
+.legend-bar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:10px 16px;margin-bottom:18px;font-size:12px;color:#6b7280}
+.legend-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:5px}
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(138px,1fr));gap:13px;margin-bottom:22px}
+.stat-card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:15px 16px;border-top:3px solid #ccc}
+.stat-label{font-size:10px;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.stat-value{font-size:26px;font-weight:900}
+.stat-sub{font-size:11px;color:#9ca3af;margin-top:2px}
+
+.chart-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:16px}
+.chart-card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:18px}
+.chart-card h3{font-size:13px;font-weight:700;margin-bottom:3px}
+.chart-card p{font-size:11px;color:#6b7280;margin-bottom:14px}
+.chart-wrap{position:relative;height:240px}
+
+.filter-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.filter-bar label{font-size:12px;font-weight:600;color:#6b7280}
+select,input[type=text]{padding:6px 10px;border:1px solid #e5e7eb;border-radius:6px;font-size:12px;background:#fff;color:#111827;font-family:inherit}
+select:focus,input:focus{outline:2px solid #1a6fa8}
+
+.table-wrap{background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden}
+.table-head{padding:13px 16px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;gap:10px}
+.table-head h2{font-size:13px;font-weight:700;flex:1}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+thead th{background:#f8f9fb;padding:9px 11px;text-align:left;font-weight:600;font-size:10px;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #e5e7eb;white-space:nowrap}
+thead th.center{text-align:center}
+tbody tr{border-bottom:1px solid #e5e7eb;transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#f8fafc}
+td{padding:8px 11px;vertical-align:middle}
+
+.badge{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-size:10px;font-weight:800}
+.badge-Y{background:#d1fae5;color:#1a6640}
+.badge-X{background:#fee2e2;color:#8b1a1a}
+.badge-P{background:#fef3c7;color:#c8a000}
+.badge-NA{background:#f3f4f6;color:#9ca3af}
+
+.prog{display:flex;align-items:center;gap:6px}
+.prog-bar{flex:1;height:6px;background:#e5e7eb;border-radius:99px;overflow:hidden}
+.prog-fill{height:100%;border-radius:99px}
+.prog-label{font-size:11px;font-weight:700;width:28px;text-align:right}
+
+.op-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:16px}
+.op-card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden}
+.op-head{padding:13px 16px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;gap:12px}
+.op-avatar{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:12px;flex-shrink:0}
+.op-chart-wrap{padding:14px 16px 6px;position:relative;height:180px}
+.op-rows{padding:0 16px 14px}
+.op-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px solid #e5e7eb;font-size:11px}
+
+/* vertical headers for checklist */
+.vth{writing-mode:vertical-rl;transform:rotate(180deg);font-size:9px;padding:6px 4px;max-height:90px;white-space:nowrap;cursor:help;color:#6b7280;font-weight:600;letter-spacing:.3px}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="brand">
+    <svg viewBox="0 0 108 28" style="width:108px">
+      <text x="0" y="24" font-family="Arial Black,Arial" font-size="24" font-weight="900" fill="#cccccc">BOCRA</text>
+    </svg>
+    <div class="brand-dots">
+      <div class="brand-dot" style="background:#1a6fa8"></div>
+      <div class="brand-dot" style="background:#1a6640"></div>
+      <div class="brand-dot" style="background:#8b1a1a"></div>
+      <div class="brand-dot" style="background:#c8a000"></div>
+    </div>
+    <div class="brand-sub">Compliance Portal</div>
+  </div>
+  <nav style="padding-top:10px">
+    <div class="nav-item active" onclick="switchTab('dashboard',this)"><span class="nav-icon"></span>Dashboard</div>
+    <div class="nav-item" onclick="switchTab('checklist',this)"><span class="nav-icon"></span>Checklist Matrix</div>
+    <div class="nav-item" onclick="switchTab('operators',this)"><span class="nav-icon"></span>MNO Operators</div>
+    <div class="nav-item" onclick="switchTab('analytics',this)"><span class="nav-icon"></span>Analytics</div>
+  </nav>
+  <div class="sidebar-footer">Botswana Communications<br>Regulatory Authority<br><span style="color:#333">© 2025 BOCRA - Tshiamo Chibua</span></div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <h1>MNO Service Licensees — Compliance Portal</h1>
+    <span class="topbar-meta" id="today-date"></span>
+    <button class="btn btn-outline" onclick="exportCSV()">⬇ Export CSV</button>
+    <button class="btn btn-primary" onclick="window.print()">🖨 Print</button>
+  </div>
+
+  <div class="tabbar">
+    <button class="tab-btn active" onclick="switchTab('dashboard',null,this)">Dashboard</button>
+    <button class="tab-btn" onclick="switchTab('checklist',null,this)">Checklist Matrix</button>
+    <button class="tab-btn" onclick="switchTab('operators',null,this)">MNO Operators</button>
+    <button class="tab-btn" onclick="switchTab('analytics',null,this)">Analytics</button>
+  </div>
+
+  <div class="content">
+
+    <div class="legend-bar">
+      <strong style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:.5px">Legend:</strong>
+      <span><span class="legend-dot" style="background:#1a6640"></span>Y — Submitted</span>
+      <span><span class="legend-dot" style="background:#8b1a1a"></span>X — Did not submit</span>
+      <span><span class="legend-dot" style="background:#c8a000"></span>~ — 1 or 2 months of period unavailable</span>
+      <span><span class="legend-dot" style="background:#9ca3af"></span>– — N/A / Pending</span>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="tab-dashboard" class="section active">
+      <div class="stats-grid" id="stats-grid"></div>
+      <div class="chart-grid">
+        <div class="chart-card">
+          <h3>Submission Rate by Period</h3>
+          <p>Hover bars for exact % · click legend to toggle operator</p>
+          <div class="chart-wrap"><canvas id="chart-bar"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Overall Compliance Distribution</h3>
+          <p>Hover segments for exact counts and percentages</p>
+          <div class="chart-wrap"><canvas id="chart-pie"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Compliance Trend by Operator</h3>
+          <p>Hover dots for values · trend across all periods</p>
+          <div class="chart-wrap"><canvas id="chart-line"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Category Compliance (Lowest 10)</h3>
+          <p>Lowest-performing reporting categories across all operators</p>
+          <div class="chart-wrap"><canvas id="chart-cat"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECKLIST -->
+    <div id="tab-checklist" class="section">
+      <div class="filter-bar">
+        <label>Operator:</label>
+        <select id="f-op" onchange="renderChecklist()">
+          <option value="">All Operators</option>
+          <option>MASCOM WIRELESS</option>
+          <option>ORANGE BOTSWANA</option>
+          <option>BTC</option>
+        </select>
+        <label>Period:</label>
+        <select id="f-period" onchange="renderChecklist()">
+          <option value="">All Periods</option>
+          <option>Apr-Jun 25</option>
+          <option>Jul-Sep 25</option>
+          <option>Oct-Dec 25</option>
+          <option>Jan-Mar 26</option>
+        </select>
+        <label>Status:</label>
+        <select id="f-status" onchange="renderChecklist()">
+          <option value="">All</option>
+          <option value="Y">Has Submitted</option>
+          <option value="X">Has Not Submitted</option>
+        </select>
+        <input type="text" id="f-search" placeholder="Search…" oninput="renderChecklist()" style="width:160px">
+        <span id="row-count" style="font-size:11px;color:#6b7280;margin-left:auto"></span>
+      </div>
+      <div class="table-wrap">
+        <div class="scroll"><table><thead id="cl-head"></thead><tbody id="cl-body"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- OPERATORS -->
+    <div id="tab-operators" class="section">
+      <div class="op-grid" id="op-grid"></div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div id="tab-analytics" class="section">
+      <div class="chart-card" style="margin-bottom:18px">
+        <h3>Stacked Submissions — All Operators & Periods</h3>
+        <p>Hover bars for exact counts · Submitted / Not Submitted / Partial / N/A</p>
+        <div class="chart-wrap" style="height:280px"><canvas id="chart-stacked"></canvas></div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-head"><h2>Compliance Score — All Submissions</h2></div>
+        <div class="scroll">
+          <table>
+            <thead><tr>
+              <th>Operator</th><th>Period</th><th>Submitted</th><th>Not Submitted</th>
+              <th>Partial</th><th>N/A</th><th>Rate</th><th>Status</th>
+            </tr></thead>
+            <tbody id="analytics-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const BLUE='#1a6fa8',GREEN='#1a6640',RED='#8b1a1a',YELLOW='#c8a000',MUTED='#6b7280';
+const OP_COLORS={'MASCOM WIRELESS':YELLOW,'ORANGE BOTSWANA':ORANGE,'BTC':GREEN};
+
+// ── 24 CATEGORIES -────────────────────────────────────────────────────────────
+const CATEGORIES=[
+  'SMS Traffic',
+  'Data Traffic',
+  'Mobile Broadband',
+  'Total Utilized Mobile Nos',
+  'Active Datacards',
+  'Number of Active SIMs',
+  'Total Utilized Fixed Nos',
+  'Voice Traffic',
+  'Total Utilized VoIP Nos',
+  'Mobile Network Subscribers',
+  'Mobile Money',
+  'Fixed Network Subscribers',
+  'Tariffs (Prepaid)',
+  'Network Coverage',
+  'Financials',
+  'Total M2M Numbers',
+  'Mobile Broadband 2',
+  'Mobile Money Services',
+  'No. of Base Stations',
+  '% Total Population',
+  'Wholesale Internet Subscribers',
+  'Retail Fixed Broadband Subscribers',
+  'Persons Employed',
+  'BTC Active Fixed Lines'
+];
+
+const PERIODS=['Apr-Jun 25','Jul-Sep 25','Oct-Dec 25','Jan-Mar 26'];
+const OPERATORS=['MASCOM WIRELESS','ORANGE BOTSWANA','BTC'];
+
+// ── DATA — read directly from updated Excel ───────────────────────────────────
+const RAW=[
+  // MASCOM WIRELESS
+  {op:'MASCOM WIRELESS',period:'Apr-Jun 25',
+   vals:['Y','Y','Y','X','Y','Y','X','X','X','Y','Y','_','_','_',null,'_','Y','Y','Y','Y','_','Y','X','_']},
+  {op:'MASCOM WIRELESS',period:'Jul-Sep 25',
+   vals:['Y','Y','Y','Y','Y','Y','X','Y','X','Y',null,'_','_','_','Y','_','Y',null,'Y','Y','_','Y','X','_']},
+  {op:'MASCOM WIRELESS',period:'Oct-Dec 25',
+   vals:['Y','Y',null,'Y','Y','Y','X','Y','X','Y','Y','_','Y','Y','Y','X','P',null,'Y','X','_','Y','X','_']},
+  {op:'MASCOM WIRELESS',period:'Jan-Mar 26',
+   vals:['Y','Y','Y','Y','X','X','Y','Y','Y','Y','Y','Y','Y','_','Y','Y','Y',null,'Y','Y','_','Y','X','_']},
+
+  // ORANGE BOTSWANA
+  {op:'ORANGE BOTSWANA',period:'Apr-Jun 25',
+   vals:['Y','Y','Y','Y','Y','Y','X','Y','X','Y','Y','_','_','_','_','_','Y','Y','Y','Y','_','Y','Y','_']},
+  {op:'ORANGE BOTSWANA',period:'Jul-Sep 25',
+   vals:['Y','Y','Y','Y','Y','Y','X','Y','X','Y','P','_','_','_','_','_','Y',null,'Y','Y','_','Y','Y','_']},
+  {op:'ORANGE BOTSWANA',period:'Oct-Dec 25',
+   vals:['Y','Y',null,'Y','X','Y','X','Y','Y','Y','Y','_','_','_','_','Y','P',null,'Y','Y','_','Y','Y','_']},
+  {op:'ORANGE BOTSWANA',period:'Jan-Mar 26',
+   vals:['Y','Y','Y','Y','X','X','Y','Y','Y','Y','Y','Y','_','_','Y','Y','Y',null,'Y','Y','_','Y','Y','_']},
+
+  // BTC
+  {op:'BTC',period:'Apr-Jun 25',
+   vals:['Y','Y','Y','Y','Y','Y','X','Y','X','Y','Y','_','_','_',null,'_','Y','Y','Y','Y','_','Y','Y','X']},
+  {op:'BTC',period:'Jul-Sep 25',
+   vals:['Y','Y','Y','Y','Y','Y','X','Y','X','Y',null,'_','_','_',null,'_','Y',null,'Y','Y','_','Y','Y','X']},
+  {op:'BTC',period:'Oct-Dec 25',
+   vals:['Y','Y',null,'Y','X','X','X','Y','Y','Y','Y','_','_','_',null,'Y','P',null,'Y','Y','_','Y','Y','X']},
+  {op:'BTC',period:'Jan-Mar 26',
+   vals:['Y','Y','Y','Y','X','X','Y','Y','Y','Y','Y','Y','_','_',null,'Y','Y',null,'Y','Y','Y','Y','Y','X']},
+];
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function norm(v){
+  if(v==null)return'NA';
+  const s=String(v).trim().toUpperCase();
+  if(!s||s==='_'||s==='—')return'NA';
+  if(s.startsWith('Y'))return'Y';
+  if(s.startsWith('X'))return'X';
+  if(s==='P'||s.includes('DEC')||s.includes('DID NOT'))return'P';
+  return'NA';
+}
+function compRate(vals){
+  const n=vals.map(norm),rel=n.filter(v=>v!=='NA');
+  return rel.length?Math.round(n.filter(v=>v==='Y').length/rel.length*100):0;
+}
+function rateColor(r){return r>=80?GREEN:r>=50?YELLOW:RED;}
+function badge(val){
+  const n=norm(val);
+  const tips={Y:'Submitted',X:'Did not submit',P:'Partial (1–2 months unavailable)',NA:'N/A'};
+  const lbl={Y:'Y',X:'X',P:'~',NA:'–'};
+  return`<span class="badge badge-${n}" title="${tips[n]}">${lbl[n]}</span>`;
+}
+function progHTML(rate){
+  const c=rateColor(rate);
+  return`<div class="prog"><div class="prog-bar"><div class="prog-fill" style="width:${rate}%;background:${c}"></div></div><span class="prog-label" style="color:${c}">${rate}%</span></div>`;
+}
+
+// ── TABS ─────────────────────────────────────────────────────────────────────
+function switchTab(id,navEl,tabEl){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>{if(n.textContent.trim().toLowerCase().startsWith(id.slice(0,4)))n.classList.add('active');});
+  document.querySelectorAll('.tab-btn').forEach(b=>{if(b.textContent.trim().toLowerCase().startsWith(id.slice(0,4)))b.classList.add('active');});
+}
+
+// ── STATS ─────────────────────────────────────────────────────────────────────
+function buildStats(){
+  const all=RAW.flatMap(r=>r.vals.map(norm));
+  const Y=all.filter(v=>v==='Y').length,X=all.filter(v=>v==='X').length;
+  const P=all.filter(v=>v==='P').length,NA=all.filter(v=>v==='NA').length;
+  const rel=all.filter(v=>v!=='NA').length;
+  const rate=Math.round(Y/rel*100);
+  const cards=[
+    {label:'Total Submissions',value:RAW.length,sub:`${OPERATORS.length} operators × ${PERIODS.length} periods`,color:BLUE},
+    {label:'Submitted (Y)',value:Y,sub:'data points compliant',color:GREEN},
+    {label:'Not Submitted (X)',value:X,sub:'data points missing',color:RED},
+    {label:'Partial (~)',value:P,sub:'months unavailable',color:YELLOW},
+    {label:'N/A / Pending',value:NA,sub:'not applicable',color:'#9ca3af'},
+    {label:'Compliance Rate',value:rate+'%',sub:'across all 24 categories',color:BLUE},
+  ];
+  document.getElementById('stats-grid').innerHTML=cards.map(c=>`
+    <div class="stat-card" style="border-top-color:${c.color}">
+      <div class="stat-label">${c.label}</div>
+      <div class="stat-value" style="color:${c.color}">${c.value}</div>
+      <div class="stat-sub">${c.sub}</div>
+    </div>`).join('');
+}
+
+// ── CHART SHARED OPTIONS ──────────────────────────────────────────────────────
+const TT={backgroundColor:'#1a1a2e',titleColor:'#ccc',bodyColor:'#fff',borderColor:'#333',borderWidth:1,padding:10,cornerRadius:8};
+const BASE={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:11},color:'#374151'}},tooltip:TT}};
+
+// ── CHARTS ────────────────────────────────────────────────────────────────────
+function buildCharts(){
+  // Grouped Bar
+  new Chart(document.getElementById('chart-bar'),{
+    type:'bar',
+    data:{
+      labels:PERIODS.map(p=>p.replace(' 25',"'25").replace(' 26',"'26")),
+      datasets:OPERATORS.map(op=>({
+        label:op.split(' ')[0],
+        data:PERIODS.map(p=>{const r=RAW.find(r=>r.op===op&&r.period===p);return r?compRate(r.vals):0;}),
+        backgroundColor:OP_COLORS[op]+'bb',borderColor:OP_COLORS[op],borderWidth:1,borderRadius:4
+      }))
+    },
+    options:{...BASE,
+      scales:{
+        y:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%',color:MUTED,font:{size:10}},grid:{color:'#f0f0f0'}},
+        x:{ticks:{color:MUTED,font:{size:11}},grid:{display:false}}
+      },
+      plugins:{...BASE.plugins,tooltip:{...TT,callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.y}%`}}}
+    }
+  });
+
+  // Doughnut
+  const all=RAW.flatMap(r=>r.vals.map(norm));
+  new Chart(document.getElementById('chart-pie'),{
+    type:'doughnut',
+    data:{
+      labels:['Submitted','Not Submitted','Partial','N/A'],
+      datasets:[{
+        data:[all.filter(v=>v==='Y').length,all.filter(v=>v==='X').length,all.filter(v=>v==='P').length,all.filter(v=>v==='NA').length],
+        backgroundColor:[GREEN+'dd',RED+'dd',YELLOW+'dd','#9ca3afdd'],
+        borderColor:'#fff',borderWidth:3,hoverOffset:12
+      }]
+    },
+    options:{...BASE,cutout:'60%',
+      plugins:{
+        legend:{position:'right',labels:{font:{size:11},color:'#374151',padding:14}},
+        tooltip:{...TT,callbacks:{label:ctx=>{const t=ctx.dataset.data.reduce((a,b)=>a+b,0);return` ${ctx.label}: ${ctx.parsed} (${(ctx.parsed/t*100).toFixed(1)}%)`;} }}
+      }
+    }
+  });
+
+  // Line
+  new Chart(document.getElementById('chart-line'),{
+    type:'line',
+    data:{
+      labels:PERIODS.map(p=>p.replace(' 25',"'25").replace(' 26',"'26")),
+      datasets:OPERATORS.map(op=>({
+        label:op.split(' ')[0],
+        data:PERIODS.map(p=>{const r=RAW.find(r=>r.op===op&&r.period===p);return r?compRate(r.vals):0;}),
+        borderColor:OP_COLORS[op],backgroundColor:OP_COLORS[op]+'22',
+        borderWidth:2.5,pointRadius:6,pointHoverRadius:9,
+        pointBackgroundColor:OP_COLORS[op],tension:0.3,fill:false
+      }))
+    },
+    options:{...BASE,
+      scales:{
+        y:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%',color:MUTED,font:{size:10}},grid:{color:'#f0f0f0'}},
+        x:{ticks:{color:MUTED,font:{size:11}},grid:{display:false}}
+      },
+      plugins:{...BASE.plugins,tooltip:{...TT,callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.y}%`}}}
+    }
+  });
+
+  // Horizontal bar — bottom 10 categories
+  const catRates=CATEGORIES.map((cat,ci)=>{
+    const vals=RAW.flatMap(r=>[norm(r.vals[ci])]).filter(v=>v!=='NA');
+    return{cat,rate:vals.length?Math.round(vals.filter(v=>v==='Y').length/vals.length*100):0};
+  }).sort((a,b)=>a.rate-b.rate).slice(0,10);
+
+  new Chart(document.getElementById('chart-cat'),{
+    type:'bar',
+    data:{
+      labels:catRates.map(c=>c.cat.length>20?c.cat.slice(0,19)+'…':c.cat),
+      datasets:[{
+        label:'Compliance %',
+        data:catRates.map(c=>c.rate),
+        backgroundColor:catRates.map(c=>rateColor(c.rate)+'bb'),
+        borderColor:catRates.map(c=>rateColor(c.rate)),
+        borderWidth:1,borderRadius:4
+      }]
+    },
+    options:{...BASE,indexAxis:'y',
+      scales:{
+        x:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%',color:MUTED,font:{size:10}},grid:{color:'#f0f0f0'}},
+        y:{ticks:{color:'#374151',font:{size:10}},grid:{display:false}}
+      },
+      plugins:{...BASE.plugins,tooltip:{...TT,callbacks:{label:ctx=>` ${ctx.label}: ${ctx.parsed.x}%`}}}
+    }
+  });
+
+  // Stacked bar
+  new Chart(document.getElementById('chart-stacked'),{
+    type:'bar',
+    data:{
+      labels:RAW.map(r=>r.op.split(' ')[0]+' '+r.period.replace(' 25',"'25").replace(' 26',"'26")),
+      datasets:[
+        {label:'Submitted',    data:RAW.map(r=>r.vals.filter(v=>norm(v)==='Y').length), backgroundColor:GREEN+'bb', borderColor:GREEN,  borderWidth:1},
+        {label:'Not Submitted',data:RAW.map(r=>r.vals.filter(v=>norm(v)==='X').length), backgroundColor:RED+'bb',   borderColor:RED,    borderWidth:1},
+        {label:'Partial',      data:RAW.map(r=>r.vals.filter(v=>norm(v)==='P').length), backgroundColor:YELLOW+'bb',borderColor:YELLOW, borderWidth:1},
+        {label:'N/A',          data:RAW.map(r=>r.vals.filter(v=>norm(v)==='NA').length),backgroundColor:'#d1d5dbbb',borderColor:'#9ca3af',borderWidth:1,borderRadius:4},
+      ]
+    },
+    options:{...BASE,
+      scales:{
+        x:{stacked:true,ticks:{color:MUTED,font:{size:9},maxRotation:40,minRotation:40},grid:{display:false}},
+        y:{stacked:true,ticks:{color:MUTED,font:{size:10}},grid:{color:'#f0f0f0'}}
+      },
+      plugins:{...BASE.plugins,tooltip:{...TT,callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.y}`}}}
+    }
+  });
+}
+
+// ── CHECKLIST ─────────────────────────────────────────────────────────────────
+function renderChecklist(){
+  const fOp=document.getElementById('f-op').value;
+  const fPeriod=document.getElementById('f-period').value;
+  const fStatus=document.getElementById('f-status').value;
+  const q=document.getElementById('f-search').value.toLowerCase();
+  const rows=RAW.filter(r=>{
+    if(fOp&&r.op!==fOp)return false;
+    if(fPeriod&&r.period!==fPeriod)return false;
+    if(q&&!r.op.toLowerCase().includes(q)&&!r.period.toLowerCase().includes(q))return false;
+    if(fStatus&&!r.vals.some(v=>norm(v)===fStatus))return false;
+    return true;
+  });
+  document.getElementById('row-count').textContent=rows.length+' rows';
+
+  document.getElementById('cl-head').innerHTML=`<tr>
+    <th>Operator</th>
+    <th>Period</th>
+    ${CATEGORIES.map((c,i)=>`<th class="center"><div class="vth" title="${c}">${c}</div></th>`).join('')}
+    <th style="min-width:90px">Rate</th>
+  </tr>`;
+
+  document.getElementById('cl-body').innerHTML=rows.map(r=>`<tr>
+    <td style="font-weight:700;color:${OP_COLORS[r.op]};white-space:nowrap">${r.op}</td>
+    <td style="color:${MUTED};white-space:nowrap">${r.period}</td>
+    ${r.vals.map(v=>`<td style="text-align:center">${badge(v)}</td>`).join('')}
+    <td>${progHTML(compRate(r.vals))}</td>
+  </tr>`).join('');
+}
+
+// ── OPERATORS ─────────────────────────────────────────────────────────────────
+function buildOperators(){
+  document.getElementById('op-grid').innerHTML=OPERATORS.map(op=>{
+    const rows=RAW.filter(r=>r.op===op);
+    const color=OP_COLORS[op];
+    const init=op.split(' ').map(w=>w[0]).join('').slice(0,3);
+    const allV=rows.flatMap(r=>r.vals.map(norm)).filter(v=>v!=='NA');
+    const overall=Math.round(allV.filter(v=>v==='Y').length/allV.length*100);
+    const oc=rateColor(overall);
+    const rowsHTML=rows.map(r=>{
+      const rt=compRate(r.vals),rc=rateColor(rt);
+      const Y=r.vals.filter(v=>norm(v)==='Y').length,X=r.vals.filter(v=>norm(v)==='X').length;
+      return`<div class="op-row">
+        <span style="color:${MUTED};width:80px;flex-shrink:0">${r.period}</span>
+        <span style="color:${GREEN};font-weight:700">✓${Y}</span>
+        <span style="color:${RED};font-weight:700;margin-left:4px">✗${X}</span>
+        <div class="prog" style="flex:1;margin-left:6px">
+          <div class="prog-bar"><div class="prog-fill" style="width:${rt}%;background:${rc}"></div></div>
+          <span class="prog-label" style="color:${rc}">${rt}%</span>
+        </div>
+      </div>`;
+    }).join('');
+    return`<div class="op-card">
+      <div class="op-head">
+        <div class="op-avatar" style="background:${color}">${init}</div>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:700">${op}</div>
+          <div style="font-size:11px;color:${MUTED}">MNO Service Licensee · ${rows.length} periods</div>
+        </div>
+        <div style="font-size:22px;font-weight:900;color:${oc}">${overall}%</div>
+      </div>
+      <div class="op-chart-wrap"><canvas id="opc-${op.replace(/ /g,'_')}"></canvas></div>
+      <div class="op-rows">${rowsHTML}</div>
+    </div>`;
+  }).join('');
+
+  setTimeout(()=>{
+    OPERATORS.forEach(op=>{
+      const rows=RAW.filter(r=>r.op===op);
+      const el=document.getElementById('opc-'+op.replace(/ /g,'_'));
+      if(!el)return;
+      new Chart(el,{
+        type:'bar',
+        data:{
+          labels:rows.map(r=>r.period.replace(' 25',"'25").replace(' 26',"'26")),
+          datasets:[{label:'Compliance Rate',data:rows.map(r=>compRate(r.vals)),backgroundColor:OP_COLORS[op]+'bb',borderColor:OP_COLORS[op],borderWidth:1,borderRadius:5}]
+        },
+        options:{responsive:true,maintainAspectRatio:false,
+          plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:ctx=>` Rate: ${ctx.parsed.y}%`}}},
+          scales:{
+            y:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%',color:MUTED,font:{size:9}},grid:{color:'#f0f0f0'}},
+            x:{ticks:{color:MUTED,font:{size:10}},grid:{display:false}}
+          }
+        }
+      });
+    });
+  },50);
+}
+
+// ── ANALYTICS ─────────────────────────────────────────────────────────────────
+function buildAnalytics(){
+  document.getElementById('analytics-body').innerHTML=RAW.map(r=>{
+    const n=r.vals.map(norm);
+    const Y=n.filter(v=>v==='Y').length,X=n.filter(v=>v==='X').length;
+    const P=n.filter(v=>v==='P').length,NA=n.filter(v=>v==='NA').length;
+    const rate=compRate(r.vals),rc=rateColor(rate);
+    const st=rate>=80?'✅ Compliant':rate>=50?'⚠ Partial':'❌ Non-compliant';
+    return`<tr>
+      <td style="font-weight:700;color:${OP_COLORS[r.op]}">${r.op}</td>
+      <td style="color:${MUTED}">${r.period}</td>
+      <td style="font-weight:700;color:${GREEN}">${Y}</td>
+      <td style="font-weight:700;color:${RED}">${X}</td>
+      <td style="font-weight:700;color:${YELLOW}">${P}</td>
+      <td style="color:#9ca3af">${NA}</td>
+      <td>${progHTML(rate)}</td>
+      <td style="font-weight:600;color:${rc};font-size:11px">${st}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── EXPORT ────────────────────────────────────────────────────────────────────
+function exportCSV(){
+  const header=['Operator','Period',...CATEGORIES,'Rate'].join(',');
+  const rows=RAW.map(r=>[`"${r.op}"`,`"${r.period}"`,...r.vals.map(v=>`"${norm(v)}"`),compRate(r.vals)+'%'].join(','));
+  const blob=new Blob([header+'\n'+rows.join('\n')],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='bocra_compliance.csv';a.click();
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+document.getElementById('today-date').textContent=
+  new Date().toLocaleDateString('en-BW',{weekday:'short',year:'numeric',month:'long',day:'numeric'});
+buildStats();
+buildCharts();
+renderChecklist();
+buildOperators();
+buildAnalytics();
+</script>
+</body>
+</html>

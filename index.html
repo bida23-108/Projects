@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <title>BOCRA | Botswana Communications Regulatory Authority</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Botswana Communications Regulatory Authority — licensing, consumer protection, QoS monitoring, and regulatory oversight." />
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+
+  <!-- Your design system — source of truth -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+
+  <!-- ============================================================
+       STICKY QUICK-ACTION RAIL (right edge, desktop only)
+  ============================================================ -->
+  <aside class="quick-rail" aria-label="Quick actions">
+    <a class="qa qa-blue"   href="https://op-web.bocra.org.bw"  target="_blank" rel="noopener" aria-label="BOCRA Portal">
+      <span class="qa-ic" aria-hidden="true">P</span><span class="qa-tx">Portal</span>
+    </a>
+    <a class="qa qa-green"  href="https://dqos.bocra.org.bw/"   target="_blank" rel="noopener" aria-label="QoS Monitoring">
+      <span class="qa-ic" aria-hidden="true">Q</span><span class="qa-tx">QoS</span>
+    </a>
+    <a class="qa qa-yellow" href="#licensing" aria-label="Licensing">
+      <span class="qa-ic" aria-hidden="true">L</span><span class="qa-tx">Licensing</span>
+    </a>
+    <a class="qa qa-red"    href="#complaints" aria-label="Complaints">
+      <span class="qa-ic" aria-hidden="true">C</span><span class="qa-tx">Complaints</span>
+    </a>
+  </aside>
+
+  <!-- Film-strip decorative rails -->
+  <div class="film-rails" aria-hidden="true"></div>
+
+  <!-- Four-colour top ribbons -->
+  <div class="ribbons" aria-hidden="true">
+    <span class="ribbon r-red"></span>
+    <span class="ribbon r-yellow"></span>
+    <span class="ribbon r-blue"></span>
+    <span class="ribbon r-green"></span>
+  </div>
+
+
+  <!-- ============================================================
+       HEADER — glass, sticky, full-width
+  ============================================================ -->
+  <header class="header header--glass" id="site-header">
+    <div class="header-bar">
+
+      <!-- Logo -->
+      <a class="brand" href="#home" aria-label="BOCRA Home">
+        <img src="assets/logo.png" class="brand-mark" alt="BOCRA" />
+      </a>
+
+      <!-- Desktop navigation with colour-coded dropdowns -->
+      <nav class="nav nav--desktop" aria-label="Primary navigation">
+
+        <!-- About dropdown (blue) -->
+        <div class="dd dd-blue" data-dd>
+          <button class="dd-btn" type="button" aria-expanded="false" aria-haspopup="true">
+            About <span class="dd-caret" aria-hidden="true">▾</span>
+          </button>
+          <div class="dd-menu" role="menu">
+            <a href="#about"      role="menuitem">Profile</a>
+            <a href="#about"      role="menuitem">A Word from the Chief Executive</a>
+            <a href="#history"    role="menuitem">History of Communication Regulation</a>
+            <a href="#organogram" role="menuitem">Organogram</a>
+            <a href="#board"      role="menuitem">Board of Directors</a>
+            <a href="#about"      role="menuitem">Executive Management</a>
+            <a href="#about"      role="menuitem">Careers</a>
+          </div>
+        </div>
+
+        <!-- Mandate dropdown (red) -->
+        <div class="dd dd-red" data-dd>
+          <button class="dd-btn" type="button" aria-expanded="false" aria-haspopup="true">
+            Mandate <span class="dd-caret" aria-hidden="true">▾</span>
+          </button>
+          <div class="dd-menu" role="menu">
+            <a href="#mandate"    role="menuitem">Legislation</a>
+            <a href="#mandate"    role="menuitem">Telecommunications</a>
+            <a href="#mandate"    role="menuitem">Broadcasting</a>
+            <a href="#mandate"    role="menuitem">Postal</a>
+            <a href="#mandate"    role="menuitem">Internet</a>
+            <a href="#licensing"  role="menuitem">Licensing</a>
+          </div>
+        </div>
+
+        <a href="#projects">Projects</a>
+
+        <!-- Documents dropdown (yellow) -->
+        <div class="dd dd-yellow" data-dd>
+          <button class="dd-btn" type="button" aria-expanded="false" aria-haspopup="true">
+            Documents <span class="dd-caret" aria-hidden="true">▾</span>
+          </button>
+          <div class="dd-menu" role="menu">
+            <a href="#documents"  role="menuitem">Draft Documents &amp; Legislation</a>
+            <a href="#documents"  role="menuitem">ICT Licensing Framework</a>
+            <a href="#documents"  role="menuitem">ITU Capacity Building Workshop</a>
+          </div>
+        </div>
+
+        <!-- Complaints dropdown (green) -->
+        <div class="dd dd-green" data-dd>
+          <button class="dd-btn" type="button" aria-expanded="false" aria-haspopup="true">
+            Complaints <span class="dd-caret" aria-hidden="true">▾</span>
+          </button>
+          <div class="dd-menu" role="menu">
+            <a href="#complaints" role="menuitem">Consumer Education &amp; Advice</a>
+            <a href="#complaints" role="menuitem">Registering Complaints</a>
+            <a href="#complaints" role="menuitem">File a Complaint</a>
+          </div>
+        </div>
+
+        <!-- Media dropdown (blue/purple styled) -->
+        <div class="dd dd-blue" data-dd>
+          <button class="dd-btn" type="button" aria-expanded="false" aria-haspopup="true">
+            Media <span class="dd-caret" aria-hidden="true">▾</span>
+          </button>
+          <div class="dd-menu" role="menu">
+            <a href="#media"      role="menuitem">News &amp; Events</a>
+            <a href="#speeches"   role="menuitem">Speeches</a>
+          </div>
+        </div>
+
+        <a href="#tenders">Tenders</a>
+      </nav>
+
+      <!-- Right-side actions -->
+      <div class="nav-actions">
+        <a class="svc svc--green"  href="https://registration.bocra.org.bw/"  target="_blank" rel="noopener">ASMS-WebCP</a>
+        <a class="svc svc--red"    href="https://customerportal.bocra.org.bw/OnlineLicenseVerification/verify" target="_blank" rel="noopener">Licence Verification</a>
+        <a class="svc svc--blue"   href="https://typeapproval.bocra.org.bw/"  target="_blank" rel="noopener">Type Approval</a>
+        <a class="svc svc--yellow" href="https://nic.net.bw/"                 target="_blank" rel="noopener">Register BW</a>
+
+        <!-- Search popover -->
+        <div class="search" data-search>
+          <button class="icon-btn" type="button" aria-label="Search" data-search-btn>🔎︎</button>
+          <div class="search-pop" role="dialog" aria-label="Search" hidden data-search-pop>
+            <form class="search-form" action="#" method="get" role="search">
+              <input type="search" name="q" placeholder="Search BOCRA…" aria-label="Search BOCRA" data-search-input />
+            </form>
+          </div>
+        </div>
+
+        <!-- Theme toggle -->
+        <button class="icon-btn" type="button" aria-label="Toggle theme" data-theme-icon>
+          <span data-theme-glyph>☀︎</span>
+        </button>
+
+        <!-- Mobile hamburger -->
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav">Menu</button>
+      </div>
+    </div><!-- /.header-bar -->
+
+    <!-- Mobile nav panel -->
+    <div id="mobile-nav" class="mobile-nav" hidden>
+      <div class="mobile-nav-inner">
+        <details class="m-dd">
+          <summary>About</summary>
+          <a href="#about">Profile</a>
+          <a href="#about">A Word from the Chief Executive</a>
+          <a href="#history">History of Communication Regulation</a>
+          <a href="#organogram">Organogram</a>
+          <a href="#board">Board of Directors</a>
+          <a href="#about">Executive Management</a>
+          <a href="#about">Careers</a>
+        </details>
+        <details class="m-dd">
+          <summary>Mandate</summary>
+          <a href="#mandate">Legislation</a>
+          <a href="#mandate">Telecommunications</a>
+          <a href="#mandate">Broadcasting</a>
+          <a href="#mandate">Postal</a>
+          <a href="#mandate">Internet</a>
+          <a href="#licensing">Licensing</a>
+        </details>
+        <a href="#projects">Projects</a>
+        <details class="m-dd">
+          <summary>Documents</summary>
+          <a href="#documents">Draft Documents &amp; Legislation</a>
+          <a href="#documents">ICT Licensing Framework</a>
+          <a href="#documents">ITU Capacity Building Workshop</a>
+        </details>
+        <details class="m-dd">
+          <summary>Complaints</summary>
+          <a href="#complaints">Consumer Education &amp; Advice</a>
+          <a href="#complaints">Registering Complaints</a>
+          <a href="#complaints">File a Complaint</a>
+        </details>
+        <details class="m-dd">
+          <summary>Media</summary>
+          <a href="#media">News &amp; Events</a>
+          <a href="#speeches">Speeches</a>
+        </details>
+        <a href="#tenders">Tenders</a>
+        <div class="mobile-quick">
+          <a class="chip chip--blue"  href="https://op-web.bocra.org.bw" target="_blank" rel="noopener">BOCRA Portal</a>
+          <a class="chip chip--green" href="https://dqos.bocra.org.bw/"  target="_blank" rel="noopener">QoS Monitoring</a>
+          <a class="chip chip--yellow" href="https://nic.net.bw/"        target="_blank" rel="noopener">Register BW</a>
+        </div>
+      </div>
+    </div><!-- /#mobile-nav -->
+
+    <!-- Scroll progress bar -->
+    <div class="scroll-progress" aria-hidden="true">
+      <span class="scroll-progress__bar" data-progress-bar></span>
+    </div>
+  </header><!-- /header -->
+
+
+  <main>
+
+    <!-- ============================================================
+         SECTION: HOME — hero carousel + service finder + news grid
+    ============================================================ -->
+    <section id="home">
+
+      <!-- About card above hero -->
+      <div class="container" style="padding: 22px 0 6px;">
+        <div class="card reveal" data-reveal>
+          <h2>About BOCRA</h2>
+          <p class="muted">
+            The Botswana Communications Regulatory Authority (BOCRA) was established under the Communications
+            Regulatory Authority (CRA) Act of 2012 and became operational on 1 April 2013 to regulate Botswana's
+            communications sector, including telecommunications, ICTs, broadcasting, radio communications, and
+            postal services. The Act replaced the Broadcasting and Telecommunications Acts and amended the Postal
+            Services Act to create a single converged regulator.
+          </p>
+          <p class="muted">
+            BOCRA's mission is to regulate the communications sector to promote competition, innovation, consumer
+            protection, and universal access, while its vision is to achieve a connected and digitally driven
+            society. Its six strategic pillars are: competition, universal access and service, consumer protection,
+            resource optimisation, talent management, and stakeholder engagement.
+          </p>
+        </div>
+      </div>
+
+      <!-- Hero mesh background -->
+      <section class="hero">
+        <div class="hero-mesh" aria-hidden="true">
+          <span class="mesh m1"></span>
+          <span class="mesh m2"></span>
+          <span class="mesh m3"></span>
+          <span class="mesh m4"></span>
+          <span class="noise"></span>
+        </div>
+
+        <div class="container">
+
+          <!-- ---- Carousel ---- -->
+          <div class="carousel" data-carousel data-autoplay="true" data-interval="6500" tabindex="0">
+            <div class="carousel__rail" aria-label="Featured highlights" role="region">
+              <div class="carousel__track" data-carousel-track>
+
+                <!-- Slide 1 -->
+                <article class="carousel__slide is-active" data-carousel-slide aria-roledescription="slide" aria-label="1 of 4">
+                  <div class="slide__card slide__card--image">
+                    <div class="slide__bg" aria-hidden="true">
+                      <img src="image_eb4369.png" alt="African telecommunications infrastructure overview" loading="eager" />
+                    </div>
+                    <div class="slide__film" aria-hidden="true"></div>
+                    <p class="slide__tag tag--blue">Telecoms</p>
+                    <h1 class="slide__title">Regulating communications for a connected Botswana</h1>
+                    <p class="slide__sub">Licensing, consumer protection, and quality monitoring across telecommunications, internet, broadcasting and postal.</p>
+                    <div class="slide__actions">
+                      <a class="btn btn--primary" href="#media">News &amp; Events</a>
+                      <a class="btn btn--ghost"   href="#documents">Documents</a>
+                      <a class="btn btn--ghost"   href="#complaints">Complaints</a>
+                    </div>
+                    <div class="slide__meta">BOCRA • Consumer-first regulation • Market development</div>
+                  </div>
+                </article>
+
+                <!-- Slide 2 -->
+                <article class="carousel__slide" data-carousel-slide aria-roledescription="slide" aria-label="2 of 4">
+                  <div class="slide__card slide__card--image">
+                    <div class="slide__bg" aria-hidden="true">
+                      <img src="image_eb43ca.png" alt="Digital data tracking networks across Africa" loading="lazy" />
+                    </div>
+                    <div class="slide__film" aria-hidden="true"></div>
+                    <p class="slide__tag tag--red">Consumer</p>
+                    <h2 class="slide__title">File a complaint in minutes</h2>
+                    <p class="slide__sub">A clear process, structured evidence, and transparent outcomes — built to protect consumers and strengthen service delivery.</p>
+                    <div class="slide__actions">
+                      <a class="btn btn--primary" href="#complaints">File a Complaint</a>
+                      <a class="btn btn--ghost"   href="#complaints">Consumer Advice</a>
+                    </div>
+                    <div class="slide__meta">Fairness • Evidence • Resolution</div>
+                  </div>
+                </article>
+
+                <!-- Slide 3 -->
+                <article class="carousel__slide" data-carousel-slide aria-roledescription="slide" aria-label="3 of 4">
+                  <div class="slide__card slide__card--image">
+                    <div class="slide__bg" aria-hidden="true">
+                      <img src="image_eb46ad.png" alt="Mobile network signals and connectivity data analysis" loading="lazy" />
+                    </div>
+                    <div class="slide__film" aria-hidden="true"></div>
+                    <p class="slide__tag tag--yellow">Licensing</p>
+                    <h2 class="slide__title">Apply for a licence — guided, compliant, transparent</h2>
+                    <p class="slide__sub">Start an application across communications services. We publish tools and frameworks to support consistent compliance and innovation.</p>
+                    <div class="slide__actions">
+                      <a class="btn btn--primary" href="#licensing">Start Licensing</a>
+                      <a class="btn btn--ghost"   href="https://customerportal.bocra.org.bw/OnlineLicenseVerification/verify" target="_blank" rel="noopener">Verify a Licence</a>
+                    </div>
+                    <div class="slide__meta">Licensing • Frameworks • Compliance</div>
+                  </div>
+                </article>
+
+                <!-- Slide 4 -->
+                <article class="carousel__slide" data-carousel-slide aria-roledescription="slide" aria-label="4 of 4">
+                  <div class="slide__card slide__card--image">
+                    <div class="slide__bg" aria-hidden="true">
+                      <img src="https://t4.ftcdn.net/jpg/09/51/30/35/360_F_951303534_i326EdZiGLjaIl0pC42aampUixEBzBJf.jpg" alt="Broadcasting standards and equipment validation" loading="lazy" />
+                    </div>
+                    <div class="slide__film" aria-hidden="true"></div>
+                    <p class="slide__tag tag--green">Type Approval</p>
+                    <h2 class="slide__title">Equipment approval database</h2>
+                    <p class="slide__sub">Ensure devices used in Botswana meet relevant standards. Search approvals and access guidance for industry and consumers.</p>
+                    <div class="slide__actions">
+                      <a class="btn btn--primary" href="https://typeapproval.bocra.org.bw/" target="_blank" rel="noopener">Type Approval</a>
+                      <a class="btn btn--ghost"   href="https://dqos.bocra.org.bw/" target="_blank" rel="noopener">QoS Monitoring</a>
+                    </div>
+                    <div class="slide__meta">Standards • Safety • Compliance</div>
+                  </div>
+                </article>
+
+              </div><!-- /.carousel__track -->
+            </div><!-- /.carousel__rail -->
+
+            <div class="carousel__controls">
+              <button class="cbtn" type="button" data-carousel-prev aria-label="Previous slide">Prev</button>
+              <div class="carousel__dots" data-carousel-dots aria-label="Slide selector"></div>
+              <button class="cbtn" type="button" data-carousel-next aria-label="Next slide">Next</button>
+            </div>
+            <p class="sr-only" aria-live="polite" data-carousel-live></p>
+          </div><!-- /.carousel -->
+
+          <!-- ---- Service finder ---- -->
+          <section class="service-finder reveal" data-reveal aria-label="Service finder">
+            <div class="sf-head">
+              <h2 class="h2">What do you need today?</h2>
+              <p class="muted">Quick access to the most-used services and information.</p>
+            </div>
+            <div class="sf-grid">
+              <a class="sf-card sf-blue"   href="#licensing">
+                <div class="sf-ic" aria-hidden="true">🕮</div>
+                <h3>Licensing</h3>
+                <p class="muted">Apply, renew, or verify licences.</p>
+                <span class="sf-cta">Go →</span>
+              </a>
+              <a class="sf-card sf-red"    href="#complaints">
+                <div class="sf-ic" aria-hidden="true">⛉</div>
+                <h3>Complaints</h3>
+                <p class="muted">File a complaint and track outcomes.</p>
+                <span class="sf-cta">Go →</span>
+              </a>
+              <a class="sf-card sf-green"  href="https://dqos.bocra.org.bw/" target="_blank" rel="noopener">
+                <div class="sf-ic" aria-hidden="true">ᯤ</div>
+                <h3>QoS Monitoring</h3>
+                <p class="muted">Quality tests and monitoring dashboard.</p>
+                <span class="sf-cta">Open →</span>
+              </a>
+              <a class="sf-card sf-yellow" href="#documents">
+                <div class="sf-ic" aria-hidden="true">🗁</div>
+                <h3>Documents</h3>
+                <p class="muted">Frameworks, guidelines, and tools.</p>
+                <span class="sf-cta">Browse →</span>
+              </a>
+            </div>
+          </section>
+
+          <!-- ---- News / Documents / Licensing three-column ---- -->
+          <section id="media" class="sections" aria-label="Key sections">
+
+            <!-- News & Events -->
+            <div class="card blue-border reveal" data-reveal>
+              <h2>News &amp; Events</h2>
+              <p class="muted">Latest updates, media releases and public notices.</p>
+              <div class="news-grid">
+                <a class="news-card" href="#">
+                  <div class="news-top">
+                    <span class="chip-mini cm-blue">Media Release</span>
+                    <time class="news-date" datetime="2026-02-28">28 Feb 2026</time>
+                  </div>
+                  <h3 class="news-title">BOCRA approves reduced data prices for BTC</h3>
+                  <p class="news-desc muted">Summary placeholder text for the release — keep this short and scannable.</p>
+                </a>
+                <a class="news-card" href="#">
+                  <div class="news-top">
+                    <span class="chip-mini cm-yellow">Public Notice</span>
+                    <time class="news-date" datetime="2026-02-25">25 Feb 2026</time>
+                  </div>
+                  <h3 class="news-title">Expression of Interest for Supplier Database inclusion</h3>
+                  <p class="news-desc muted">Short description placeholder for the notice and what stakeholders should do.</p>
+                </a>
+                <a class="news-card" href="#">
+                  <div class="news-top">
+                    <span class="chip-mini cm-green">Licensing</span>
+                    <time class="news-date" datetime="2026-02-20">20 Feb 2026</time>
+                  </div>
+                  <h3 class="news-title">Invitation to apply for commercial broadcasting radio licences</h3>
+                  <p class="news-desc muted">Short placeholder to explain eligibility, timelines and how to apply.</p>
+                </a>
+              </div>
+              <a class="btn btn--ghost btn--small" href="#">View all</a>
+            </div>
+
+            <!-- Documents -->
+            <div id="documents" class="card yellow-border reveal" data-reveal>
+              <h2>Documents &amp; Legislation</h2>
+              <p class="muted">Frameworks, guidelines and reference publications.</p>
+              <ul>
+                <li><a href="/sites/default/files/sites/default/files/documents/BOCRA2025_ANNUAL_REPORT_%28WEB%29_compressed.pdf" target="_blank" rel="noopener">BOCRA 2025 Annual Report</a></li>
+                <li><a href="/sites/default/files/sites/default/files/documents/digital_services_ACT.pdf" target="_blank" rel="noopener">Digital Services Act, 2025</a></li>
+                <li><a href="/sites/default/files/sites/default/files/documents/Cybersecurity_ACT_-_5%20Nov_2025.pdf" target="_blank" rel="noopener">Cybersecurity Act, 2025</a></li>
+                <li><a href="/sites/default/files/sites/default/files/documents/2025_Revised_QoS_QoE%20Guidelines.pdf" target="_blank" rel="noopener">ICT QoS / QoE Guidelines</a></li>
+                <li><a href="/sites/default/files/sites/default/files/documents/BOTSWANA_UASF_FRAMEWORK_FINAL_VERSION.pdf" target="_blank" rel="noopener">Universal Access &amp; Service Fund Framework</a></li>
+              </ul>
+              <a class="btn btn--ghost btn--small" href="https://www.bocra.org.bw/documents%26legislation" target="_blank" rel="noopener">Browse all documents</a>
+            </div>
+
+            <!-- Licensing quick CTA -->
+            <div id="licensing" class="card green-border reveal" data-reveal>
+              <h2>Apply for a Licence</h2>
+              <p class="muted">Start an application or verify existing licences.</p>
+              <div class="stack">
+                <a class="btn btn--primary btn--full" href="https://registration.bocra.org.bw/" target="_blank" rel="noopener">Start licensing (ASMS-WebCP)</a>
+                <a class="btn btn--ghost btn--full"   href="https://customerportal.bocra.org.bw/OnlineLicenseVerification/verify" target="_blank" rel="noopener">Verify a licence</a>
+              </div>
+            </div>
+
+          </section><!-- /.sections -->
+
+        </div><!-- /.container -->
+      </section><!-- /.hero -->
+
+    </section><!-- /#home -->
+
+
+    <!-- ============================================================
+         SECTION: STATS — at-a-glance counters
+    ============================================================ -->
+    <section class="stats reveal" data-reveal aria-label="At a glance">
+      <div class="container">
+        <div class="stats__head">
+          <h2>At a glance</h2>
+          <p class="muted">Key sector indicators.</p>
+        </div>
+        <div class="stats__grid">
+          <div class="stat">
+            <div class="stat__value" data-counter="148">0</div>
+            <div class="stat__label">Licences issued</div>
+          </div>
+          <div class="stat">
+            <div class="stat__value" data-counter="392">0</div>
+            <div class="stat__label">Complaints resolved</div>
+          </div>
+          <div class="stat">
+            <div class="stat__value" data-counter="4425">0</div>
+            <div class="stat__label">Mobile subscriptions (K)</div>
+          </div>
+          <div class="stat">
+            <div class="stat__value" data-counter="2910">0</div>
+            <div class="stat__label">Mobile broadband subs (K)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         SECTION: COMPLAINTS
+    ============================================================ -->
+    <section id="complaints" class="container" style="padding: 14px 0 0;">
+      <div class="card reveal" data-reveal>
+        <h2>Complaints</h2>
+        <p class="muted">
+          BOCRA will investigate a consumer complaint against a licensed service provider where there is sufficient
+          evidence to establish a breach. Submit your complaint online or contact us directly.
+        </p>
+        <div class="stack">
+          <a class="btn btn--primary btn--full" href="https://www.bocra.org.bw/form/file-complaint-form" target="_blank" rel="noopener">File a complaint</a>
+          <a class="btn btn--ghost btn--full"   href="https://www.bocra.org.bw/consumer-education-and-advice" target="_blank" rel="noopener">Consumer advice</a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         SECTION: REGULATORY FOCUS STRIP
+    ============================================================ -->
+    <section class="focus-strip reveal" data-reveal aria-label="Regulatory focus areas">
+      <div class="container">
+        <div class="focus-inner">
+          <div class="focus-left">
+            <h2 class="h2">Regulatory focus areas</h2>
+            <p class="muted">BOCRA's strategic priorities for the communications sector.</p>
+          </div>
+          <div class="focus-steps">
+            <div class="step">
+              <span class="dot d-blue"></span>
+              <div>
+                <h3>Affordability</h3>
+                <p class="muted">Cost-reflective pricing and consumer value.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="dot d-green"></span>
+              <div>
+                <h3>Quality &amp; Coverage</h3>
+                <p class="muted">QoS monitoring and access improvement.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="dot d-yellow"></span>
+              <div>
+                <h3>Compliance</h3>
+                <p class="muted">Transparent licensing and enforcement tools.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="dot d-red"></span>
+              <div>
+                <h3>Consumer Protection</h3>
+                <p class="muted">Complaints resolution and public guidance.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         SECTION: MANDATE — tabbed panel
+    ============================================================ -->
+    <section id="mandate" class="mandate reveal" data-reveal aria-label="Mandate">
+      <div class="container">
+        <div class="mandate__head">
+          <div>
+            <h2 class="h2">Mandate</h2>
+            <p class="muted">A converged regulator for telecommunications, internet/ICTs, broadcasting and postal services.</p>
+          </div>
+          <a class="chip chip--blue" href="https://www.bocra.org.bw/mandate" target="_blank" rel="noopener" aria-label="Read more about BOCRA mandate">Read more</a>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs" data-tabs>
+          <div class="tabs__bar" role="tablist" aria-label="Mandate categories">
+            <button class="tab is-active" type="button" role="tab" aria-selected="true"  data-tab="internet">Internet</button>
+            <button class="tab"           type="button" role="tab" aria-selected="false" data-tab="broadcasting">Broadcasting</button>
+            <button class="tab"           type="button" role="tab" aria-selected="false" data-tab="postal">Postal</button>
+            <button class="tab"           type="button" role="tab" aria-selected="false" data-tab="telecoms">Telecommunications</button>
+            <span class="tabs__indicator" aria-hidden="true"></span>
+          </div>
+
+          <div class="tabs__panes">
+
+            <!-- Internet pane -->
+            <div class="pane is-active" role="tabpanel" data-pane="internet">
+              <div class="pane__grid">
+                <article class="pane__card">
+                  <h3>bw ccTLD</h3>
+                  <p class="muted">Domain policy and oversight for Botswana's country code top-level domain.</p>
+                  <a class="btn btn--ghost btn--small" href="https://www.bocra.org.bw/bw-cctld" target="_blank" rel="noopener">Learn more</a>
+                </article>
+                <article class="pane__card">
+                  <h3>bw CIRT</h3>
+                  <p class="muted">National cybersecurity coordination, incident awareness and stakeholder collaboration.</p>
+                  <a class="btn btn--ghost btn--small" href="https://www.bocra.org.bw/bw-cirt" target="_blank" rel="noopener">Learn more</a>
+                </article>
+                <article class="pane__card">
+                  <h3>Electronic Evidence</h3>
+                  <p class="muted">Support for admissibility and authenticity of electronic records in legal processes.</p>
+                  <a class="btn btn--ghost btn--small" href="https://www.bocra.org.bw/electronic-evidence" target="_blank" rel="noopener">Learn more</a>
+                </article>
+                <article class="pane__card">
+                  <h3>E-Transactions</h3>
+                  <p class="muted">Guidance for electronic communications and transactions frameworks.</p>
+                  <a class="btn btn--ghost btn--small" href="https://www.bocra.org.bw/electronic-communications-transactions" target="_blank" rel="noopener">Learn more</a>
+                </article>
+              </div>
+            </div>
+
+            <!-- Broadcasting pane -->
+            <div class="pane" role="tabpanel" data-pane="broadcasting">
+              <div class="pane__grid">
+                <article class="pane__card">
+                  <h3>Commercial Radio</h3>
+                  <p class="muted">Licensing and regulation for commercial broadcasting radio stations.</p>
+                  <a class="btn btn--ghost btn--small" href="https://www.bocra.org.bw/broadcasting" target="_blank" rel="noopener">Learn more</a>
+                </article>
+                <article class="pane__card">
+                  <h3>Local Content</h3>
+                  <p class="muted">Promoting local music and content as set out in licence obligations.</p>
+                  <a class="btn btn--ghost btn--small" href="https://www.bocra.org.bw/broadcasting" target="_blank" rel="noopener">Learn more</a>
+                </article>
+                <article class="pane__card">
+                  <h3>Audience Research</h3>
+                  <p class="muted">Broadcasting audience insights and public reference reports.</p>
+                  <a class="btn btn--ghost btn--small" href="https://www.bocra.org.bw/broadcasting" target="_blank" rel="noopener">View report</a>
+                </article>
+                <article class="pane__card">
+                  <h3>Digital Transition</h3>
+                  <p class="muted">Supporting evolution of the broadcasting sector through modern frameworks.</p>
+                  <a class="btn btn--ghost btn--small" href="https://www.bocra.org.bw/broadcasting" target="_blank" rel="noopener">Learn more</a>
+                </article>
+              </div>
+            </div>
+
+            <!-- Postal pane -->
+            <div class="pane" role="tabpanel" data-pane="postal">
+              <div class="pane__grid">
+                <article class="pane__card">
+                  <h3>Postal Licensing</h3>
+                  <p class="muted">Market entry and licensing oversight for postal service providers.</p>
+                  <a class="btn btn--ghost btn--small" href="https://www.bocra.org.bw/postal" target="_blank" rel="noopener">Learn more</a>
+                </article>
+                <article class="pane__card">
+                  <h3>Consumer Protection</h3>
+                  <p class="muted">Ensuring safe, reliable, efficient and affordable postal services.</p>
+                  <a class="btn btn--ghost btn--small" href="https://www.bocra.org.bw/postal" target="_blank" rel="noopener">Learn more</a>
+                </article>
+                <article class="pane__card">
+                  <h3>Regulatory Instruments</h3>
+                  <p class="muted">Frameworks and tools that support innovation and compliance.</p>
+                  <a class="btn btn--ghost btn--small" href="https://www.bocra.org.bw/postal" target="_blank" rel="noopener">View tools</a>
+                </article>
+                <article class="pane__card">
+                  <h3>Market Development</h3>
+                  <p class="muted">Enabling modern postal and courier offerings nationwide.</p>
+                  <a class="btn btn--ghost btn--small" href="https://www.bocra.org.bw/postal" target="_blank" rel="noopener">Learn more</a>
+                </article>
+              </div>
+            </div>
+
+            <!-- Telecoms pane -->
+            <div class="pane" role="tabpanel" data-pane="telecoms">
+              <div class="pane__grid">
+                <article class="pane__card">
+                  <h3>Type Approval</h3>
+                  <p class="muted">Ensuring devices used in Botswana comply with relevant standards.</p>
+                  <a class="btn btn--ghost btn--small" href="https://typeapproval.bocra.org.bw/" target="_blank" rel="noopener">Learn more</a>
+                </article>
+                <article class="pane__card">
+                  <h3>Numbering Plan</h3>
+                  <p class="muted">Overseeing numbering resources and related regulatory requirements.</p>
+                  <a class="btn btn--ghost btn--small" href="https://www.bocra.org.bw/numbering-plan" target="_blank" rel="noopener">Learn more</a>
+                </article>
+                <article class="pane__card">
+                  <h3>Spectrum Planning</h3>
+                  <p class="muted">Radio spectrum planning and coordination for efficient use.</p>
+                  <a class="btn btn--ghost btn--small" href="https://www.bocra.org.bw/radio-spectrum-planning" target="_blank" rel="noopener">Learn more</a>
+                </article>
+                <article class="pane__card">
+                  <h3>National Frequency Plan</h3>
+                  <p class="muted">Reference for frequency allocations and planning principles.</p>
+                  <a class="btn btn--ghost btn--small" href="/sites/default/files/frequency_map.pdf" target="_blank" rel="noopener">View plan</a>
+                </article>
+              </div>
+            </div>
+
+          </div><!-- /.tabs__panes -->
+        </div><!-- /.tabs -->
+
+        <!-- Telecoms stats CTA -->
+        <section class="cta-strip reveal" data-reveal aria-label="Telecoms Statistics" style="margin-top:14px;">
+          <div class="cta-strip__inner">
+            <div class="cta-strip__left">
+              <p class="cta-strip__kicker">Telecoms Statistics</p>
+              <h2 class="cta-strip__title">Explore sector indicators and market trends</h2>
+              <p class="muted">Quick access to dashboards and summary metrics for the communications sector.</p>
+            </div>
+            <div class="cta-strip__right">
+              <a class="btn btn--primary" href="https://www.bocra.org.bw/telecoms-statistics" target="_blank" rel="noopener">Open Telecoms Statistics</a>
+              <a class="btn btn--ghost"   href="https://dqos.bocra.org.bw/" target="_blank" rel="noopener">QoS Monitoring</a>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tools -->
+        <section id="tools" class="tools reveal" data-reveal aria-label="Tools">
+          <div class="tools__head">
+            <h2 class="h2">Tools</h2>
+            <p class="muted">Guides and reference maps to support consumers and licensees.</p>
+          </div>
+          <div class="tools__grid">
+            <a class="tool-card" href="/sites/default/files/Mobile_Netowrk_Coverage.pdf" target="_blank" rel="noopener">
+              <span class="tool-card__icon tool-blue" aria-hidden="true"></span>
+              <div>
+                <h3>Mobile Coverage</h3>
+                <p class="muted">Coverage reference map for mobile networks.</p>
+              </div>
+              <span class="tool-card__arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="tool-card" href="https://www.bocra.org.bw/broadcasting" target="_blank" rel="noopener">
+              <span class="tool-card__icon tool-yellow" aria-hidden="true"></span>
+              <div>
+                <h3>Broadcasting Coverage</h3>
+                <p class="muted">Broadcasting coverage map and licensing information.</p>
+              </div>
+              <span class="tool-card__arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="tool-card" href="/sites/default/files/frequency_map.pdf" target="_blank" rel="noopener">
+              <span class="tool-card__icon tool-green" aria-hidden="true"></span>
+              <div>
+                <h3>Frequency Plan</h3>
+                <p class="muted">National frequency plan reference (PDF).</p>
+              </div>
+              <span class="tool-card__arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>
+
+        <!-- Latest Publications rail -->
+        <section class="pubs reveal" data-reveal aria-label="Latest Publications">
+          <div class="pubs__head">
+            <div>
+              <h2 class="h2">Latest Publications</h2>
+              <p class="muted">Recent documents and reference materials.</p>
+            </div>
+            <div class="pubs__controls">
+              <button class="cbtn" type="button" data-pubs-prev aria-label="Previous publications">Prev</button>
+              <button class="cbtn" type="button" data-pubs-next aria-label="Next publications">Next</button>
+            </div>
+          </div>
+          <div class="pubs__rail" data-pubs-rail tabindex="0" aria-label="Publications slider">
+            <article class="pub-card">
+              <div class="pub-top">
+                <span class="chip-mini cm-blue">Annual Report</span>
+                <time class="news-date" datetime="2025-01-01">2025</time>
+              </div>
+              <h3>BOCRA 2025 Annual Report</h3>
+              <p class="muted">Performance, sector highlights and financial summary for 2024/25.</p>
+              <a class="btn btn--ghost btn--small" href="/sites/default/files/sites/default/files/documents/BOCRA2025_ANNUAL_REPORT_%28WEB%29_compressed.pdf" target="_blank" rel="noopener">Open PDF</a>
+            </article>
+            <article class="pub-card">
+              <div class="pub-top">
+                <span class="chip-mini cm-yellow">Guideline</span>
+                <time class="news-date" datetime="2025-01-01">2025</time>
+              </div>
+              <h3>ICT QoS &amp; QoE Guidelines</h3>
+              <p class="muted">Revised quality of service and quality of experience guidelines for ICT services.</p>
+              <a class="btn btn--ghost btn--small" href="/sites/default/files/sites/default/files/documents/2025_Revised_QoS_QoE%20Guidelines.pdf" target="_blank" rel="noopener">Open PDF</a>
+            </article>
+            <article class="pub-card">
+              <div class="pub-top">
+                <span class="chip-mini cm-green">Framework</span>
+                <time class="news-date" datetime="2025-09-01">Sep 2025</time>
+              </div>
+              <h3>Universal Access &amp; Service Fund Framework</h3>
+              <p class="muted">Updated UASF framework for underserved and un-served areas of Botswana.</p>
+              <a class="btn btn--ghost btn--small" href="/sites/default/files/sites/default/files/documents/BOTSWANA_UASF_FRAMEWORK_FINAL_VERSION.pdf" target="_blank" rel="noopener">Open PDF</a>
+            </article>
+            <article class="pub-card">
+              <div class="pub-top">
+                <span class="chip-mini cm-red">Act</span>
+                <time class="news-date" datetime="2025-11-05">Nov 2025</time>
+              </div>
+              <h3>Cybersecurity Act, 2025</h3>
+              <p class="muted">Enacted cybersecurity legislation for Botswana's digital economy.</p>
+              <a class="btn btn--ghost btn--small" href="/sites/default/files/sites/default/files/documents/Cybersecurity_ACT_-_5%20Nov_2025.pdf" target="_blank" rel="noopener">Open PDF</a>
+            </article>
+            <article class="pub-card">
+              <div class="pub-top">
+                <span class="chip-mini cm-blue">Act</span>
+                <time class="news-date" datetime="2025-01-01">2025</time>
+              </div>
+              <h3>Digital Services Act, 2025</h3>
+              <p class="muted">Legislation governing digital services and platforms in Botswana.</p>
+              <a class="btn btn--ghost btn--small" href="/sites/default/files/sites/default/files/documents/digital_services_ACT.pdf" target="_blank" rel="noopener">Open PDF</a>
+            </article>
+          </div>
+          <p class="pubs__hint muted">Tip: hold <b>Shift</b> + scroll to slide horizontally.</p>
+        </section>
+
+      </div><!-- /.container -->
+    </section><!-- /#mandate -->
+
+
+    <!-- ============================================================
+         SECTION: ANNUAL REPORTS
+    ============================================================ -->
+    <section class="reports reveal" data-reveal aria-label="Annual reports">
+      <div class="container">
+        <div class="reports__head">
+          <div>
+            <h2 class="h2">Annual Reports</h2>
+            <p class="muted">Download BOCRA annual reports.</p>
+          </div>
+          <a class="btn btn--ghost" href="https://www.bocra.org.bw/documents%26legislation" target="_blank" rel="noopener">All reports</a>
+        </div>
+        <div class="reports__grid">
+          <a class="report-card" href="/sites/default/files/sites/default/files/documents/BOCRA2025_ANNUAL_REPORT_%28WEB%29_compressed.pdf" target="_blank" rel="noopener">
+            <div class="report-badge b-blue">PDF</div>
+            <h3>Annual Report 2024/25</h3>
+            <p class="muted">Performance, sector highlights and financial summary.</p>
+            <span class="report-meta muted">2025</span>
+          </a>
+          <a class="report-card" href="/sites/default/files/documents/BOCRA%202024%20ANNUAL%20REPORT%20WEB%20VERSION.pdf" target="_blank" rel="noopener">
+            <div class="report-badge b-green">PDF</div>
+            <h3>Annual Report 2023/24</h3>
+            <p class="muted">Regulatory outcomes and market developments.</p>
+            <span class="report-meta muted">2024</span>
+          </a>
+          <a class="report-card" href="#" target="_blank" rel="noopener">
+            <div class="report-badge b-yellow">PDF</div>
+            <h3>Annual Report 2022/23</h3>
+            <p class="muted">Compliance, consumer protection and projects.</p>
+            <span class="report-meta muted">2023</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         SECTION: TENDERS
+    ============================================================ -->
+    <section id="tenders" class="container" style="padding: 40px 0 0;">
+      <div class="card reveal" data-reveal>
+
+        <!-- Section heading styled within your card system -->
+        <div style="padding: 6px 0 18px;">
+          <h2>Tenders</h2>
+          <p class="muted">BOCRA invites qualified bidders to submit proposals for projects, services and procurement opportunities.</p>
+        </div>
+
+        <!-- Active tenders -->
+        <h3 style="margin: 0 0 12px; letter-spacing: -0.02em;">Active Tenders</h3>
+        <div class="tenders-grid">
+
+          <div class="tender-card" data-reveal>
+            <div class="tender-header">
+              <span class="chip-mini cm-blue">Consultancy</span>
+              <span class="chip-mini cm-green">Open</span>
+            </div>
+            <h3 style="margin: 10px 0 8px;">Consultancy Services for Development of Cost Models and Pricing Framework</h3>
+            <p class="muted">BOCRA seeks consultancy services to develop cost models and pricing framework for ICT services in Botswana.</p>
+            <div class="tender-meta muted" style="margin-top: 12px; font-size: 14px;">
+              Closing Date: <strong>30 June 2026</strong>
+            </div>
+            <div class="slide__actions" style="margin-top: 14px;">
+              <a class="btn btn--primary btn--small" href="#">Download Tender</a>
+              <a class="btn btn--ghost btn--small"   href="#">Details</a>
+            </div>
+          </div>
+
+          <div class="tender-card" data-reveal>
+            <div class="tender-header">
+              <span class="chip-mini cm-blue">Technical</span>
+              <span class="chip-mini cm-green">Open</span>
+            </div>
+            <h3 style="margin: 10px 0 8px;">Review of Type Approval Technical Standards</h3>
+            <p class="muted">Review of type approval technical standards and procedures for ICT equipment in Botswana.</p>
+            <div class="tender-meta muted" style="margin-top: 12px; font-size: 14px;">
+              Closing Date: <strong>15 July 2026</strong>
+            </div>
+            <div class="slide__actions" style="margin-top: 14px;">
+              <a class="btn btn--primary btn--small" href="#">Download Tender</a>
+              <a class="btn btn--ghost btn--small"   href="#">Details</a>
+            </div>
+          </div>
+
+        </div><!-- /.tenders-grid -->
+
+        <!-- Closed tenders -->
+        <h3 style="margin: 28px 0 12px; letter-spacing: -0.02em;">Closed Tenders</h3>
+        <div class="tenders-grid">
+
+          <div class="tender-card" data-reveal>
+            <div class="tender-header">
+              <span class="chip-mini cm-blue">Consultancy</span>
+              <span class="chip-mini cm-red">Closed</span>
+            </div>
+            <h3 style="margin: 10px 0 8px;">Consultancy Services for ICT Licensing Framework</h3>
+            <p class="muted">Development of licensing framework for postal and broadcasting sectors.</p>
+            <div class="tender-meta muted" style="margin-top: 12px; font-size: 14px;">
+              Closed: <strong>21 Feb 2026</strong>
+            </div>
+            <div class="slide__actions" style="margin-top: 14px;">
+              <a class="btn btn--ghost btn--small" href="#">View Documents</a>
+            </div>
+          </div>
+
+        </div><!-- /.tenders-grid closed -->
+
+      </div><!-- /.card -->
+    </section><!-- /#tenders -->
+
+
+    <!-- ============================================================
+         SECTION: PROJECTS
+    ============================================================ -->
+    <section id="projects" class="container" style="padding: 40px 0 0;">
+      <div class="card reveal" data-reveal>
+        <h2>Projects</h2>
+        <p class="muted">Current and recent strategic projects undertaken by BOCRA to advance digital connectivity and regulatory excellence in Botswana.</p>
+
+        <div class="pane__grid" style="margin-top: 16px;">
+          <article class="pane__card">
+            <h3>BotswanaSat-1</h3>
+            <p class="muted">Botswana's pioneering satellite initiative, supporting national connectivity and research at BIUST.</p>
+            <a class="btn btn--ghost btn--small" href="https://www.bocra.org.bw/projects" target="_blank" rel="noopener">Learn more</a>
+          </article>
+          <article class="pane__card">
+            <h3>Universal Access &amp; Service Fund</h3>
+            <p class="muted">Financing provision of communication services in underserved and un-served areas of Botswana.</p>
+            <a class="btn btn--ghost btn--small" href="https://www.bocra.org.bw/projects" target="_blank" rel="noopener">Learn more</a>
+          </article>
+          <article class="pane__card">
+            <h3>Digital Transition</h3>
+            <p class="muted">Coordinating the transition from analogue to digital broadcasting across the country.</p>
+            <a class="btn btn--ghost btn--small" href="https://www.bocra.org.bw/projects" target="_blank" rel="noopener">Learn more</a>
+          </article>
+          <article class="pane__card">
+            <h3>Cost Modelling</h3>
+            <p class="muted">Developing cost models and pricing frameworks for telecommunications services in Botswana.</p>
+            <a class="btn btn--ghost btn--small" href="https://www.bocra.org.bw/projects" target="_blank" rel="noopener">Learn more</a>
+          </article>
+        </div>
+      </div>
+    </section><!-- /#projects -->
+
+
+    <!-- ============================================================
+         SECTION: BOARD OF DIRECTORS
+    ============================================================ -->
+    <section id="board" class="container" style="padding: 40px 0 0;">
+      <div class="card reveal" data-reveal>
+        <h2>Board of Directors</h2>
+        <p class="muted">
+          BOCRA is led by seven non-executive board members and one Ex-Officio member (the Chief Executive),
+          appointed by the Minister responsible for Communications under Section 4 of the CRA Act, 2012.
+          The current Board was appointed with effect from 1 August 2025.
+        </p>
+
+        <!-- Board members grid — adapted to your pane__card system -->
+        <div class="pane__grid" style="margin-top: 18px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+
+          <article class="pane__card">
+            <p class="chip-mini cm-blue" style="display:inline-flex; margin-bottom: 10px;">Chairperson</p>
+            <h3>Dr. Bokamoso Basutli, PhD</h3>
+            <p class="muted">
+              Professional Engineer and Senior IEEE Member. Head of Electrical and Communications Systems
+              Engineering at BIUST. Principal Investigator of the BotswanaSat-1 project. PhD from Loughborough
+              University, UK.
+            </p>
+          </article>
+
+          <article class="pane__card">
+            <p class="chip-mini cm-yellow" style="display:inline-flex; margin-bottom: 10px;">Vice Chairperson</p>
+            <h3>Mr. Moabi Pusumane</h3>
+            <p class="muted">
+              Commercial Director at Coca-Cola Beverages Botswana. Over 15 years' experience in
+              telecommunications, market intelligence and commercial leadership with a track record of
+              double-digit revenue growth.
+            </p>
+          </article>
+
+          <article class="pane__card">
+            <p class="chip-mini cm-green" style="display:inline-flex; margin-bottom: 10px;">Board Member</p>
+            <h3>Ms. Montle Phuthego</h3>
+            <p class="muted">
+              Country Director for TechnoServe. MSc Economics, University of Warwick. Founding Caretaker CEO
+              at SPEDU. Extensive experience in business development, trade and investment.
+            </p>
+          </article>
+
+          <article class="pane__card">
+            <p class="chip-mini cm-green" style="display:inline-flex; margin-bottom: 10px;">Board Member</p>
+            <h3>Ms. Alta Dimpho Seleka</h3>
+            <p class="muted">
+              FCCA and FCPA (BICA). Acting Commissioner for Finance and Administration at BURS. Expert in
+              public financial management, IPSAS, IFRS and fiscal governance modernisation.
+            </p>
+          </article>
+
+          <article class="pane__card">
+            <p class="chip-mini cm-green" style="display:inline-flex; margin-bottom: 10px;">Board Member</p>
+            <h3>Ms. Lebogang George</h3>
+            <p class="muted">
+              Partner at AJA/MCL. Attorney admitted to the High Courts of Botswana. Specialist in ICT law,
+              data protection, GDPR, POPIA and corporate governance. Harvard Law School certificate holder.
+            </p>
+          </article>
+
+          <article class="pane__card">
+            <p class="chip-mini cm-green" style="display:inline-flex; margin-bottom: 10px;">Board Member</p>
+            <h3>Mr. Ronald Kgafela, CODP</h3>
+            <p class="muted">
+              Head of HR at NBFIRA. Certified Professional Business Coach and Chartered OD Practitioner.
+              MSc Strategic Management, University of Derby. Over 20 years in Human Capital leadership.
+            </p>
+          </article>
+
+          <article class="pane__card">
+            <p class="chip-mini cm-green" style="display:inline-flex; margin-bottom: 10px;">Board Member</p>
+            <h3>Dr. Kennedy Ramojela</h3>
+            <p class="muted">
+              PhD, Media and Communications, RMIT University. Media and Communications lecturer at University
+              of Botswana. Practitioner with over two decades in digital media, broadcasting and technology.
+            </p>
+          </article>
+
+        </div><!-- /.pane__grid -->
+      </div><!-- /.card -->
+    </section><!-- /#board -->
+
+
+    <!-- ============================================================
+         SECTION: LICENSING INFO (from bocra.org.bw/licensing)
+    ============================================================ -->
+    <section id="licensing-info" class="container" style="padding: 40px 0 0;">
+      <div class="card reveal" data-reveal>
+        <h2>Licensing Framework</h2>
+        <p class="muted">
+          BOCRA is mandated by Section 6(h) of the CRA Act to process applications for and issue licences,
+          permits, permissions, concessions and authorities for regulated sectors: telecommunications, internet,
+          radio communications, broadcasting and postal.
+        </p>
+
+        <div class="pane__grid" style="margin-top: 18px;">
+
+          <article class="pane__card">
+            <h3>Network Facilities Provider (NFP)</h3>
+            <p class="muted">
+              Licensees own, operate or provide physical infrastructure — fixed links, satellites, submarine
+              cable, fibre/copper, towers, switches, base stations — for own use or for other licensed operators.
+            </p>
+          </article>
+
+          <article class="pane__card">
+            <h3>Services &amp; Applications Provider (SAP)</h3>
+            <p class="muted">
+              Non-infrastructure-based providers offering speech, data, text, image and application services
+              to end users over NFP infrastructure. Excludes broadcasting content services.
+            </p>
+          </article>
+
+          <article class="pane__card">
+            <h3>Content Services Provider (CSP)</h3>
+            <p class="muted">
+              Provides content material — audio, text, images, video — solely for broadcasting (TV and radio)
+              and other information services including Subscription TV. State broadcasters are exempt.
+            </p>
+          </article>
+
+          <article class="pane__card">
+            <h3>Postal Licensing</h3>
+            <p class="muted">
+              Two categories: Designated Postal Operator (DPO) carrying universal service obligations, and
+              Commercial Postal Operator (CPO) for value-added courier and postal services.
+            </p>
+          </article>
+
+        </div>
+
+        <div class="stack" style="margin-top: 18px; max-width: 380px;">
+          <a class="btn btn--primary btn--full" href="https://registration.bocra.org.bw/" target="_blank" rel="noopener">Apply online (ASMS-WebCP)</a>
+          <a class="btn btn--ghost btn--full"   href="https://customerportal.bocra.org.bw/OnlineLicenseVerification/verify" target="_blank" rel="noopener">Verify a licence</a>
+          <a class="btn btn--ghost btn--full"   href="/sites/default/files/LATEST%20BOCRA%20LICENSEE%20LIST%20AS%20%40%20END%20OF%20MARCH%202025....xlsx" target="_blank" rel="noopener">Download licensee list (XLSX)</a>
+        </div>
+
+      </div><!-- /.card -->
+    </section><!-- /#licensing-info -->
+
+
+    <!-- ============================================================
+         SECTION: FAQ
+    ============================================================ -->
+    <section class="faq reveal" data-reveal aria-label="FAQs">
+      <div class="container">
+        <div class="faq__head">
+          <div>
+            <h2 class="h2">FAQs</h2>
+            <p class="muted">Common questions about BOCRA services.</p>
+          </div>
+          <div class="faq__search">
+            <input type="search" placeholder="Search FAQs…" aria-label="Search FAQs" data-faq-search />
+          </div>
+        </div>
+        <div class="faq__list" data-faq-list>
+
+          <details class="faq-item">
+            <summary>How do I apply for a licence?</summary>
+            <div class="faq-body muted">
+              Visit <a href="https://registration.bocra.org.bw/" target="_blank" rel="noopener">registration.bocra.org.bw</a>
+              to access the ASMS-WebCP portal. Select the appropriate licence category (NFP, SAP, CSP, or
+              Postal), complete the application form, attach required supporting documents, and submit.
+              BOCRA will acknowledge receipt and advise on next steps.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>How do I file a complaint?</summary>
+            <div class="faq-body muted">
+              First, contact your service provider and allow them a reasonable opportunity to resolve the
+              issue. If unsatisfied, submit a complaint to BOCRA via the online form at
+              <a href="https://www.bocra.org.bw/form/file-complaint-form" target="_blank" rel="noopener">bocra.org.bw</a>
+              or in writing, including evidence of the issue and the provider's response.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>What is Type Approval?</summary>
+            <div class="faq-body muted">
+              Type Approval is the process by which BOCRA certifies that communications equipment meets
+              Botswana's technical standards before it can be used or sold in the country. Apply at
+              <a href="https://typeapproval.bocra.org.bw/" target="_blank" rel="noopener">typeapproval.bocra.org.bw</a>.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>Where can I view QoS results?</summary>
+            <div class="faq-body muted">
+              Quality of Service monitoring data and dashboards are available at
+              <a href="https://dqos.bocra.org.bw/" target="_blank" rel="noopener">dqos.bocra.org.bw</a>.
+              The portal shows coverage, speed test results, and service quality indicators for mobile operators.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>How do I access BOCRA documents and guidelines?</summary>
+            <div class="faq-body muted">
+              All publications, acts, guidelines and reports are listed on the
+              <a href="https://www.bocra.org.bw/documents%26legislation" target="_blank" rel="noopener">Documents &amp; Legislation</a>
+              page. You can filter by category and download PDFs directly.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>What is the Universal Access and Service Fund (UASF)?</summary>
+            <div class="faq-body muted">
+              Created in April 2014, the UASF finances provision of communication services in underserved
+              and un-served areas of Botswana. It supports projects that bring connectivity to communities
+              where commercial deployment would otherwise be uneconomical.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>How do I verify if a business is a licensed operator?</summary>
+            <div class="faq-body muted">
+              Use the online Licence Verification tool at
+              <a href="https://customerportal.bocra.org.bw/OnlineLicenseVerification/verify" target="_blank" rel="noopener">customerportal.bocra.org.bw</a>
+              or download the current BOCRA Licensee List from the Documents section.
+            </div>
+          </details>
+
+        </div><!-- /.faq__list -->
+      </div><!-- /.container -->
+    </section><!-- /.faq -->
+
+
+    <!-- ============================================================
+         SECTION: LOCATION MAP
+    ============================================================ -->
+    <section id="location" class="map-wrap">
+      <div class="container">
+        <div class="map-head reveal" data-reveal>
+          <div>
+            <h2>BOCRA Location</h2>
+            <p class="muted">Plot 50671 Independence Avenue, Gaborone, Botswana</p>
+          </div>
+          <div class="map-badges">
+            <span class="badge b-red">Support</span>
+            <span class="badge b-yellow">Licensing</span>
+            <span class="badge b-blue">Regulation</span>
+            <span class="badge b-green">QoS</span>
+          </div>
+        </div>
+        <div class="map-card reveal" data-reveal>
+          <div id="map" class="map" role="region" aria-label="BOCRA office map"></div>
+        </div>
+      </div>
+    </section>
+
+  </main><!-- /main -->
+
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer class="footer">
+    <div class="container footer-grid">
+
+      <!-- Brand + contact -->
+      <div class="footer-brand">
+        <img class="footer-logo" src="assets/bocra-footer-logo.png" alt="BOCRA" />
+        <p class="muted">
+          Botswana Communications Regulatory Authority<br />
+          Plot 50671 Independence Avenue, Gaborone<br />
+          T: +267 395 7755<br />
+          F: +267 395 7976<br />
+          E: info@bocra.org.bw
+        </p>
+        <div class="footer-social" aria-label="Social links">
+          <a class="soc soc-fb" href="https://www.facebook.com/BTAbw"  aria-label="Facebook">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg" width="22" alt="" />
+          </a>
+          <a class="soc soc-x"  href="https://twitter.com/BTAbw"       aria-label="X / Twitter">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/twitter.svg"  width="22" alt="" />
+          </a>
+          <a class="soc soc-yt" href="https://www.youtube.com/channel/UCkv70wCxbxy7OkC12QlL3ZA/feed" aria-label="YouTube">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/youtube.svg"  width="22" alt="" />
+          </a>
+          <a class="soc soc-in" href="https://www.linkedin.com/company/bta_3/" aria-label="LinkedIn">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg" width="22" alt="" />
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick links -->
+      <div class="footer-links">
+        <h3>Quick links</h3>
+        <a href="#media">News &amp; Events</a>
+        <a href="#documents">Documents</a>
+        <a href="#tools">Tools</a>
+        <a href="#mandate">Mandate</a>
+        <a href="#licensing">Licensing</a>
+        <a href="#tenders">Tenders</a>
+        <a href="#board">Board</a>
+      </div>
+
+      <!-- Services -->
+      <div class="footer-links">
+        <h3>Services</h3>
+        <a href="https://op-web.bocra.org.bw"  target="_blank" rel="noopener">BOCRA Portal</a>
+        <a href="https://dqos.bocra.org.bw/"   target="_blank" rel="noopener">QoS Monitoring</a>
+        <a href="https://customerportal.bocra.org.bw/OnlineLicenseVerification/verify" target="_blank" rel="noopener">Licence Verification</a>
+        <a href="https://typeapproval.bocra.org.bw/" target="_blank" rel="noopener">Type Approval</a>
+        <a href="https://registration.bocra.org.bw/" target="_blank" rel="noopener">ASMS-WebCP</a>
+        <a href="https://www.bocra.org.bw/careers"   target="_blank" rel="noopener">Careers</a>
+      </div>
+
+      <!-- Newsletter -->
+      <div class="footer-newsletter">
+        <h3>Newsletter</h3>
+        <p class="muted">Get updates on public notices, media releases, and consultations.</p>
+        <form class="nl" action="#" method="post">
+          <input type="email" placeholder="Email address" aria-label="Email address" required />
+          <form-btn class="btn btn--primary" type="submit">Subscribe</form-btn>
+        </form>
+        <p class="muted small">Connect to your mail service to activate.</p>
+      </div>
+
+    </div><!-- /.footer-grid -->
+
+    <div class="container footer-bottom">
+      <span class="muted">© BOCRA 2026 • All Rights Reserved</span>
+      <span class="muted">
+        <a href="https://www.bocra.org.bw/privacy-notice" target="_blank" rel="noopener">Privacy Notice</a>
+        &nbsp;•&nbsp;
+        <a href="https://www.bocra.org.bw" target="_blank" rel="noopener">Terms</a>
+      </span>
+    </div>
+  </footer><!-- /footer -->
+
+
+  <!-- Back to top -->
+  <button class="to-top" type="button" aria-label="Back to top" data-to-top>↑</button>
+
+  <!-- WhatsApp floating button -->
+  <a
+    href="https://wa.me/26773604289"
+    class="whatsapp-float"
+    target="_blank"
+    rel="noopener"
+    aria-label="Chat with BOCRA on WhatsApp"
+  >
+    <span class="wa-icon">
+      <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg" width="22" alt="" />
+    </span>
+    <span class="wa-label">Chat with BOCRA</span>
+  </a>
+
+
+  <!-- ============================================================
+       SCRIPTS — load order matters; NO duplicates
+  ============================================================ -->
+
+  <!-- Leaflet JS (deferred, after DOM) -->
+  <script
+    defer
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MW8H0Y6NY4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-MW8H0Y6NY4');
+  </script>
+
+  <!-- Your application JS — single source of truth, loaded last -->
+  <script defer src="js/app.js"></script>
+
+</body>
+</html>
