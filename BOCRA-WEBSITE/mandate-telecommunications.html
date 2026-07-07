@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <title>Telecommunications | BOCRA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="BOCRA's regulatory oversight of Botswana's telecommunications sector." />
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+
+  <!-- Your design system — source of truth -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+
+  <!-- ============================================================
+       STICKY QUICK-ACTION RAIL (right edge, desktop only)
+  ============================================================ -->
+  <aside class="quick-rail" aria-label="Quick actions">
+    <a class="qa qa-blue"   href="https://op-web.bocra.org.bw"  target="_blank" rel="noopener" aria-label="BOCRA Portal">
+      <span class="qa-ic" aria-hidden="true">P</span><span class="qa-tx">Portal</span>
+    </a>
+    <a class="qa qa-green"  href="https://dqos.bocra.org.bw/"   target="_blank" rel="noopener" aria-label="QoS Monitoring">
+      <span class="qa-ic" aria-hidden="true">Q</span><span class="qa-tx">QoS</span>
+    </a>
+    <a class="qa qa-yellow" href="index.html#licensing" aria-label="Licensing">
+      <span class="qa-ic" aria-hidden="true">L</span><span class="qa-tx">Licensing</span>
+    </a>
+    <a class="qa qa-red"    href="index.html#complaints" aria-label="Complaints">
+      <span class="qa-ic" aria-hidden="true">C</span><span class="qa-tx">Complaints</span>
+    </a>
+  </aside>
+
+  <!-- Film-strip decorative rails -->
+  <div class="film-rails" aria-hidden="true"></div>
+
+  <!-- Four-colour top ribbons -->
+  <div class="ribbons" aria-hidden="true">
+    <span class="ribbon r-red"></span>
+    <span class="ribbon r-yellow"></span>
+    <span class="ribbon r-blue"></span>
+    <span class="ribbon r-green"></span>
+  </div>
+
+
+  <!-- ============================================================
+       HEADER — glass, sticky, full-width
+  ============================================================ -->
+  <header class="header header--glass" id="site-header">
+    <div class="header-bar">
+
+      <!-- Logo -->
+      <a class="brand" href="index.html" aria-label="BOCRA Home">
+        <img src="assets/logo.png" class="brand-mark" alt="BOCRA" />
+      </a>
+
+      <!-- Desktop navigation with colour-coded dropdowns -->
+      <nav class="nav nav--desktop" aria-label="Primary navigation">
+
+        <!-- About dropdown (blue) -->
+        <div class="dd dd-blue" data-dd>
+          <button class="dd-btn" type="button" aria-expanded="false" aria-haspopup="true">
+            About <span class="dd-caret" aria-hidden="true">▾</span>
+          </button>
+          <div class="dd-menu" role="menu">
+            <a href="about-profile.html" role="menuitem">Profile</a>
+            <a href="about-chief-executive.html" role="menuitem">A Word from the Chief Executive</a>
+            <a href="about-history.html" role="menuitem">History of Communication Regulation</a>
+            <a href="about-organogram.html" role="menuitem">Organogram</a>
+            <a href="about-board.html" role="menuitem">Board of Directors</a>
+            <a href="about-executive-management.html" role="menuitem">Executive Management</a>
+            <a href="about-careers.html" role="menuitem">Careers</a>
+          </div>
+        </div>
+
+        <!-- Mandate dropdown (red) -->
+        <div class="dd dd-red" data-dd>
+          <button class="dd-btn" type="button" aria-expanded="false" aria-haspopup="true">
+            Mandate <span class="dd-caret" aria-hidden="true">▾</span>
+          </button>
+          <div class="dd-menu" role="menu">
+            <a href="mandate-legislation.html" role="menuitem">Legislation</a>
+            <a href="mandate-telecommunications.html" role="menuitem">Telecommunications</a>
+            <a href="mandate-broadcasting.html" role="menuitem">Broadcasting</a>
+            <a href="mandate-postal.html" role="menuitem">Postal</a>
+            <a href="mandate-internet.html" role="menuitem">Internet</a>
+            <a href="mandate-licensing.html" role="menuitem">Licensing</a>
+          </div>
+        </div>
+
+        <a href="index.html#projects">Projects</a>
+
+        <!-- Documents dropdown (yellow) -->
+        <div class="dd dd-yellow" data-dd>
+          <button class="dd-btn" type="button" aria-expanded="false" aria-haspopup="true">
+            Documents <span class="dd-caret" aria-hidden="true">▾</span>
+          </button>
+          <div class="dd-menu" role="menu">
+            <a href="documents-draft-legislation.html" role="menuitem">Draft Documents &amp; Legislation</a>
+            <a href="documents-ict-framework.html" role="menuitem">ICT Licensing Framework</a>
+            <a href="documents-itu-workshop.html" role="menuitem">ITU Capacity Building Workshop</a>
+          </div>
+        </div>
+
+        <!-- Complaints dropdown (green) -->
+        <div class="dd dd-green" data-dd>
+          <button class="dd-btn" type="button" aria-expanded="false" aria-haspopup="true">
+            Complaints <span class="dd-caret" aria-hidden="true">▾</span>
+          </button>
+          <div class="dd-menu" role="menu">
+            <a href="complaints-consumer-education.html" role="menuitem">Consumer Education &amp; Advice</a>
+            <a href="complaints-registering.html" role="menuitem">Registering Complaints</a>
+            <a href="complaints-file.html" role="menuitem">File a Complaint</a>
+          </div>
+        </div>
+
+        <!-- Media dropdown (blue/purple styled) -->
+        <div class="dd dd-blue" data-dd>
+          <button class="dd-btn" type="button" aria-expanded="false" aria-haspopup="true">
+            Media <span class="dd-caret" aria-hidden="true">▾</span>
+          </button>
+          <div class="dd-menu" role="menu">
+            <a href="media-news-events.html" role="menuitem">News &amp; Events</a>
+            <a href="media-speeches.html" role="menuitem">Speeches</a>
+          </div>
+        </div>
+
+        <a href="index.html#tenders">Tenders</a>
+      </nav>
+
+      <!-- Right-side actions -->
+      <div class="nav-actions">
+        <a class="svc svc--green"  href="https://registration.bocra.org.bw/"  target="_blank" rel="noopener">ASMS-WebCP</a>
+        <a class="svc svc--red"    href="https://customerportal.bocra.org.bw/OnlineLicenseVerification/verify" target="_blank" rel="noopener">Licence Verification</a>
+        <a class="svc svc--blue"   href="https://typeapproval.bocra.org.bw/"  target="_blank" rel="noopener">Type Approval</a>
+        <a class="svc svc--yellow" href="https://nic.net.bw/"                 target="_blank" rel="noopener">Register BW</a>
+
+        <!-- Search popover -->
+        <div class="search" data-search>
+          <button class="icon-btn" type="button" aria-label="Search" data-search-btn>🔎︎</button>
+          <div class="search-pop" role="dialog" aria-label="Search" hidden data-search-pop>
+            <form class="search-form" action="#" method="get" role="search">
+              <input type="search" name="q" placeholder="Search BOCRA…" aria-label="Search BOCRA" data-search-input />
+            </form>
+          </div>
+        </div>
+
+        <!-- Theme toggle -->
+        <button class="icon-btn" type="button" aria-label="Toggle theme" data-theme-icon>
+          <span data-theme-glyph>☀︎</span>
+        </button>
+
+        <!-- Mobile hamburger -->
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav">Menu</button>
+      </div>
+    </div><!-- /.header-bar -->
+
+    <!-- Mobile nav panel -->
+    <div id="mobile-nav" class="mobile-nav" hidden>
+      <div class="mobile-nav-inner">
+        <details class="m-dd">
+          <summary>About</summary>
+          <a href="about-profile.html">Profile</a>
+          <a href="about-chief-executive.html">A Word from the Chief Executive</a>
+          <a href="about-history.html">History of Communication Regulation</a>
+          <a href="about-organogram.html">Organogram</a>
+          <a href="about-board.html">Board of Directors</a>
+          <a href="about-executive-management.html">Executive Management</a>
+          <a href="about-careers.html">Careers</a>
+        </details>
+        <details class="m-dd">
+          <summary>Mandate</summary>
+          <a href="mandate-legislation.html">Legislation</a>
+          <a href="mandate-telecommunications.html">Telecommunications</a>
+          <a href="mandate-broadcasting.html">Broadcasting</a>
+          <a href="mandate-postal.html">Postal</a>
+          <a href="mandate-internet.html">Internet</a>
+          <a href="mandate-licensing.html">Licensing</a>
+        </details>
+        <a href="index.html#projects">Projects</a>
+        <details class="m-dd">
+          <summary>Documents</summary>
+          <a href="documents-draft-legislation.html">Draft Documents &amp; Legislation</a>
+          <a href="documents-ict-framework.html">ICT Licensing Framework</a>
+          <a href="documents-itu-workshop.html">ITU Capacity Building Workshop</a>
+        </details>
+        <details class="m-dd">
+          <summary>Complaints</summary>
+          <a href="complaints-consumer-education.html">Consumer Education &amp; Advice</a>
+          <a href="complaints-registering.html">Registering Complaints</a>
+          <a href="complaints-file.html">File a Complaint</a>
+        </details>
+        <details class="m-dd">
+          <summary>Media</summary>
+          <a href="media-news-events.html">News &amp; Events</a>
+          <a href="media-speeches.html">Speeches</a>
+        </details>
+        <a href="index.html#tenders">Tenders</a>
+        <div class="mobile-quick">
+          <a class="chip chip--blue"  href="https://op-web.bocra.org.bw" target="_blank" rel="noopener">BOCRA Portal</a>
+          <a class="chip chip--green" href="https://dqos.bocra.org.bw/"  target="_blank" rel="noopener">QoS Monitoring</a>
+          <a class="chip chip--yellow" href="https://nic.net.bw/"        target="_blank" rel="noopener">Register BW</a>
+        </div>
+      </div>
+    </div><!-- /#mobile-nav -->
+
+    <!-- Scroll progress bar -->
+    <div class="scroll-progress" aria-hidden="true">
+      <span class="scroll-progress__bar" data-progress-bar></span>
+    </div>
+  </header><!-- /header -->
+
+
+  <main>
+<div class="container" style="padding: 22px 0 0;"><p class="muted" style="font-size:13px; letter-spacing:.02em;"><a href="index.html" style="color:inherit;">Home</a> &nbsp;/&nbsp; <a href="index.html#mandate" style="color:inherit;">Mandate</a> &nbsp;/&nbsp; <span style="color:var(--text, #fff);">Telecommunications</span></p></div>
+    <section class="container" style="padding: 14px 0 0;">
+      <div class="card reveal" data-reveal style="overflow:hidden; padding:0;">
+        <div style="position:relative; min-height:260px; display:flex; align-items:flex-end;">
+          <img src="https://images.pexels.com/photos/6728858/pexels-photo-6728858.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="" loading="eager"
+               style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.55;" />
+          <div style="position:relative; z-index:1; padding: 34px 30px; background:linear-gradient(0deg, rgba(0,0,0,.55), rgba(0,0,0,.05));">
+            <span class="chip chip--blue" style="margin-bottom:12px; display:inline-flex;">Mandate</span>
+            <h1 class="h2" style="margin:0 0 8px; font-size: clamp(26px,4vw,38px);">Telecommunications</h1>
+            <p class="muted" style="max-width:640px; margin:0;">Regulating a liberalised, fast-evolving telecoms market.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section class="container" style="padding: 28px 0 0; ">
+      <div class="card reveal" data-reveal>
+        <h2 style="margin-top:0;">Regulating Telecommunications</h2>
+        
+          <p class="muted">Under the CRA Act, BOCRA regulates telecommunications services within the guidelines
+          established by national telecommunications policy. The Authority is empowered to promote the interests
+          of consumers, purchasers and other users in respect of the price, quality and variety of telecommunications
+          services and equipment.</p>
+          <p class="muted">Liberalisation of the telecommunications market has brought a wide variety of services
+          that differ in price and quality, with new technologies emerging rapidly. Consumers need sufficient
+          information about these services to make informed choices and obtain the best value for money.</p>
+        
+      </div>
+    </section>
+    
+    <section class="container" style="padding: 28px 0 0; ">
+      <div class="card reveal" data-reveal>
+        <h2 style="margin-top:0;">Key Focus Areas</h2>
+        
+          <div class="pane__grid" style="margin-top:6px;">
+            <article class="pane__card"><h3>National Radio Frequency Plan</h3><p class="muted">Provides the framework for allocating and managing radio frequency spectrum in Botswana.</p></article>
+            <article class="pane__card"><h3>Radio Spectrum Planning</h3><p class="muted">Engineering analysis, frequency assignment and monitoring supported by the Automated Frequency Management System.</p></article>
+            <article class="pane__card"><h3>The Numbering Plan</h3><p class="muted">Manages Botswana's telephone numbering resources for fixed, mobile and emerging services.</p></article>
+            <article class="pane__card"><h3>Type Approval</h3><p class="muted">Certifies that communications equipment meets Botswana's technical standards before use or sale.</p></article>
+          </div>
+        
+      </div>
+    </section>
+    
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer class="footer">
+    <div class="container footer-grid">
+
+      <!-- Brand + contact -->
+      <div class="footer-brand">
+        <img class="footer-logo" src="assets/bocra-footer-logo.png" alt="BOCRA" />
+        <p class="muted">
+          Botswana Communications Regulatory Authority<br />
+          Plot 50671 Independence Avenue, Gaborone<br />
+          T: +267 395 7755<br />
+          F: +267 395 7976<br />
+          E: info@bocra.org.bw
+        </p>
+        <div class="footer-social" aria-label="Social links">
+          <a class="soc soc-fb" href="https://www.facebook.com/BTAbw"  aria-label="Facebook">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg" width="22" alt="" />
+          </a>
+          <a class="soc soc-x"  href="https://twitter.com/BTAbw"       aria-label="X / Twitter">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/twitter.svg"  width="22" alt="" />
+          </a>
+          <a class="soc soc-yt" href="https://www.youtube.com/channel/UCkv70wCxbxy7OkC12QlL3ZA/feed" aria-label="YouTube">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/youtube.svg"  width="22" alt="" />
+          </a>
+          <a class="soc soc-in" href="https://www.linkedin.com/company/bta_3/" aria-label="LinkedIn">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg" width="22" alt="" />
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick links -->
+      <div class="footer-links">
+        <h3>Quick links</h3>
+        <a href="media-news-events.html">News &amp; Events</a>
+        <a href="index.html#documents">Documents</a>
+        <a href="index.html#tools">Tools</a>
+        <a href="index.html#mandate">Mandate</a>
+        <a href="mandate-licensing.html">Licensing</a>
+        <a href="index.html#tenders">Tenders</a>
+        <a href="about-board.html">Board</a>
+      </div>
+
+      <!-- Services -->
+      <div class="footer-links">
+        <h3>Services</h3>
+        <a href="https://op-web.bocra.org.bw"  target="_blank" rel="noopener">BOCRA Portal</a>
+        <a href="https://dqos.bocra.org.bw/"   target="_blank" rel="noopener">QoS Monitoring</a>
+        <a href="https://customerportal.bocra.org.bw/OnlineLicenseVerification/verify" target="_blank" rel="noopener">Licence Verification</a>
+        <a href="https://typeapproval.bocra.org.bw/" target="_blank" rel="noopener">Type Approval</a>
+        <a href="https://registration.bocra.org.bw/" target="_blank" rel="noopener">ASMS-WebCP</a>
+        <a href="https://www.bocra.org.bw/careers"   target="_blank" rel="noopener">Careers</a>
+      </div>
+
+      <!-- Newsletter -->
+      <div class="footer-newsletter">
+        <h3>Newsletter</h3>
+        <p class="muted">Get updates on public notices, media releases, and consultations.</p>
+        <form class="nl" action="#" method="post">
+          <input type="email" placeholder="Email address" aria-label="Email address" required />
+          <form-btn class="btn btn--primary" type="submit">Subscribe</form-btn>
+        </form>
+        <p class="muted small">Connect to your mail service to activate.</p>
+      </div>
+
+    </div><!-- /.footer-grid -->
+
+    <div class="container footer-bottom">
+      <span class="muted">© BOCRA 2026 • All Rights Reserved</span>
+      <span class="muted">
+        <a href="https://www.bocra.org.bw/privacy-notice" target="_blank" rel="noopener">Privacy Notice</a>
+        &nbsp;•&nbsp;
+        <a href="https://www.bocra.org.bw" target="_blank" rel="noopener">Terms</a>
+      </span>
+    </div>
+  </footer><!-- /footer -->
+
+
+  <!-- Back to top -->
+  <button class="to-top" type="button" aria-label="Back to top" data-to-top>↑</button>
+
+  <!-- WhatsApp floating button -->
+  <a
+    href="https://wa.me/26773604289"
+    class="whatsapp-float"
+    target="_blank"
+    rel="noopener"
+    aria-label="Chat with BOCRA on WhatsApp"
+  >
+    <span class="wa-icon">
+      <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg" width="22" alt="" />
+    </span>
+    <span class="wa-label">Chat with BOCRA</span>
+  </a>
+
+
+  <!-- ============================================================
+       SCRIPTS — load order matters; NO duplicates
+  ============================================================ -->
+
+  <!-- Leaflet JS (deferred, after DOM) -->
+  <script
+    defer
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MW8H0Y6NY4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-MW8H0Y6NY4');
+  </script>
+
+  <!-- Your application JS — single source of truth, loaded last -->
+  <script defer src="js/app.js"></script>
+
+</body>
+</html>
