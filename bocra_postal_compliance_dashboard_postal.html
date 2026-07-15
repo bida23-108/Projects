@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>BOCRA · Postal Compliance Checklist</title>
+<meta name="description" content="Botswana Communications Regulatory Authority — Postal Service Licensees Compliance Dashboard"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+/* ============================================================
+   BOCRA Postal Compliance Dashboard — Design System
+   Matched to the BOCRA SIMS Portal "Liquid Glass" language
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --brand-blue:#1a6cb5;
+  --brand-green:#1a7a5e;
+  --brand-red:#c0243b;
+  --brand-yellow:#e8a800;
+  --brand-gray:#8c8c8c;
+
+  --bg-primary:#eef2f9;
+  --bg-secondary:rgba(255,255,255,0.6);
+  --bg-tertiary:rgba(255,255,255,0.4);
+  --bg-card:rgba(255,255,255,0.55);
+  --bg-sidebar:rgba(13,27,46,0.55);
+  --bg-sidebar-hover:rgba(255,255,255,0.10);
+  --bg-sidebar-active:rgba(255,255,255,0.16);
+
+  --text-primary:#0d1b2e;
+  --text-secondary:#46566b;
+  --text-muted:#8296ac;
+  --text-sidebar:rgba(255,255,255,0.88);
+  --text-sidebar-muted:rgba(255,255,255,0.5);
+
+  --border-color:rgba(13,27,46,0.09);
+  --border-light:rgba(13,27,46,0.06);
+
+  --glass-blur:22px;
+  --glass-blur-strong:34px;
+  --glass-saturate:180%;
+  --glass-sheen:linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.08) 35%, rgba(255,255,255,0) 60%);
+  --glass-border:1px solid rgba(255,255,255,0.5);
+  --glass-border-dark:1px solid rgba(255,255,255,0.14);
+
+  --shadow-sm:0 1px 3px rgba(13,27,46,0.06), 0 1px 2px rgba(13,27,46,0.04);
+  --shadow-md:0 8px 24px rgba(13,27,46,0.10), 0 2px 6px rgba(13,27,46,0.05);
+  --shadow-lg:0 20px 50px rgba(13,27,46,0.16), 0 6px 16px rgba(13,27,46,0.08);
+  --shadow-card:0 4px 18px rgba(13,27,46,0.07), inset 0 1px 0 rgba(255,255,255,0.6);
+
+  --status-approved-bg:#edfaf4; --status-approved-text:#1a6b47; --status-approved-border:#7dd5a8;
+  --status-rejected-bg:#fef0f0; --status-rejected-text:#b91c1c; --status-rejected-border:#f5a8a8;
+  --status-pending-bg:#fef9ec; --status-pending-text:#92680a; --status-pending-border:#f5d87a;
+  --status-neutral-bg:rgba(13,27,46,0.04); --status-neutral-text:#9aa7b8; --status-neutral-border:rgba(13,27,46,0.08);
+
+  --sidebar-width:260px;
+  --header-height:64px;
+  --radius-sm:10px;
+  --radius-md:14px;
+  --radius-lg:22px;
+
+  --transition-fast:150ms cubic-bezier(0.4,0,0.2,1);
+  --transition-base:250ms cubic-bezier(0.4,0,0.2,1);
+}
+
+html{font-size:15px;scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg-primary);
+  color:var(--text-primary);
+  line-height:1.6;
+  min-height:100vh;
+  display:flex;
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* ── Ambient glass background mesh ── */
+.bg-mesh{position:fixed;inset:0;z-index:-1;overflow:hidden;background:var(--bg-primary)}
+.bg-mesh span{position:absolute;border-radius:50%;filter:blur(70px);opacity:0.55;will-change:transform}
+.bg-mesh .b1{width:46vw;height:46vw;top:-14vw;left:-10vw;background:radial-gradient(circle,#4f9fe8,transparent 70%);animation:drift1 26s ease-in-out infinite}
+.bg-mesh .b2{width:40vw;height:40vw;top:10vh;right:-12vw;background:radial-gradient(circle,#2fbf9e,transparent 70%);animation:drift2 32s ease-in-out infinite}
+.bg-mesh .b3{width:38vw;height:38vw;bottom:-14vw;left:12vw;background:radial-gradient(circle,#e8a800,transparent 70%);opacity:0.28;animation:drift3 28s ease-in-out infinite}
+.bg-mesh .b4{width:30vw;height:30vw;bottom:-6vw;right:8vw;background:radial-gradient(circle,#c0243b,transparent 70%);opacity:0.2;animation:drift1 34s ease-in-out infinite reverse}
+@keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(4vw,5vh) scale(1.08)}}
+@keyframes drift2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-5vw,4vh) scale(1.1)}}
+@keyframes drift3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(3vw,-4vh) scale(1.05)}}
+@media (prefers-reduced-motion:reduce){.bg-mesh span{animation:none!important}}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border-color);border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:var(--text-muted)}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar-width);
+  min-height:calc(100vh - 24px);
+  background:var(--bg-sidebar);
+  backdrop-filter:blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter:blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  display:flex;flex-direction:column;
+  position:fixed;left:12px;top:12px;z-index:100;
+  transition:transform var(--transition-base);
+  overflow:hidden;border-radius:24px;
+  border:var(--glass-border-dark);
+  box-shadow:var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,0.16), inset 0 0 0 1px rgba(255,255,255,0.04);
+}
+.sidebar::before{content:'';position:absolute;top:0;left:0;right:0;height:180px;background:linear-gradient(135deg,rgba(79,159,232,0.28),rgba(47,191,158,0.14));pointer-events:none}
+.sidebar::after{content:'';position:absolute;inset:0;border-radius:24px;background:linear-gradient(160deg,rgba(255,255,255,0.10) 0%,rgba(255,255,255,0) 22%);pointer-events:none}
+
+.sidebar-logo{padding:24px 20px 18px;border-bottom:1px solid rgba(255,255,255,0.06);position:relative}
+.logo-text{font-size:22px;font-weight:700;color:#fff;letter-spacing:-0.5px}
+.logo-dots{display:flex;gap:4px;margin-top:6px}
+.logo-dot{width:8px;height:8px;border-radius:50%}
+.logo-dot:nth-child(1){background:var(--brand-blue)}
+.logo-dot:nth-child(2){background:var(--brand-green)}
+.logo-dot:nth-child(3){background:var(--brand-red)}
+.logo-dot:nth-child(4){background:var(--brand-yellow)}
+.logo-subtitle{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--text-sidebar-muted);margin-top:8px}
+
+.sidebar-status-badge{
+  margin:12px 20px;padding:8px 12px;background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.14);border-radius:99px;
+  display:flex;align-items:center;gap:8px;font-size:11px;color:rgba(255,255,255,0.6);
+}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--brand-green);animation:pulse-green 2s infinite;flex-shrink:0}
+@keyframes pulse-green{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(26,122,94,0.4)}50%{opacity:0.8;box-shadow:0 0 0 4px rgba(26,122,94,0)}}
+
+.sidebar-nav{flex:1;padding:12px;overflow-y:auto}
+.nav-section-label{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-sidebar-muted);padding:16px 8px 8px}
+.nav-item{
+  display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;
+  cursor:pointer;color:var(--text-sidebar);font-size:14px;font-weight:400;
+  transition:all var(--transition-fast);margin-bottom:2px;position:relative;
+  border:none;background:none;width:100%;text-align:left;font-family:inherit;
+}
+.nav-item:hover{background:var(--bg-sidebar-hover)}
+.nav-item.active{background:var(--bg-sidebar-active);color:#fff;font-weight:500}
+.nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:20px;background:var(--brand-blue);border-radius:0 3px 3px 0}
+.nav-icon{width:18px;height:18px;opacity:0.7;flex-shrink:0}
+.nav-item.active .nav-icon{opacity:1}
+
+.sidebar-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.06)}
+.sidebar-user{display:flex;align-items:center;gap:10px}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--brand-blue),var(--brand-green));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff;flex-shrink:0}
+.user-info .user-name{font-size:13px;font-weight:500;color:#fff}
+.user-info .user-role{font-size:11px;color:var(--text-sidebar-muted)}
+
+/* ── MAIN CONTENT ── */
+.main-content{flex:1;margin-left:calc(var(--sidebar-width) + 24px);display:flex;flex-direction:column;min-height:100vh}
+
+/* ── HEADER ── */
+.header{
+  height:var(--header-height);background:var(--bg-secondary);
+  backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border:var(--glass-border);border-radius:20px;
+  display:flex;align-items:center;padding:0 24px;gap:16px;
+  position:sticky;top:12px;z-index:50;margin:12px 24px 0;
+  box-shadow:var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.header-breadcrumb{display:flex;align-items:center;gap:8px;flex:1}
+.breadcrumb-item{font-size:14px;color:var(--text-muted)}
+.breadcrumb-item.current{color:var(--text-primary);font-weight:600}
+.breadcrumb-sep{color:var(--text-muted);font-size:12px}
+.header-actions{display:flex;align-items:center;gap:10px}
+.header-search{position:relative;display:flex;align-items:center}
+.header-search input{
+  width:220px;height:36px;padding:0 12px 0 36px;background:var(--bg-tertiary);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:var(--glass-border);border-radius:99px;font-family:inherit;font-size:13px;
+  color:var(--text-primary);outline:none;transition:all var(--transition-fast);
+}
+.header-search input:focus{border-color:rgba(26,108,181,0.5);background:var(--bg-secondary);box-shadow:0 0 0 3px rgba(26,108,181,0.14)}
+.header-search input::placeholder{color:var(--text-muted)}
+.search-icon{position:absolute;left:11px;color:var(--text-muted);width:14px;height:14px;pointer-events:none}
+.btn-icon{
+  width:36px;height:36px;border-radius:50%;border:var(--glass-border);background:var(--bg-tertiary);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:var(--text-secondary);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.5);transition:all var(--transition-fast);
+}
+.btn-icon:hover{background:var(--bg-secondary);color:var(--text-primary);border-color:rgba(26,108,181,0.4);transform:translateY(-1px)}
+.mobile-menu-btn{display:none}
+
+/* ── PAGE CONTENT ── */
+.page-content{flex:1;padding:28px;overflow-x:hidden}
+.page{display:none;animation:fadeInUp 0.3s ease}
+.page.active{display:block}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.page-title{font-size:22px;font-weight:700;color:var(--text-primary);letter-spacing:-0.3px}
+.page-subtitle{font-size:13px;color:var(--text-muted);margin-top:2px}
+
+/* ── STAT CARDS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-bottom:24px}
+.stat-card{
+  background:var(--bg-card);
+  backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border:var(--glass-border);border-radius:22px;padding:20px;
+  box-shadow:var(--shadow-card);transition:all var(--transition-base);
+  position:relative;overflow:hidden;
+}
+.stat-card::before{content:'';position:absolute;inset:0;background:var(--glass-sheen);pointer-events:none}
+.stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:22px 22px 0 0}
+.stat-card.blue::after{background:var(--brand-blue)}
+.stat-card.green::after{background:var(--brand-green)}
+.stat-card.red::after{background:var(--brand-red)}
+.stat-card.yellow::after{background:var(--brand-yellow)}
+.stat-card.gray::after{background:var(--brand-gray)}
+.stat-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:rgba(26,108,181,0.35)}
+.stat-label{font-size:11px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
+.stat-value{font-size:32px;font-weight:700;color:var(--text-primary);line-height:1;letter-spacing:-1px;margin-bottom:8px;position:relative}
+.stat-value.blue{color:var(--brand-blue)}
+.stat-value.green{color:var(--brand-green)}
+.stat-value.red{color:var(--brand-red)}
+.stat-value.yellow{color:var(--brand-yellow)}
+.stat-note{font-size:12px;color:var(--text-muted);position:relative}
+
+/* ── CARD ── */
+.card{
+  background:var(--bg-card);
+  backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border:var(--glass-border);border-radius:22px;box-shadow:var(--shadow-card);
+  position:relative;overflow:hidden;margin-bottom:24px;
+}
+.card::before{content:'';position:absolute;inset:0;background:var(--glass-sheen);pointer-events:none}
+.card-header{padding:18px 22px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;position:relative}
+.card-title{font-size:15px;font-weight:600;color:var(--text-primary)}
+.card-subtitle{font-size:12px;color:var(--text-muted);margin-top:1px}
+.card-body{padding:22px;position:relative}
+
+/* ── FILTERS ── */
+.filters-bar{display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:16px 22px;border-bottom:1px solid var(--border-light);position:relative}
+.filter-label{font-size:11px;font-weight:600;letter-spacing:0.6px;text-transform:uppercase;color:var(--text-muted)}
+.filter-group{display:flex;gap:4px;background:var(--bg-tertiary);border:var(--glass-border);border-radius:99px;padding:3px;backdrop-filter:blur(10px)}
+.ftab{
+  padding:6px 14px;border-radius:99px;border:1px solid transparent;background:transparent;
+  color:var(--text-muted);font-size:11px;font-weight:600;letter-spacing:0.3px;cursor:pointer;
+  transition:all var(--transition-fast);font-family:inherit;white-space:nowrap;
+}
+.ftab.on{background:linear-gradient(155deg,#2f83cf,var(--brand-blue) 60%);color:#fff;box-shadow:0 3px 10px rgba(26,108,181,0.35)}
+.ftab:not(.on):hover{color:var(--text-primary)}
+.filters-spacer{flex:1}
+.filter-search{position:relative;display:flex;align-items:center}
+.filter-search input{
+  width:200px;height:34px;padding:0 12px 0 32px;background:var(--bg-tertiary);
+  backdrop-filter:blur(10px);border:var(--glass-border);border-radius:99px;
+  font-family:inherit;font-size:13px;color:var(--text-primary);outline:none;transition:all var(--transition-fast);
+}
+.filter-search input:focus{border-color:rgba(26,108,181,0.5);background:var(--bg-secondary);box-shadow:0 0 0 3px rgba(26,108,181,0.1)}
+.filter-search .search-icon{left:10px}
+
+/* ── TABLE ── */
+.table-wrapper{overflow-x:auto;position:relative}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{
+  padding:12px 16px;text-align:left;font-size:11px;font-weight:600;letter-spacing:0.5px;
+  text-transform:uppercase;color:var(--text-muted);background:var(--bg-tertiary);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--border-color);white-space:nowrap;position:sticky;top:0;z-index:2;
+}
+thead th.c{text-align:center}
+tbody tr{border-bottom:1px solid var(--border-light);transition:background var(--transition-fast);cursor:pointer}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--bg-tertiary)}
+tbody tr.group-sep{cursor:default}
+tbody tr.group-sep:hover{background:transparent}
+tbody tr.group-sep td{height:4px;padding:0}
+tbody td{padding:13px 16px;vertical-align:middle;color:var(--text-secondary)}
+.op-name{font-size:13px;font-weight:600;color:var(--text-primary)}
+.op-tag{font-size:11px;color:var(--text-muted);margin-top:2px}
+.period-cell{font-size:11px;font-weight:600;color:var(--text-muted);white-space:nowrap;border-left:1px solid var(--border-light)}
+.chip-cell{text-align:center}
+
+/* ── BADGES (compliance status) ── */
+.badge{
+  display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:99px;
+  font-size:11px;font-weight:600;border:1px solid transparent;white-space:nowrap;
+  backdrop-filter:blur(8px);box-shadow:inset 0 1px 0 rgba(255,255,255,0.4);
+}
+.badge-approved{background:var(--status-approved-bg);color:var(--status-approved-text);border-color:var(--status-approved-border)}
+.badge-rejected{background:var(--status-rejected-bg);color:var(--status-rejected-text);border-color:var(--status-rejected-border)}
+.badge-pending{background:var(--status-pending-bg);color:var(--status-pending-text);border-color:var(--status-pending-border)}
+.badge-neutral{background:var(--status-neutral-bg);color:var(--status-neutral-text);border-color:var(--status-neutral-border);font-size:10px}
+.badge-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.badge-approved .badge-dot{background:var(--status-approved-text)}
+.badge-rejected .badge-dot{background:var(--status-rejected-text)}
+.badge-pending .badge-dot{background:var(--status-pending-text)}
+
+/* ── LEGEND ── */
+.legend{display:flex;flex-wrap:wrap;align-items:center;gap:20px;padding:14px 22px;border-top:1px solid var(--border-light);position:relative}
+.leg{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-muted);font-weight:500}
+.leg-dot{width:8px;height:8px;border-radius:50%}
+.legend-note{margin-left:auto;font-size:11px;color:var(--text-muted)}
+
+/* ── CHARTS ── */
+.charts-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.charts-grid .card.wide{grid-column:1/-1}
+.chart-container{position:relative;height:260px}
+.chart-container.tall{height:280px}
+canvas{max-width:100%!important}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(7,14,28,0.45);backdrop-filter:blur(8px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;animation:fadeIn 0.2s ease}
+.modal-overlay.open{display:flex}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{
+  background:var(--bg-secondary);
+  backdrop-filter:blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter:blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  border-radius:26px;box-shadow:var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,0.5);
+  width:100%;max-width:560px;max-height:90vh;overflow-y:auto;
+  animation:slideUp 0.25s cubic-bezier(0.34,1.56,0.64,1);border:var(--glass-border);position:relative;
+}
+@keyframes slideUp{from{transform:translateY(30px) scale(0.97);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:17px;font-weight:700;color:var(--text-primary)}
+.modal-close{
+  width:30px;height:30px;border-radius:50%;background:var(--bg-tertiary);border:var(--glass-border);
+  color:var(--text-secondary);cursor:pointer;font-size:18px;line-height:1;
+  display:flex;align-items:center;justify-content:center;transition:all var(--transition-fast);
+}
+.modal-close:hover{color:var(--text-primary);background:var(--bg-secondary)}
+.modal-body{padding:22px;display:flex;flex-direction:column;gap:16px}
+.modal-period{border:var(--glass-border);background:var(--bg-tertiary);border-radius:16px;padding:14px 16px}
+.modal-period-label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--brand-blue);margin-bottom:10px}
+.modal-chips{display:flex;flex-wrap:wrap;gap:10px}
+.modal-chip-row{display:flex;align-items:center;gap:8px;width:100%}
+.modal-chip-form{font-size:12px;color:var(--text-secondary);min-width:140px}
+.modal-score{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-top:1px solid var(--border-color);margin-top:4px;background:var(--bg-tertiary);border-radius:16px}
+.modal-score-label{font-size:12px;color:var(--text-secondary)}
+.modal-score-val{font-size:26px;font-weight:700}
+
+/* ── SIDEBAR OVERLAY (mobile) ── */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99}
+.sidebar-overlay.open{display:block}
+
+/* ── RESPONSIVE ── */
+@media (max-width:1024px){.charts-grid{grid-template-columns:1fr}}
+@media (max-width:768px){
+  :root{--sidebar-width:0px}
+  .sidebar{transform:translateX(-280px);width:260px}
+  .sidebar.open{transform:translateX(0)}
+  .main-content{margin-left:0}
+  .header{margin:12px 12px 0}
+  .page-content{padding:16px}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .header-search{display:none}
+  .mobile-menu-btn{display:flex!important}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-mesh" aria-hidden="true">
+  <span class="b1"></span><span class="b2"></span><span class="b3"></span><span class="b4"></span>
+</div>
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-text">BOCRA</div>
+    <div class="logo-dots"><span class="logo-dot"></span><span class="logo-dot"></span><span class="logo-dot"></span><span class="logo-dot"></span></div>
+    <div class="logo-subtitle">Postal Compliance</div>
+  </div>
+
+  <div class="sidebar-status-badge">
+    <span class="status-dot"></span>
+    <span>14 Licensees Tracked</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+
+    <button class="nav-item active" data-page="matrix" onclick="switchPage('matrix',this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+        <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+      </svg>
+      Compliance Matrix
+    </button>
+
+    <button class="nav-item" data-page="analytics" onclick="switchPage('analytics',this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/>
+      </svg>
+      Analytics
+    </button>
+
+    <div class="nav-section-label">System</div>
+    <button class="nav-item" disabled style="opacity:.5;cursor:default">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+      Settings
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-user">
+      <div class="user-avatar">BD</div>
+      <div class="user-info">
+        <div class="user-name">Business Development</div>
+        <div class="user-role">BOCRA Postal Unit</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="document.getElementById('sidebar').classList.remove('open');this.classList.remove('open')"></div>
+
+<!-- ── MAIN ── -->
+<main class="main-content">
+  <header class="header">
+    <button class="btn-icon mobile-menu-btn" onclick="document.getElementById('sidebar').classList.add('open');document.getElementById('sidebarOverlay').classList.add('open')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+
+    <div class="header-breadcrumb">
+      <span class="breadcrumb-item">BOCRA</span>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-item current" id="breadcrumbCurrent">Compliance Matrix</span>
+    </div>
+
+    <div class="header-actions">
+      <div class="header-search">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" id="headerSearch" placeholder="Search operator…" oninput="document.getElementById('search-input').value=this.value;renderTable()"/>
+      </div>
+      <button class="btn-icon" title="Notifications">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="page-content">
+
+    <!-- PAGE: MATRIX -->
+    <div class="page active" id="page-matrix">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Postal Licensee Compliance Checklist</div>
+          <div class="page-subtitle">FY Apr 2025 – Mar 2026 · Mail volume, turnover &amp; mobile money submissions</div>
+        </div>
+      </div>
+
+      <div class="stats-grid" id="kpi-bar"><!-- filled by JS --></div>
+
+      <div class="card">
+        <div class="filters-bar">
+          <span class="filter-label">Quarter</span>
+          <div class="filter-group">
+            <button class="ftab on" onclick="setFilter('ALL',this)">All Quarters</button>
+            <button class="ftab" onclick="setFilter('Q1',this)">Q1 Apr–Jun 25</button>
+            <button class="ftab" onclick="setFilter('Q2',this)">Q2 Jul–Sep 25</button>
+            <button class="ftab" onclick="setFilter('Q3',this)">Q3 Oct–Dec 25</button>
+            <button class="ftab" onclick="setFilter('Q4',this)">Q4 Jan–Mar 26</button>
+          </div>
+          <span class="filter-label">Form</span>
+          <div class="filter-group">
+            <button class="ftab on" onclick="setFormFilter('ALL',this)">All Forms</button>
+            <button class="ftab" onclick="setFormFilter('MAIL',this)">Mail Volume</button>
+            <button class="ftab" onclick="setFormFilter('TURN',this)">Turnover</button>
+            <button class="ftab" onclick="setFormFilter('MOB',this)">Mobile Money</button>
+          </div>
+          <div class="filters-spacer"></div>
+          <div class="filter-search">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="text" id="search-input" placeholder="Search operator…" oninput="document.getElementById('headerSearch').value=this.value;renderTable()"/>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table id="main-table">
+            <thead>
+              <tr>
+                <th style="width:200px">Postal Operator</th>
+                <th style="width:120px">Quarter</th>
+                <th class="c" id="th-mail">Mail Volume</th>
+                <th class="c" id="th-turn">Turnover</th>
+                <th class="c" id="th-mob">Mobile Money</th>
+                <th class="c" id="th-crasa">CRASA Postal</th>
+                <th class="c" id="th-mms">Mobile Money Svcs</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+
+        <div class="legend">
+          <div class="leg"><div class="leg-dot" style="background:var(--brand-green)"></div>Filed — submission received</div>
+          <div class="leg"><div class="leg-dot" style="background:var(--brand-red)"></div>Missed — did not submit</div>
+          <div class="leg"><div class="leg-dot" style="background:var(--brand-yellow)"></div>Pending — no record on portal</div>
+          <div class="leg"><div class="leg-dot" style="background:var(--status-neutral-text)"></div>N/A — form not applicable</div>
+          <div class="legend-note">Click an operator row to view detail</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: ANALYTICS -->
+    <div class="page" id="page-analytics">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Compliance Analytics</div>
+          <div class="page-subtitle">Trends and breakdowns across all postal licensees</div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Overall Submission Rate by Form</div><div class="card-subtitle">% of expected filings submitted — full year</div></div>
+          </div>
+          <div class="card-body"><div class="chart-container"><canvas id="chart-bar-forms"></canvas></div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Compliance Status Breakdown</div><div class="card-subtitle">Distribution of all filing slots</div></div>
+          </div>
+          <div class="card-body"><div class="chart-container"><canvas id="chart-donut-status"></canvas></div></div>
+        </div>
+
+        <div class="card wide">
+          <div class="card-header">
+            <div><div class="card-title">Per-Operator Filing Score</div><div class="card-subtitle">Total submissions vs missed across all quarters and applicable forms</div></div>
+          </div>
+          <div class="card-body"><div class="chart-container tall"><canvas id="chart-bar-operators"></canvas></div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Quarterly Compliance Trend</div><div class="card-subtitle">Operators submitting Mail Volume per quarter</div></div>
+          </div>
+          <div class="card-body"><div class="chart-container"><canvas id="chart-line-trend"></canvas></div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Operator Compliance Rate</div><div class="card-subtitle">Share of expected submissions filed per operator</div></div>
+          </div>
+          <div class="card-body"><div class="chart-container"><canvas id="chart-donut-ops"></canvas></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-bg" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title"></div>
+      <button class="modal-close" onclick="document.getElementById('modal-bg').classList.remove('open')">&times;</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────────
+const PERIODS = ['Q1','Q2','Q3','Q4'];
+const PERIOD_LABELS = {'Q1':'Apr–Jun 25','Q2':'Jul–Sep 25','Q3':'Oct–Dec 25','Q4':'Jan–Mar 26'};
+const FORMS = ['MAIL','TURN','MOB','CRASA','MMS'];
+const FORM_LABELS = {'MAIL':'Mail Volume','TURN':'Turnover','MOB':'Mobile Money','CRASA':'CRASA Postal','MMS':'Mobile Money Svcs'};
+
+// Y=filed, X=missed, -=N/A, ?=pending
+const DATA = [
+  {
+    name:'Aramex Botswana (Pty) Ltd', short:'Aramex',
+    filings:{
+      Q1:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q2:{MAIL:'X',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q3:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q4:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+    }
+  },
+  {
+    name:'Botswana Post Services Limited', short:'BotswanaPost',
+    filings:{
+      Q1:{MAIL:'Y',TURN:'-',MOB:'Y',CRASA:'Y',MMS:'Y'},
+      Q2:{MAIL:'Y',TURN:'-',MOB:'Y',CRASA:'-',MMS:'-'},
+      Q3:{MAIL:'Y',TURN:'-',MOB:'Y',CRASA:'-',MMS:'-'},
+      Q4:{MAIL:'Y',TURN:'-',MOB:'Y',CRASA:'-',MMS:'-'},
+    }
+  },
+  {
+    name:'DHL International Botswana', short:'DHL',
+    filings:{
+      Q1:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q2:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q3:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q4:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+    }
+  },
+  {
+    name:'A2B Logistics (Pty) Ltd', short:'A2B',
+    filings:{
+      Q1:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q2:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q3:{MAIL:'X',TURN:'X',MOB:'-',CRASA:'-',MMS:'-'},
+      Q4:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+    }
+  },
+  {
+    name:'FedEx Express Botswana (Pty) Ltd', short:'FedEx',
+    filings:{
+      Q1:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q2:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q3:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q4:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+    }
+  },
+  {
+    name:'First Connections Couriers (Pty) Ltd', short:'First Connections',
+    filings:{
+      Q1:{MAIL:'?',TURN:'?',MOB:'-',CRASA:'-',MMS:'-'},
+      Q2:{MAIL:'?',TURN:'?',MOB:'-',CRASA:'-',MMS:'-'},
+      Q3:{MAIL:'?',TURN:'?',MOB:'-',CRASA:'-',MMS:'-'},
+      Q4:{MAIL:'?',TURN:'?',MOB:'-',CRASA:'-',MMS:'-'},
+    }
+  },
+  {
+    name:'KTU Holdings (Pty) Ltd', short:'KTU Holdings',
+    filings:{
+      Q1:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q2:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q3:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q4:{MAIL:'X',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+    }
+  },
+  {
+    name:'S Couriers (Pty) Ltd', short:'S Couriers',
+    filings:{
+      Q1:{MAIL:'X',TURN:'X',MOB:'-',CRASA:'-',MMS:'-'},
+      Q2:{MAIL:'X',TURN:'X',MOB:'-',CRASA:'-',MMS:'-'},
+      Q3:{MAIL:'X',TURN:'X',MOB:'-',CRASA:'-',MMS:'-'},
+      Q4:{MAIL:'X',TURN:'X',MOB:'-',CRASA:'-',MMS:'-'},
+    }
+  },
+  {
+    name:'Pinnacle Express (Pty) Ltd', short:'Pinnacle',
+    filings:{
+      Q1:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q2:{MAIL:'X',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q3:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q4:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+    }
+  },
+  {
+    name:'RAM Transport Botswana (Pty) Ltd', short:'RAM',
+    filings:{
+      Q1:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q2:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q3:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q4:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+    }
+  },
+  {
+    name:'Sprint Couriers (Pty) Ltd', short:'Sprint',
+    filings:{
+      Q1:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q2:{MAIL:'X',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q3:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q4:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+    }
+  },
+  {
+    name:'Tri Optimum Logistics (Pty) Ltd', short:'Tri Optimum',
+    filings:{
+      Q1:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q2:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q3:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q4:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+    }
+  },
+  {
+    name:'Triton Express (Pty) Ltd', short:'Triton',
+    filings:{
+      Q1:{MAIL:'X',TURN:'X',MOB:'-',CRASA:'-',MMS:'-'},
+      Q2:{MAIL:'Y',TURN:'X',MOB:'-',CRASA:'-',MMS:'-'},
+      Q3:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q4:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+    }
+  },
+  {
+    name:'TMS Logistics (Pty) Ltd', short:'TMS',
+    filings:{
+      Q1:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q2:{MAIL:'X',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q3:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+      Q4:{MAIL:'Y',TURN:'Y',MOB:'-',CRASA:'-',MMS:'-'},
+    }
+  },
+];
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let activeQFilter   = 'ALL';
+let activeFormFilter= 'ALL';
+let chartsBuilt     = false;
+
+// ─────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────
+function chip(val){
+  if(val==='Y')  return '<span class="badge badge-approved"><span class="badge-dot"></span>Filed</span>';
+  if(val==='X')  return '<span class="badge badge-rejected"><span class="badge-dot"></span>Missed</span>';
+  if(val==='?')  return '<span class="badge badge-pending"><span class="badge-dot"></span>Pending</span>';
+  return '<span class="badge badge-neutral">N/A</span>';
+}
+
+function opScore(op){
+  let filed=0,missed=0,pending=0,applicable=0;
+  for(const q of PERIODS){
+    for(const f of FORMS){
+      const v=op.filings[q][f];
+      if(v==='-') continue;
+      applicable++;
+      if(v==='Y') filed++;
+      else if(v==='X') missed++;
+      else if(v==='?') pending++;
+    }
+  }
+  return {filed,missed,pending,applicable};
+}
+
+function pct(a,b){ return b===0?0:Math.round((a/b)*100); }
+
+// ─────────────────────────────────────────────
+// STAT CARDS
+// ─────────────────────────────────────────────
+function buildKPIs(){
+  let totalFiled=0,totalMissed=0,totalPending=0,totalApplicable=0;
+  let fullyCompliant=0,nonCompliant=0,noFilings=0;
+  for(const op of DATA){
+    const s=opScore(op);
+    totalFiled+=s.filed; totalMissed+=s.missed; totalPending+=s.pending; totalApplicable+=s.applicable;
+    if(s.pending===s.applicable) noFilings++;
+    else if(s.missed===0&&s.pending===0) fullyCompliant++;
+    else if(s.missed>0||s.pending>0) nonCompliant++;
+  }
+  const rate=pct(totalFiled,totalFiled+totalMissed+totalPending);
+  document.getElementById('kpi-bar').innerHTML=`
+    <div class="stat-card blue">
+      <div class="stat-label">Total Operators</div>
+      <div class="stat-value">${DATA.length}</div>
+      <div class="stat-note">Postal service licensees</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-label">Fully Compliant</div>
+      <div class="stat-value green">${fullyCompliant}</div>
+      <div class="stat-note">All applicable forms filed</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-label">Non-Compliant</div>
+      <div class="stat-value red">${nonCompliant}</div>
+      <div class="stat-note">One or more quarters missed</div>
+    </div>
+    <div class="stat-card yellow">
+      <div class="stat-label">No Filings</div>
+      <div class="stat-value yellow">${noFilings}</div>
+      <div class="stat-note">No record on portal</div>
+    </div>
+    <div class="stat-card blue">
+      <div class="stat-label">Overall Rate</div>
+      <div class="stat-value blue">${rate}%</div>
+      <div class="stat-note">${totalFiled} of ${totalFiled+totalMissed+totalPending} applicable slots</div>
+    </div>
+  `;
+}
+
+// ─────────────────────────────────────────────
+// TABLE RENDER
+// ─────────────────────────────────────────────
+function renderTable(){
+  const q=activeQFilter;
+  const ff=activeFormFilter;
+  const search=document.getElementById('search-input').value.toLowerCase();
+
+  const showForm={MAIL:true,TURN:true,MOB:true,CRASA:true,MMS:true};
+  if(ff!=='ALL'){for(const k in showForm) showForm[k]=(k===ff);}
+  ['MAIL','TURN','MOB','CRASA','MMS'].forEach(f=>{
+    const thMap={MAIL:'th-mail',TURN:'th-turn',MOB:'th-mob',CRASA:'th-crasa',MMS:'th-mms'};
+    document.getElementById(thMap[f]).style.display=showForm[f]?'':'none';
+  });
+
+  const quarters=q==='ALL'?PERIODS:[q];
+  const ops=DATA.filter(op=>op.name.toLowerCase().includes(search)||op.short.toLowerCase().includes(search));
+
+  let html='';
+  for(const op of ops){
+    const score=opScore(op);
+    const isDefaults=(score.pending===score.applicable);
+    const hasMissed=score.missed>0;
+    const nameColor=isDefaults?'var(--brand-yellow)':hasMissed?'var(--brand-red)':'var(--text-primary)';
+    for(let qi=0;qi<quarters.length;qi++){
+      const period=quarters[qi];
+      const fl=op.filings[period];
+      const isFirst=qi===0;
+      html+=`<tr onclick="${isFirst?`openModal(${DATA.indexOf(op)})`:''}">`;
+      if(isFirst){
+        html+=`<td rowspan="${quarters.length}">
+          <div class="op-name" style="color:${nameColor}">${op.name}</div>
+          <div class="op-tag">${op.short}</div>
+        </td>`;
+      }
+      html+=`<td class="period-cell">${PERIOD_LABELS[period]}</td>`;
+      for(const f of FORMS){
+        if(!showForm[f]){html+=`<td class="chip-cell" style="display:none">${chip(fl[f])}</td>`;continue;}
+        html+=`<td class="chip-cell">${chip(fl[f])}</td>`;
+      }
+      html+='</tr>';
+    }
+    html+=`<tr class="group-sep"><td colspan="7"></td></tr>`;
+  }
+  document.getElementById('tbody').innerHTML=html;
+}
+
+// ─────────────────────────────────────────────
+// FILTERS
+// ─────────────────────────────────────────────
+function setFilter(val,el){
+  activeQFilter=val;
+  document.querySelectorAll('.filter-group').forEach(g=>{
+    if(g.contains(el)){g.querySelectorAll('.ftab').forEach(b=>b.classList.remove('on'));el.classList.add('on');}
+  });
+  renderTable();
+}
+function setFormFilter(val,el){
+  activeFormFilter=val;
+  const parentGroup=el.closest('.filter-group');
+  parentGroup.querySelectorAll('.ftab').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  renderTable();
+}
+
+// ─────────────────────────────────────────────
+// MODAL
+// ─────────────────────────────────────────────
+function openModal(idx){
+  const op=DATA[idx];
+  const score=opScore(op);
+  document.getElementById('modal-title').textContent=op.name;
+  let html='';
+  for(const q of PERIODS){
+    html+=`<div class="modal-period">
+      <div class="modal-period-label">${PERIOD_LABELS[q]}</div>
+      <div class="modal-chips">`;
+    for(const f of FORMS){
+      html+=`<div class="modal-chip-row"><span class="modal-chip-form">${FORM_LABELS[f]}</span>${chip(op.filings[q][f])}</div>`;
+    }
+    html+=`</div></div>`;
+  }
+  const rate=pct(score.filed,score.applicable);
+  html+=`<div class="modal-score">
+    <div class="modal-score-label">${score.filed} filed &nbsp;/&nbsp; ${score.applicable} applicable &nbsp;/&nbsp; ${score.missed} missed</div>
+    <div class="modal-score-val" style="color:${rate===100?'var(--brand-green)':rate===0?'var(--brand-red)':'var(--brand-yellow)'}">${rate}%</div>
+  </div>`;
+  document.getElementById('modal-body').innerHTML=html;
+  document.getElementById('modal-bg').classList.add('open');
+}
+function closeModal(e){if(e.target===document.getElementById('modal-bg'))document.getElementById('modal-bg').classList.remove('open');}
+
+// ─────────────────────────────────────────────
+// PAGE SWITCH
+// ─────────────────────────────────────────────
+function switchPage(page,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  el.classList.add('active');
+  document.getElementById('breadcrumbCurrent').textContent = page==='matrix' ? 'Compliance Matrix' : 'Analytics';
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+  if(page==='analytics'&&!chartsBuilt){buildCharts();chartsBuilt=true;}
+}
+
+// ─────────────────────────────────────────────
+// CHARTS
+// ─────────────────────────────────────────────
+const CHART_BLUE   ='#1a6cb5';
+const CHART_GREEN  ='#1a7a5e';
+const CHART_RED    ='#c0243b';
+const CHART_YELLOW ='#e8a800';
+const FONT         ='DM Sans';
+const TEXT_COLOR   ='#46566b';
+const GRID_COLOR   ='rgba(13,27,46,0.06)';
+
+Chart.defaults.color=TEXT_COLOR;
+Chart.defaults.font.family=FONT;
+Chart.defaults.font.size=11;
+
+function buildCharts(){
+  const formStats={};
+  for(const f of FORMS){ formStats[f]={filed:0,total:0}; }
+  for(const op of DATA){
+    for(const q of PERIODS){
+      for(const f of FORMS){
+        if(op.filings[q][f]==='-') continue;
+        formStats[f].total++;
+        if(op.filings[q][f]==='Y') formStats[f].filed++;
+      }
+    }
+  }
+  const formLabels=FORMS.filter(f=>formStats[f].total>0).map(f=>FORM_LABELS[f]);
+  const formRates=FORMS.filter(f=>formStats[f].total>0).map(f=>pct(formStats[f].filed,formStats[f].total));
+
+  new Chart(document.getElementById('chart-bar-forms'),{
+    type:'bar',
+    data:{
+      labels:formLabels,
+      datasets:[{
+        label:'Submission rate %',
+        data:formRates,
+        backgroundColor:[CHART_GREEN,CHART_GREEN,CHART_BLUE,CHART_RED,CHART_RED],
+        borderRadius:6,borderSkipped:false,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.raw}% compliance`}}},
+      scales:{
+        x:{grid:{color:GRID_COLOR},ticks:{color:TEXT_COLOR}},
+        y:{grid:{color:GRID_COLOR},ticks:{color:TEXT_COLOR,callback:v=>v+'%'},min:0,max:100}
+      }
+    }
+  });
+
+  let totalFiled=0,totalMissed=0,totalPending=0;
+  for(const op of DATA){
+    const s=opScore(op);
+    totalFiled+=s.filed;totalMissed+=s.missed;totalPending+=s.pending;
+  }
+  new Chart(document.getElementById('chart-donut-status'),{
+    type:'doughnut',
+    data:{
+      labels:['Filed','Missed','Pending'],
+      datasets:[{
+        data:[totalFiled,totalMissed,totalPending],
+        backgroundColor:[CHART_GREEN,CHART_RED,CHART_YELLOW],
+        borderWidth:2,borderColor:'#ffffff',hoverOffset:6
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,cutout:'68%',
+      plugins:{
+        legend:{position:'bottom',labels:{padding:16,usePointStyle:true,pointStyle:'rectRounded'}},
+        tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.raw} submissions`}}
+      }
+    }
+  });
+
+  const opNames=DATA.map(o=>o.short);
+  const opFiled=DATA.map(o=>opScore(o).filed);
+  const opMissed=DATA.map(o=>opScore(o).missed);
+  const opPending=DATA.map(o=>opScore(o).pending);
+  new Chart(document.getElementById('chart-bar-operators'),{
+    type:'bar',
+    data:{
+      labels:opNames,
+      datasets:[
+        {label:'Filed',data:opFiled,backgroundColor:CHART_GREEN,borderRadius:0,stack:'s'},
+        {label:'Missed',data:opMissed,backgroundColor:CHART_RED,stack:'s'},
+        {label:'Pending',data:opPending,backgroundColor:CHART_YELLOW,stack:'s'},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{usePointStyle:true,pointStyle:'rectRounded',padding:16}}},
+      scales:{
+        x:{grid:{color:GRID_COLOR},ticks:{color:TEXT_COLOR,maxRotation:40,minRotation:30}},
+        y:{grid:{color:GRID_COLOR},ticks:{color:TEXT_COLOR,stepSize:1},stacked:true}
+      }
+    }
+  });
+
+  const qCompliant=PERIODS.map(q=>{
+    return DATA.filter(op=>op.filings[q]['MAIL']==='Y').length;
+  });
+  new Chart(document.getElementById('chart-line-trend'),{
+    type:'line',
+    data:{
+      labels:PERIODS.map(q=>PERIOD_LABELS[q]),
+      datasets:[{
+        label:'Operators filed Mail Volume',
+        data:qCompliant,
+        borderColor:CHART_BLUE,
+        backgroundColor:'rgba(26,108,181,0.08)',
+        pointBackgroundColor:CHART_BLUE,
+        pointRadius:5,pointHoverRadius:7,
+        tension:0.3,fill:true,borderWidth:2
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{color:GRID_COLOR},ticks:{color:TEXT_COLOR}},
+        y:{grid:{color:GRID_COLOR},ticks:{color:TEXT_COLOR,stepSize:1},min:0,max:DATA.length}
+      }
+    }
+  });
+
+  const opRates=DATA.map(o=>{const s=opScore(o);return pct(s.filed,s.applicable);});
+  new Chart(document.getElementById('chart-donut-ops'),{
+    type:'bar',
+    data:{
+      labels:DATA.map(o=>o.short),
+      datasets:[{
+        label:'Compliance rate %',
+        data:opRates,
+        backgroundColor:opRates.map(r=>r===100?CHART_GREEN:r===0?CHART_RED:CHART_YELLOW),
+        borderRadius:6,
+      }]
+    },
+    options:{
+      indexAxis:'y',
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.raw}% compliance rate`}}},
+      scales:{
+        x:{grid:{color:GRID_COLOR},ticks:{color:TEXT_COLOR,callback:v=>v+'%'},min:0,max:100},
+        y:{grid:{color:GRID_COLOR},ticks:{color:TEXT_COLOR,font:{size:10}}}
+      }
+    }
+  });
+}
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+buildKPIs();
+renderTable();
+</script>
+</body>
+</html>
